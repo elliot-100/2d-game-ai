@@ -4,6 +4,19 @@ from src.bot import Bot
 
 
 class World:
+    """Simulated domain.
+
+    Assumed circular.
+
+    Attributes
+    ----------
+
+    radius: float
+        Radius
+    bots: list[Bot]
+        All bots in the World.
+    """
+
     def __init__(self, radius: float) -> None:
         self.radius = radius
         self.bots: list[Bot] = []
