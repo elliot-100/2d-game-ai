@@ -16,6 +16,5 @@ def test_add_bot() -> None:
     w = World(10)
     w.add_bot(
         pos=Vector2(0, 0),
-        radius=1,
     )
     assert len(w.bots) == 1

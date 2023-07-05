@@ -11,11 +11,7 @@ class Bot:
 
     pos: Vector2
         Position
-    radius: float
-        Radius
-
     """
 
-    def __init__(self, pos: Vector2, radius: float) -> None:
+    def __init__(self, pos: Vector2) -> None:
         self.pos = pos
-        self.radius = radius
