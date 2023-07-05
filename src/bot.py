@@ -1,3 +1,5 @@
+"""Define the Bot class."""
+
 from pygame import Vector2
 
 
@@ -8,7 +10,6 @@ class Bot:
 
     Attributes
     ----------
-
     pos: Vector2
         Position
     """

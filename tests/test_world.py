@@ -6,6 +6,7 @@ from src.world import World
 
 
 def test_create() -> None:
+    """Test World initial state."""
     w = World(
         radius=0.5,
     )
@@ -13,6 +14,7 @@ def test_create() -> None:
 
 
 def test_add_bot() -> None:
+    """Test adding a Bot to the World."""
     w = World(10)
     w.add_bot(
         pos=Vector2(0, 0),
