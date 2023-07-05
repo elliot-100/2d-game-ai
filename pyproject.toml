@@ -36,6 +36,11 @@ warn_return_any = true
 show_error_codes = true
 warn_unused_ignores = true
 
+[tool.ruff]
+# Enable flake8-COMmas, pyDocstyle, pycodestylE, pyFlakes rules by default.
+select = ["COM", "D", "E", "F"]
+ignore = []
+
 [tool.ruff.pydocstyle]
 convention = "numpy"
 
