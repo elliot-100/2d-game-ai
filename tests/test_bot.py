@@ -11,3 +11,9 @@ def test_create() -> None:
         pos=Vector2(0.7, 100.35),
     )
     assert b.pos == Vector2(0.7, 100.35)
+
+    # Test that Bot is initially stationary.
+    assert b.velocity == Vector2(0, 0)
+    assert b.speed == 0
+    # Test that Bot has default heading.
+    assert b.heading == Bot.DEFAULT_HEADING == Vector2(0, 0)
