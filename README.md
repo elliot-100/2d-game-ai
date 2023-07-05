@@ -1,9 +1,9 @@
 # 2d-game-ai
 
-Experimental Python project to explore video game-style 'AI' behaviour in a 2D
+Experimental Python project to explore video game-style 'AI' behaviour in a 2D top-down
 environment.
 
-Intended to focus on simulated entities' (`Bot`) behaviour at an 'action'/'tactical'
+Intended to focus on simulated entities' ('Bot') behaviour at an 'action'/'tactical'
 level, e.g. searching, spotting, assessing and attacking.
 
 Functional decisions:
