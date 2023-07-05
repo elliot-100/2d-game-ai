@@ -21,3 +21,4 @@ def test_add_bot() -> None:
         pos=Vector2(0, 0),
     )
     assert len(w.bots) == 1
+    assert w.bots["b0"].name == "b0"

@@ -14,14 +14,16 @@ class World:
     ----------
     radius: float
         Radius
-    bots: list[Bot]
+    bots: dict[str, Bot]
         All bots in the World.
+        Key is Bot.name
+        Value is Bot instance.
     """
 
     def __init__(self, radius: float) -> None:
         self.radius = radius
-        self.bots: list[Bot] = []
+        self.bots: dict = {}
 
     def add_bot(self, name: str, pos: Vector2) -> None:
         """Add a Bot to the World."""
-        self.bots.append(Bot(name, pos))
+        self.bots[name] = Bot(name, pos)
