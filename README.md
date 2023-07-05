@@ -9,8 +9,8 @@ level, e.g. searching, spotting, assessing and attacking.
 Functional decisions:
 
 - Bot is initially stationary.
-- Bot is either stationary or moving at a constant speed.
-- Bot can only moving in the direction it is facing.
+- Bot is either stationary or moving at its maximum speed.
+- Bot can only move in the direction it is facing.
 - Bot can rotate at a constant rate.
 - Bot is modelled as a point.
 
