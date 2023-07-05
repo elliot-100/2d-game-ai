@@ -14,6 +14,8 @@ class Bot:
 
     Attributes
     ----------
+    name: str
+        Name
     pos: Vector2
         Position
     speed: float
@@ -28,7 +30,16 @@ class Bot:
     MAX_SPEED = 1
     DEFAULT_HEADING = Vector2(0, 0)
 
-    def __init__(self, pos: Vector2) -> None:
+    def __init__(self, name: str, pos: Vector2) -> None:
+        """Initialise the instance.
+
+        name: str
+            Name
+        pos: Vector2
+            Position
+
+        """
+        self.name = name
         self.pos = pos
         self.velocity = Vector2(0, 0)
         self.heading = Bot.DEFAULT_HEADING

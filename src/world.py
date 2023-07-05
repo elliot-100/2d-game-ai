@@ -22,6 +22,6 @@ class World:
         self.radius = radius
         self.bots: list[Bot] = []
 
-    def add_bot(self, pos: Vector2) -> None:
+    def add_bot(self, name: str, pos: Vector2) -> None:
         """Add a Bot to the World."""
-        self.bots.append(Bot(pos))
+        self.bots.append(Bot(name, pos))
