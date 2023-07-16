@@ -17,6 +17,8 @@ def test_add_bot() -> None:
     """Test adding a Bot to the World."""
     w = World(10)
     w.add_bot(
+        name="b0",
         pos=Vector2(0, 0),
     )
     assert len(w.bots) == 1
+    assert w.bots["b0"].name == "b0"
