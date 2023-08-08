@@ -18,14 +18,16 @@ class View:
     world
         World to be viewed
     window
-        Display window
+        Top level 'display surface'
     """
 
     def __init__(self, world: World) -> None:
         """Wrap Pygame window initialisation."""
         self.world = world
         self.running = True
+
         pygame.init()
+        self.font = pygame.font.Font(None, 24)
         self.window = pygame.display.set_mode((world.radius * 2, world.radius * 2))
         pygame.display.set_caption("2dGameAI")
         self.clock = pygame.Clock()
@@ -53,6 +55,13 @@ class View:
                 ICON_RADIUS,
                 0,
             )
+
+        text = self.font.render(
+            text=f"step: {self.world.step_counter}",
+            antialias=True,
+            color=FOREGROUND_COLOR,
+        )
+        self.window.blit(text, (0, 0))
 
         # update entire display
         pygame.display.flip()

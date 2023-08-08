@@ -23,6 +23,7 @@ class World:
     def __init__(self, radius: float) -> None:
         self.radius = radius
         self.bots: dict = {}
+        self.step_counter = 0
 
     def add_bot(self, name: str, pos: Vector2) -> None:
         """Add a Bot to the World."""
@@ -32,3 +33,4 @@ class World:
         """Change all Bot positions over 1 simulation step."""
         for b in self.bots.values():
             b.move()
+            self.step_counter += 1
