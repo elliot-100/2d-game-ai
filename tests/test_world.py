@@ -22,3 +22,16 @@ def test_add_bot() -> None:
     )
     assert len(w.bots) == 1
     assert w.bots["b0"].name == "b0"
+
+
+def test_update() -> None:
+    """Test Bot linear move in World context."""
+    w = World(10)
+    w.add_bot(
+        name="b0",
+        pos=Vector2(0, 0),
+    )
+    b = w.bots["b0"]
+    b.velocity = Vector2(1, 0)
+    w.update()
+    assert b.pos == Vector2(1, 0)

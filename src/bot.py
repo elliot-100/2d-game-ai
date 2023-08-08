@@ -60,3 +60,7 @@ class Bot:
         """Is the point within the Bot's vision cone?."""
         relative_bearing_to_point = relative_bearing_degrees(self.heading, point)
         return abs(relative_bearing_to_point) <= self.vision_cone_angle / 2
+
+    def move(self) -> None:
+        """Change position over 1 simulation step."""
+        self.pos += self.velocity

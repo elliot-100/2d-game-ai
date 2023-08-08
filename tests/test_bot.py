@@ -1,4 +1,4 @@
-"""Tests for the Bot class."""
+"""Tests for the Bot class in isolation."""
 
 from pygame import Vector2
 
@@ -41,3 +41,24 @@ def test_can_see() -> None:
         False,
         False,
     ]
+
+
+def test_move() -> None:
+    """Test Bot linear move."""
+    b = Bot(
+        name="b0",
+        pos=Vector2(0, 0),
+    )
+    b.velocity = Vector2(1, 0)
+    b.move()
+    assert b.pos == Vector2(1, 0)
+
+
+def test_move_negative() -> None:
+    """Test that Bot does not change position by default, as velocity is zero."""
+    b = Bot(
+        name="b0",
+        pos=Vector2(0, 0),
+    )
+    b.move()
+    assert b.pos == Vector2(0, 0)

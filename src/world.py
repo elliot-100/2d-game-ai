@@ -27,3 +27,8 @@ class World:
     def add_bot(self, name: str, pos: Vector2) -> None:
         """Add a Bot to the World."""
         self.bots[name] = Bot(name, pos)
+
+    def update(self) -> None:
+        """Change all Bot positions over 1 simulation step."""
+        for b in self.bots.values():
+            b.move()
