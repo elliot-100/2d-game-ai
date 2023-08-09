@@ -19,8 +19,7 @@ def test_create() -> None:
     assert b.velocity == Vector2(0, 0)
     assert b.speed == 0
     # Test Bot defaults
-    assert b.heading == Bot.DEFAULT_HEADING == Vector2(0, 1)
-    assert b.vision_cone_angle == Bot.DEFAULT_VISION_CONE_ANGLE_DEGREES == 90
+    assert b.heading == Bot.INITIAL_HEADING == Vector2(0, 1)
 
 
 def test_can_see() -> None:

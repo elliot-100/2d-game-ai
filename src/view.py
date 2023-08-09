@@ -5,10 +5,6 @@ from pygame import Vector2
 
 from src.world import World
 
-BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
-FOREGROUND_COLOR = RED = (255, 0, 0)
-ICON_RADIUS = 10
-
 
 class View:
     """The View class.
@@ -21,27 +17,34 @@ class View:
         Top level 'display surface'
     """
 
+    BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
+    FOREGROUND_COLOR = RED = (255, 0, 0)
+    DISPLAY_MAX_FPS = 60
+    CAPTION = "2dGameAI"
+    FONT_SIZE = 24
+    ICON_RADIUS = 10
+
     def __init__(self, world: World) -> None:
         """Wrap Pygame window initialisation."""
         self.world = world
         self.running = True
 
         pygame.init()
-        self.font = pygame.font.Font(None, 24)
+        self.font = pygame.font.Font(None, View.FONT_SIZE)
         self.window = pygame.display.set_mode((world.radius * 2, world.radius * 2))
-        pygame.display.set_caption("2dGameAI")
+        pygame.display.set_caption(View.CAPTION)
         self.clock = pygame.Clock()
 
     def render(self) -> None:
         """Output a representation of the world to the window."""
-        # Limit update to 60 FPS
-        self.clock.tick(60)
+        # Limit update rate to save CPU
+        self.clock.tick(View.DISPLAY_MAX_FPS)
         # render background
-        self.window.fill(BACKGROUND_COLOR)
+        self.window.fill(View.BACKGROUND_COLOR)
         # render world limits
         pygame.draw.circle(
             self.window,
-            FOREGROUND_COLOR,
+            View.FOREGROUND_COLOR,
             self.to_display(Vector2(0, 0)),
             self.world.radius,
             1,
@@ -50,16 +53,16 @@ class View:
         for bot in self.world.bots.values():
             pygame.draw.circle(
                 self.window,
-                FOREGROUND_COLOR,
+                View.FOREGROUND_COLOR,
                 self.to_display(bot.pos),
-                ICON_RADIUS,
+                View.ICON_RADIUS,
                 0,
             )
 
         text = self.font.render(
             text=f"step: {self.world.step_counter}",
             antialias=True,
-            color=FOREGROUND_COLOR,
+            color=View.FOREGROUND_COLOR,
         )
         self.window.blit(text, (0, 0))
 
