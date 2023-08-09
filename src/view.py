@@ -22,10 +22,12 @@ class View:
 
     BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
     FOREGROUND_COLOR = RED = (255, 0, 0)
+    LABEL_COLOR = WHITE = (255, 255, 255)
     DISPLAY_MAX_FPS = 60
     CAPTION = "2dGameAI"
     FONT_SIZE = 24
     ICON_RADIUS = 10
+    LABEL_OFFSET = Vector2(10, 10)
 
     def __init__(self, world: World) -> None:
         """Wrap Pygame window initialisation."""
@@ -99,6 +101,8 @@ class View:
             View.ICON_RADIUS,
             0,
         )
+
+        # Heading indicator
         # TODO: refactor
         nose_offset = Vector2(View.ICON_RADIUS, 0).rotate(bot.heading.as_polar()[1])
         pygame.draw.line(
@@ -108,3 +112,12 @@ class View:
             self.to_display(bot.pos + nose_offset),
             3,
         )
+
+        # Create name label
+        label = self.font.render(
+            text=bot.name,
+            antialias=True,
+            color=View.LABEL_COLOR,
+        )
+        # ...and blit to window
+        self.window.blit(label, self.to_display(bot.pos) + View.LABEL_OFFSET)
