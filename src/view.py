@@ -59,11 +59,13 @@ class View:
                 0,
             )
 
+        # render the step counter...
         text = self.font.render(
             text=f"step: {self.world.step_counter}",
             antialias=True,
             color=View.FOREGROUND_COLOR,
         )
+        # ...and blit to window
         self.window.blit(text, (0, 0))
 
         # update entire display
@@ -80,7 +82,6 @@ class View:
         Returns
         -------
         Window coordinates, with origin at centre
-
         """
         offset = Vector2(self.world.radius, self.world.radius)
         return world_pos + offset

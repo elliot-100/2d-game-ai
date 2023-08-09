@@ -12,18 +12,12 @@ class Bot:
 
     Assumed circular.
 
-    Class attributes
-    ----------------
-    MAX_SPEED: int
-
     Attributes
     ----------
     name: str
         Name
     pos: Vector2
         Position
-    speed: float
-        Speed
     velocity: Vector2
         Velocity
     heading: Vector2
