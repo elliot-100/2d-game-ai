@@ -10,6 +10,8 @@ from src.world import World
 class View:
     """The View class.
 
+    NB: Unlike Pygame default, origin at centre, positive y upwards
+
     Attributes
     ----------
     world
@@ -77,8 +79,9 @@ class View:
         -------
         Window coordinates, with origin at centre
         """
+        display_pos = (world_pos[0], -world_pos[1])
         offset = Vector2(self.world.radius, self.world.radius)
-        return world_pos + offset
+        return display_pos + offset
 
     def handle_window_close(self) -> None:
         """Wrap Pygame window close handling."""
