@@ -14,6 +14,8 @@ class Bot:
 
     Attributes
     ----------
+    destination: Vector2
+        Destination
     name: str
         Name
     pos: Vector2
@@ -37,6 +39,7 @@ class Bot:
             Position
 
         """
+        self.destination: None | Vector2 = None
         self.name = name
         self.pos = pos
         self.velocity = Vector2(0, 0)
@@ -54,4 +57,8 @@ class Bot:
 
     def move(self) -> None:
         """Change position over 1 simulation step."""
+        if self.destination:
+            displacement = self.destination - self.pos
+            displacement.scale_to_length(Bot.MAX_SPEED)
+            self.velocity = displacement
         self.pos += self.velocity
