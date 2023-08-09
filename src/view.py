@@ -3,6 +3,7 @@
 import pygame
 from pygame import Vector2
 
+from src.bot import Bot
 from src.world import World
 
 
@@ -49,16 +50,9 @@ class View:
             self.world.radius,
             1,
         )
-        # render all bots
+        # render all bots as icons
         for bot in self.world.bots.values():
-            pygame.draw.circle(
-                self.window,
-                View.FOREGROUND_COLOR,
-                self.to_display(bot.pos),
-                View.ICON_RADIUS,
-                0,
-            )
-
+            self.draw_bot(bot)
         # render the step counter...
         text = self.font.render(
             text=f"step: {self.world.step_counter}",
@@ -91,3 +85,23 @@ class View:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
+
+    def draw_bot(self, bot: Bot) -> None:
+        """Draw unscaled Bot icon."""
+        # Filled circle
+        pygame.draw.circle(
+            self.window,
+            View.FOREGROUND_COLOR,
+            self.to_display(bot.pos),
+            View.ICON_RADIUS,
+            0,
+        )
+        # TODO: refactor
+        nose_offset = Vector2(View.ICON_RADIUS, 0).rotate(bot.heading.as_polar()[1])
+        pygame.draw.line(
+            self.window,
+            View.BACKGROUND_COLOR,
+            self.to_display(bot.pos),
+            self.to_display(bot.pos + nose_offset),
+            3,
+        )
