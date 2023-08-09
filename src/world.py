@@ -22,7 +22,7 @@ class World:
 
     def __init__(self, radius: float) -> None:
         self.radius = radius
-        self.bots: dict = {}
+        self.bots: dict[str, Bot] = {}
         self.step_counter = 0
 
     def add_bot(self, name: str, pos: Vector2) -> None:
