@@ -57,9 +57,13 @@ class View:
         # render all bots as icons
         for bot in self.world.bots.values():
             self.draw_bot(bot)
+
         # render the step counter...
         text = self.font.render(
-            text=f"step: {self.world.step_counter}",
+            text=(
+                f"sim elapsed: {self.world.step_counter/60:.1f} s\n"
+                f"sim step: {self.world.step_counter}"
+            ),
             antialias=True,
             color=View.FOREGROUND_COLOR,
         )
