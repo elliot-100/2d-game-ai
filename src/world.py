@@ -33,4 +33,4 @@ class World:
         """Change all Bot positions over 1 simulation step."""
         for b in self.bots.values():
             b.move()
-            self.step_counter += 1
+        self.step_counter += 1
