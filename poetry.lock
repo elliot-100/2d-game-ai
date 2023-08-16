@@ -290,6 +290,17 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
+name = "pydoctest"
+version = "0.1.22"
+description = "Test if doctype types match signatures"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pydoctest-0.1.22-py3-none-any.whl", hash = "sha256:5a218e10d7d1ec3acdf3d3c93b09ab64920846a464fd8880dcd263c67f27793a"},
+    {file = "pydoctest-0.1.22.tar.gz", hash = "sha256:696b82d8207ff791c6c9e9cf98f7af05563daded229108520a23d1ac4e8a2ce0"},
+]
+
+[[package]]
 name = "pygame-ce"
 version = "2.3.2"
 description = "Python Game Development"
@@ -500,4 +511,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8a90405daa3fed24db7dcadd227c58080c07f7f6c64570d0e9c0a61c1f5193a9"
+content-hash = "eb5064888e3f1146f078aeb740126f63b9209ee7d3ee87455e695c2db715b917"
