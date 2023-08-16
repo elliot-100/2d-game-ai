@@ -98,8 +98,38 @@ class View:
                 self.running = False
 
     def draw_bot(self, bot: Bot) -> None:
-        """Draw unscaled Bot icon."""
-        # Filled circle
+        """Draw unscaled Bot icon and decorations.
+
+        Drawn in order, bottom to top.
+        """
+        if bot.destination:
+            # Destination marker (X)
+            offset = View.ICON_RADIUS
+            pygame.draw.line(
+                self.window,
+                View.FOREGROUND_COLOR,
+                self.to_display(bot.destination + (-offset, -offset)),
+                self.to_display(bot.destination + (offset, offset)),
+                1,
+            )
+            pygame.draw.line(
+                self.window,
+                View.FOREGROUND_COLOR,
+                self.to_display(bot.destination + (offset, -offset)),
+                self.to_display(bot.destination + (-offset, offset)),
+                1,
+            )
+
+            # Line from Bot centre to destination
+            pygame.draw.line(
+                self.window,
+                View.FOREGROUND_COLOR,
+                self.to_display(bot.pos),
+                self.to_display(bot.destination),
+                1,
+            )
+
+        # Basic icon (filled circle)
         pygame.draw.circle(
             self.window,
             View.FOREGROUND_COLOR,
@@ -108,7 +138,7 @@ class View:
             0,
         )
 
-        # Heading indicator
+        # Heading indicator (line from centre to edge of icon)
         # TODO: refactor
         nose_offset = Vector2(View.ICON_RADIUS, 0).rotate(bot.heading.as_polar()[1])
         pygame.draw.line(
@@ -119,7 +149,7 @@ class View:
             3,
         )
 
-        # Create name label
+        # Create name label...
         label = self.font.render(
             text=bot.name,
             antialias=True,
