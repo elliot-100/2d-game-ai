@@ -34,5 +34,5 @@ class World:
     def update(self) -> None:
         """Change all Bot positions over 1 simulation step."""
         for b in self.bots.values():
-            b.move()
+            b.update()
         self.step_counter += 1
