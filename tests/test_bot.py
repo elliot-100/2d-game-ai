@@ -2,6 +2,7 @@
 
 from pygame import Vector2
 
+from src import SIMULATION_STEP_INTERVAL_S
 from src.bot import Bot
 from tests import NE, NW, SE, SW, E, N, S, W
 
@@ -50,7 +51,7 @@ def test_move() -> None:
     )
     b.velocity = Vector2(1, 0)
     b.move()
-    assert b.pos == Vector2(1, 0)
+    assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
 
 
 def test_move_negative() -> None:

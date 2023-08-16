@@ -3,6 +3,7 @@
 import pygame
 from pygame import Vector2
 
+from src import SIMULATION_STEP_INTERVAL_S
 from src.bot import Bot
 from src.world import World
 
@@ -23,15 +24,22 @@ class View:
     BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
     FOREGROUND_COLOR = RED = (255, 0, 0)
     LABEL_COLOR = WHITE = (255, 255, 255)
-    DISPLAY_MAX_FPS = 60
     CAPTION = "2dGameAI"
     FONT_SIZE = 24
     ICON_RADIUS = 10
     LABEL_OFFSET = Vector2(10, 10)
 
     def __init__(self, world: World) -> None:
-        """Wrap Pygame window initialisation."""
+        """Initialise the Pygame window.
+
+        Parameters
+        ----------
+        world
+            World to be viewed
+        """
         self.world = world
+        self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
+
         self.running = True
 
         pygame.init()
@@ -43,7 +51,7 @@ class View:
     def render(self) -> None:
         """Output a representation of the world to the window."""
         # Limit update rate to save CPU
-        self.clock.tick(View.DISPLAY_MAX_FPS)
+        self.clock.tick(self.max_render_fps)
         # render background
         self.window.fill(View.BACKGROUND_COLOR)
         # render world limits
@@ -57,9 +65,14 @@ class View:
         # render all bots as icons
         for bot in self.world.bots.values():
             self.draw_bot(bot)
+
         # render the step counter...
         text = self.font.render(
-            text=f"step: {self.world.step_counter}",
+            text=(
+                "sim elapsed: "
+                f"{self.world.step_counter * SIMULATION_STEP_INTERVAL_S:.1f} s\n"
+                f"sim step: {self.world.step_counter}"
+            ),
             antialias=True,
             color=View.FOREGROUND_COLOR,
         )

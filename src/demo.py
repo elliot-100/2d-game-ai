@@ -15,7 +15,7 @@ world.add_bot(
 )
 
 # ... with a velocity vector
-world.bots["b0"].velocity = Vector2(1, 0)
+world.bots["b0"].velocity = Vector2(30, 0)
 
 # Add another Bot to the World...
 world.add_bot(

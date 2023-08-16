@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pygame import Vector2
 
+from src import SIMULATION_STEP_INTERVAL_S
 from src.maths import relative_bearing_degrees
 
 
@@ -21,12 +22,12 @@ class Bot:
     pos: Vector2
         Position
     velocity: Vector2
-        Velocity
+        Velocity (units per simulated second)
     heading: Vector2
         Heading
     """
 
-    MAX_SPEED = 1
+    MAX_SPEED = 60  # units per simulated second
     INITIAL_HEADING = Vector2(0, 1)
     VISION_CONE_ANGLE = 90  # degrees
 
@@ -61,4 +62,4 @@ class Bot:
             displacement = self.destination - self.pos
             displacement.scale_to_length(Bot.MAX_SPEED)
             self.velocity = displacement
-        self.pos += self.velocity
+        self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
