@@ -16,7 +16,7 @@ class View:
     Attributes
     ----------
     world
-        World to be viewed
+        The World to be viewed
     window
         Top level 'display surface'
     """
@@ -30,13 +30,6 @@ class View:
     LABEL_OFFSET = Vector2(10, 10)
 
     def __init__(self, world: World) -> None:
-        """Initialise the Pygame window.
-
-        Parameters
-        ----------
-        world
-            World to be viewed
-        """
         self.world = world
         self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 

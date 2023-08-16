@@ -32,14 +32,6 @@ class Bot:
     VISION_CONE_ANGLE = 90  # degrees
 
     def __init__(self, name: str, pos: Vector2) -> None:
-        """Initialise the instance.
-
-        name: str
-            Name
-        pos: Vector2
-            Position
-
-        """
         self.destination: None | Vector2 = None
         self.name = name
         self.pos = pos
@@ -52,7 +44,10 @@ class Bot:
         return self.velocity.magnitude()
 
     def can_see(self, point: Vector2) -> bool:
-        """Is the point within the Bot's vision cone?."""
+        """Determine whether the Bot can see a point.
+
+        Considers only the Bot vision cone angle.
+        """
         relative_bearing_to_point = relative_bearing_degrees(self.heading, point)
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
 
