@@ -13,6 +13,7 @@ pygame-ce = "^2.4.0"
 invoke = "^2.2.0"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
+pydoclint = "^0.4.1"
 ruff = "^0.3.0"
 
 [tool.poetry.group.test.dependencies]
@@ -51,6 +52,11 @@ extra_checks = true
 ## Adjust the amount of detail shown in error messages.
 show_error_codes = true  # additional to 'strict' config
 pretty = true  # additional to 'strict' config
+
+[tool.pydoclint]
+style = 'numpy'
+arg-type-hints-in-signature = true
+arg-type-hints-in-docstring = false
 
 [tool.ruff.lint]
 select = ["ALL"]
