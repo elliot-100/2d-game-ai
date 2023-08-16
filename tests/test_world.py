@@ -2,6 +2,7 @@
 
 from pygame import Vector2
 
+from src import SIMULATION_STEP_INTERVAL_S
 from src.world import World
 
 
@@ -34,4 +35,4 @@ def test_update() -> None:
     b = w.bots["b0"]
     b.velocity = Vector2(1, 0)
     w.update()
-    assert b.pos == Vector2(1, 0)
+    assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)

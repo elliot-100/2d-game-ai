@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pygame import Vector2
 
+from src import SIMULATION_STEP_INTERVAL_S
 from src.maths import relative_bearing_degrees
 
 
@@ -61,4 +62,4 @@ class Bot:
             displacement = self.destination - self.pos
             displacement.scale_to_length(Bot.MAX_SPEED)
             self.velocity = displacement
-        self.pos += self.velocity / 60
+        self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
