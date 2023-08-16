@@ -92,6 +92,17 @@ files = [
 ]
 
 [[package]]
+name = "docstring-parser-fork"
+version = "0.0.4"
+description = "Parse Python docstrings in reST, Google and Numpydoc format"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "docstring_parser_fork-0.0.4-py3-none-any.whl", hash = "sha256:7f59547c76e96e5c1f872952accef88ae3cb2969c2451c0a4f2a668fd436be02"},
+    {file = "docstring_parser_fork-0.0.4.tar.gz", hash = "sha256:86ec8066e8fa4cee6994fe288aaf8f67956309e82edea4f64271e3c8fbfbd9a9"},
+]
+
+[[package]]
 name = "filelock"
 version = "3.12.2"
 description = "A platform independent file lock."
@@ -288,6 +299,24 @@ identify = ">=1.0.0"
 nodeenv = ">=0.11.1"
 pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
+
+[[package]]
+name = "pydoclint"
+version = "0.3.2"
+description = "A Python docstring linter that checks arguments, returns, yields, and raises sections"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pydoclint-0.3.2-py2.py3-none-any.whl", hash = "sha256:1b9342f35fa58aae7f4b274711d347be66378f697f4dd254d876381ff4de78a8"},
+    {file = "pydoclint-0.3.2.tar.gz", hash = "sha256:cc81f7c3b0dcd8869072b324a8995b2257257988c85964f3a376279ef2bb29f9"},
+]
+
+[package.dependencies]
+click = ">=8.0.0"
+docstring-parser-fork = ">=0.0.4"
+
+[package.extras]
+flake8 = ["flake8 (>=4)"]
 
 [[package]]
 name = "pygame-ce"
@@ -500,4 +529,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8a90405daa3fed24db7dcadd227c58080c07f7f6c64570d0e9c0a61c1f5193a9"
+content-hash = "7082d458a770717c26a584349faac013c1252a8101694aec3bf61923fe7d4e43"
