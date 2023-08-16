@@ -5,7 +5,7 @@ from __future__ import annotations
 from pygame import Vector2
 
 from src import SIMULATION_STEP_INTERVAL_S
-from src.maths import relative_bearing_degrees
+from src.maths import point_in_or_on_circle, relative_bearing_degrees
 
 
 class Bot:
@@ -30,6 +30,7 @@ class Bot:
     MAX_SPEED = 60  # units per simulated second
     INITIAL_HEADING = Vector2(0, 1)
     VISION_CONE_ANGLE = 90  # degrees
+    DESTINATION_ARRIVAL_TOLERANCE = 1
 
     def __init__(self, name: str, pos: Vector2) -> None:
         self.destination: None | Vector2 = None
@@ -52,9 +53,20 @@ class Bot:
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
 
     def move(self) -> None:
-        """Change position over 1 simulation step."""
+        """Change Bot position over 1 simulation step."""
         if self.destination:
             displacement = self.destination - self.pos
             displacement.scale_to_length(Bot.MAX_SPEED)
             self.velocity = displacement
         self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
+
+    def update(self) -> None:
+        """Update Bot, including move over 1 simulation step."""
+        if self.destination and point_in_or_on_circle(
+            self.pos,
+            self.destination,
+            self.DESTINATION_ARRIVAL_TOLERANCE,
+        ):
+            self.destination = None
+            self.velocity = Vector2(0)
+        self.move()
