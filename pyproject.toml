@@ -14,6 +14,7 @@ invoke = "^2.2.0"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
 pydoclint = "^0.4.1"
+pydoctest = "^0.1.22"
 ruff = "^0.3.0"
 
 [tool.poetry.group.test.dependencies]
