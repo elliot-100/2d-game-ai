@@ -1,9 +1,13 @@
 """Demonstrate implemented features using renderer."""
 
+import logging
+
 from pygame import Vector2
 
 from src.view import View
 from src.world import World
+
+logging.basicConfig(level=logging.INFO)
 
 # Create a World
 world = World(100)

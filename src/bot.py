@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import math
 
 from pygame import Vector2
@@ -39,6 +40,7 @@ class Bot:
         self.pos = pos
         self.velocity = Vector2(0, 0)
         self.heading = Bot.INITIAL_HEADING.copy()
+        logging.info("Bot %s created.", self.name)
 
     @property
     def speed(self) -> float:
@@ -59,11 +61,13 @@ class Bot:
 
     def update(self) -> None:
         """Update Bot, including move over 1 simulation step."""
+        # if arrived at destination, stop
         if self.destination and point_in_or_on_circle(
             self.pos,
             self.destination,
             self.DESTINATION_ARRIVAL_TOLERANCE,
         ):
+            logging.info("Bot %s reached destination.", self.name)
             self.destination = None
             self.velocity = Vector2(0)
 
