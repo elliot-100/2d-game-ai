@@ -17,13 +17,13 @@ class Bot:
 
     Attributes
     ----------
-    destination: Vector2
+    destination : Vector2
         Destination
-    name: str
+    name : str
         Name
-    pos: Vector2
+    pos : Vector2
         Position
-    heading: Vector2
+    heading : Vector2
         Heading
     """
 

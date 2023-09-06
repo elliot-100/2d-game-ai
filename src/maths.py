@@ -33,6 +33,7 @@ def point_in_or_on_circle(
 
     Returns
     -------
-    True if the point is (inside or on) the circle
+    bool
+        True if the point is (inside or on) the circle
     """
     return (point - circle_centre).length() <= circle_radius

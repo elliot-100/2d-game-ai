@@ -85,7 +85,8 @@ class View:
 
         Returns
         -------
-        Window coordinates, with origin at centre
+        Vector2
+            Window coordinates, with origin at centre
         """
         display_pos = (world_pos[0], -world_pos[1])
         offset = Vector2(self.world.radius, self.world.radius)
