@@ -108,15 +108,15 @@ class View:
             pygame.draw.line(
                 self.window,
                 View.FOREGROUND_COLOR,
-                self.to_display(bot.destination + (-offset, -offset)),
-                self.to_display(bot.destination + (offset, offset)),
+                self.to_display(bot.destination + Vector2(-offset, -offset)),
+                self.to_display(bot.destination + Vector2(offset, offset)),
                 1,
             )
             pygame.draw.line(
                 self.window,
                 View.FOREGROUND_COLOR,
-                self.to_display(bot.destination + (offset, -offset)),
-                self.to_display(bot.destination + (-offset, offset)),
+                self.to_display(bot.destination + Vector2(offset, -offset)),
+                self.to_display(bot.destination + Vector2(-offset, offset)),
                 1,
             )
 
@@ -139,7 +139,6 @@ class View:
         )
 
         # Heading indicator (line from centre to edge of icon)
-        # TODO: refactor
         nose_offset = Vector2(View.ICON_RADIUS, 0).rotate(bot.heading.as_polar()[1])
         pygame.draw.line(
             self.window,
