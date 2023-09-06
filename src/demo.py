@@ -11,11 +11,8 @@ world = World(100)
 # Add a Bot to the World...
 world.add_bot(
     name="b0",
-    pos=Vector2(0, 0),
+    pos=Vector2(20, 20),
 )
-
-# ... with a velocity vector
-world.bots["b0"].velocity = Vector2(30, 0)
 
 # Add another Bot to the World...
 world.add_bot(
@@ -24,7 +21,7 @@ world.add_bot(
 )
 
 # ... with a destination
-world.bots["b1"].destination = Vector2(-25, 50)
+world.bots["b1"].destination = Vector2(25, -50)
 
 
 # Create a View of the World

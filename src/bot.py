@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 from pygame import Vector2
 
 from src import SIMULATION_STEP_INTERVAL_S
@@ -21,13 +23,12 @@ class Bot:
         Name
     pos: Vector2
         Position
-    velocity: Vector2
-        Velocity (units per simulated second)
     heading: Vector2
         Heading
     """
 
     MAX_SPEED = 60  # units per simulated second
+    ROTATION_RATE = 90  # degrees per simulated second
     INITIAL_HEADING = Vector2(0, 1)
     VISION_CONE_ANGLE = 90  # degrees
     DESTINATION_ARRIVAL_TOLERANCE = 1
@@ -37,7 +38,7 @@ class Bot:
         self.name = name
         self.pos = pos
         self.velocity = Vector2(0, 0)
-        self.heading = Bot.INITIAL_HEADING
+        self.heading = Bot.INITIAL_HEADING.copy()
 
     @property
     def speed(self) -> float:
@@ -54,10 +55,6 @@ class Bot:
 
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
-        if self.destination:
-            displacement = self.destination - self.pos
-            displacement.scale_to_length(Bot.MAX_SPEED)
-            self.velocity = displacement
         self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
 
     def update(self) -> None:
@@ -69,4 +66,24 @@ class Bot:
         ):
             self.destination = None
             self.velocity = Vector2(0)
+
+        if self.destination:
+            destination_relative_bearing = relative_bearing_degrees(
+                self.heading,
+                self.destination,
+            )
+            max_rotation_delta = self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
+
+            # if can complete rotation to face destination this step...
+            if abs(destination_relative_bearing) <= max_rotation_delta:
+                # face destination
+                # self.heading.rotate_ip(destination_relative_bearing)
+                # move towards destination
+                self.velocity = self.heading * Bot.MAX_SPEED
+
+            else:
+                # turn towards destination
+                self.heading.rotate_ip(
+                    math.copysign(max_rotation_delta, destination_relative_bearing),
+                )
         self.move()
