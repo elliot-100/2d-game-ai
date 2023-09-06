@@ -76,8 +76,8 @@ class Bot:
 
             # if can complete rotation to face destination this step...
             if abs(destination_relative_bearing) <= max_rotation_delta:
-                # face destination
-                # self.heading.rotate_ip(destination_relative_bearing)
+                # face destination precisely
+                self.heading.rotate_ip(destination_relative_bearing)
                 # move towards destination
                 self.velocity = self.heading * Bot.MAX_SPEED
 
