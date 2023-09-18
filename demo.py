@@ -10,28 +10,33 @@ from two_d_game_ai.world import World
 logging.basicConfig(level=logging.INFO)
 
 # Create a World
-world = World(100)
+the_world = World(100)
 
 # Add a Bot to the World...
-world.add_bot(
+the_world.add_bot(
     name="b0",
     pos=Vector2(20, 20),
 )
 
 # Add another Bot to the World...
-world.add_bot(
+the_world.add_bot(
     name="b1",
     pos=Vector2(0, 0),
 )
 
 # ... with a destination
-world.bots["b1"].destination = Vector2(25, -50)
+the_world.bots["b1"].destination = Vector2(25, -50)
 
 
 # Create a View of the World
-view = View(world)
+view = View(
+    name="the_view",
+    world=the_world,
+)
+the_world.bots["b0"].register_observer(view)
+the_world.bots["b1"].register_observer(view)
 
 while view.running:
     view.handle_window_close()
-    world.update()
+    the_world.update()
     view.render()

@@ -5,10 +5,11 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.bot import Bot
+from two_d_game_ai.observer import Observer
 from two_d_game_ai.world import World
 
 
-class View:
+class View(Observer):
     """The View class.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards
@@ -29,7 +30,8 @@ class View:
     ICON_RADIUS = 10
     LABEL_OFFSET = Vector2(10, 10)
 
-    def __init__(self, world: World) -> None:
+    def __init__(self, world: World, name: str) -> None:
+        super().__init__(name)
         self.world = world
         self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 

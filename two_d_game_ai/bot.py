@@ -9,9 +9,10 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.maths import point_in_or_on_circle, relative_bearing_degrees
+from two_d_game_ai.observer import Subject
 
 
-class Bot:
+class Bot(Subject):
     """Simulated entity.
 
     Assumed circular.
@@ -35,12 +36,12 @@ class Bot:
     DESTINATION_ARRIVAL_TOLERANCE = 1
 
     def __init__(self, name: str, pos: Vector2) -> None:
+        super().__init__(name)
         self.destination: None | Vector2 = None
-        self.name = name
         self.pos = pos
         self.velocity = Vector2(0, 0)
         self.heading = Bot.INITIAL_HEADING.copy()
-        logging.info("Bot %s created.", self.name)
+        logging.info("Bot `%s` created.", self.name)
 
     @property
     def speed(self) -> float:
@@ -67,7 +68,7 @@ class Bot:
             self.destination,
             self.DESTINATION_ARRIVAL_TOLERANCE,
         ):
-            logging.info("Bot %s reached destination.", self.name)
+            self.notify_observers("I've reached destination")
             self.destination = None
             self.velocity = Vector2(0)
 
