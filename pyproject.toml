@@ -10,7 +10,7 @@ python = "^3.11"
 pygame-ce = "^2.3.2"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.9.1"
+black = "^23.11.0"
 isort = "^5.12.0"
 mypy = "^1.5.1"
 pre-commit = "^3.4.0"
