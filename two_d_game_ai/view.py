@@ -3,9 +3,9 @@
 import pygame
 from pygame import Vector2
 
-from src import SIMULATION_STEP_INTERVAL_S
-from src.bot import Bot
-from src.world import World
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai.bot import Bot
+from two_d_game_ai.world import World
 
 
 class View:

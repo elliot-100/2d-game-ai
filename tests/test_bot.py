@@ -2,9 +2,9 @@
 
 from pygame import Vector2
 
-from src import SIMULATION_STEP_INTERVAL_S
-from src.bot import Bot
 from tests import NE, NW, SE, SW, E, N, S, W
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai.bot import Bot
 
 
 def test_create() -> None:

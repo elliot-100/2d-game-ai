@@ -4,8 +4,8 @@ import logging
 
 from pygame import Vector2
 
-from src.view import View
-from src.world import World
+from two_d_game_ai.view import View
+from two_d_game_ai.world import World
 
 logging.basicConfig(level=logging.INFO)
 

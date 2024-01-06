@@ -1,7 +1,7 @@
 """Tests for maths functions."""
 
-from src.maths import relative_bearing_degrees
 from tests import NE, NW, SE, SW, E, N, S, W
+from two_d_game_ai.maths import relative_bearing_degrees
 
 compass = [N, NE, E, SE, S, SW, W, NW]
 

@@ -7,8 +7,8 @@ import math
 
 from pygame import Vector2
 
-from src import SIMULATION_STEP_INTERVAL_S
-from src.maths import point_in_or_on_circle, relative_bearing_degrees
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai.maths import point_in_or_on_circle, relative_bearing_degrees
 
 
 class Bot:

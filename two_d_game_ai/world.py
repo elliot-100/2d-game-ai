@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pygame import Vector2
 
-from src.bot import Bot
+from two_d_game_ai.bot import Bot
 
 
 class World:

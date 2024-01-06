@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "2d-game-ai"
+name = "two-d-game-ai"
 version = "0.2.0"
 description = ""
 authors = ["elliot-100 <3186037+elliot-100@users.noreply.github.com>"]
