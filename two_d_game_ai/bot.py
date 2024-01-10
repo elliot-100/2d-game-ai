@@ -78,7 +78,7 @@ class Bot:
             )
             max_rotation_delta = self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
 
-            # if can complete rotation to face destination this step...
+            #  if can complete rotation to face destination this step...
             if abs(destination_relative_bearing) <= max_rotation_delta:
                 # face destination precisely
                 self.heading.rotate_ip(destination_relative_bearing)
