@@ -87,7 +87,7 @@ class Bot(Subject):
         if self.destination:
             destination_relative_bearing = relative_bearing_degrees(
                 self.heading,
-                self.destination,
+                self.destination - self.pos,
             )
 
             #  if Bot can complete rotation to face destination this step...
