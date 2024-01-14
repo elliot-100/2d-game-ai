@@ -110,33 +110,43 @@ class View(Observer):
         Drawn in order, bottom to top.
         """
         if bot.destination:
-            # Destination marker (X)
-            offset = View.ICON_RADIUS
-            pygame.draw.line(
-                self.window,
-                View.FOREGROUND_COLOR,
-                self.to_display(bot.destination + Vector2(-offset, -offset)),
-                self.to_display(bot.destination + Vector2(offset, offset)),
-                1,
-            )
-            pygame.draw.line(
-                self.window,
-                View.FOREGROUND_COLOR,
-                self.to_display(bot.destination + Vector2(offset, -offset)),
-                self.to_display(bot.destination + Vector2(-offset, offset)),
-                1,
-            )
+            self.draw_bot_destination_icon(bot)
+        self.draw_bot_icon(bot)
+        self.draw_bot_label(bot)
 
-            # Line from Bot centre to destination
-            pygame.draw.line(
-                self.window,
-                View.FOREGROUND_COLOR,
-                self.to_display(bot.pos),
-                self.to_display(bot.destination),
-                1,
-            )
+    def draw_bot_destination_icon(self, bot: Bot) -> None:
+        """Draw Bot destination icon and line to it."""
+        # Destination marker (X)
+        if not bot.destination:
+            raise TypeError
+        offset = self.ICON_RADIUS
+        pygame.draw.line(
+            self.window,
+            View.FOREGROUND_COLOR,
+            self.to_display(bot.destination + Vector2(-offset, -offset)),
+            self.to_display(bot.destination + Vector2(offset, offset)),
+            1,
+        )
+        pygame.draw.line(
+            self.window,
+            View.FOREGROUND_COLOR,
+            self.to_display(bot.destination + Vector2(offset, -offset)),
+            self.to_display(bot.destination + Vector2(-offset, offset)),
+            1,
+        )
 
-        # Basic icon (filled circle)
+        # Line from Bot centre to destination
+        pygame.draw.line(
+            self.window,
+            View.FOREGROUND_COLOR,
+            self.to_display(bot.pos),
+            self.to_display(bot.destination),
+            1,
+        )
+
+    def draw_bot_icon(self, bot: Bot) -> None:
+        """Draw Bot icon."""
+        # Filled circle
         pygame.draw.circle(
             self.window,
             View.FOREGROUND_COLOR,
@@ -155,11 +165,11 @@ class View(Observer):
             3,
         )
 
-        # Create name label...
+    def draw_bot_label(self, bot: Bot) -> None:
+        """Draw Bot name label."""
         label = self.font.render(
             text=bot.name,
             antialias=True,
             color=View.LABEL_COLOR,
         )
-        # ...and blit to window
         self.window.blit(label, self.to_display(bot.pos) + View.LABEL_OFFSET)
