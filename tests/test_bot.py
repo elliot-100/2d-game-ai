@@ -33,8 +33,12 @@ def test_can_see() -> None:
         pos=Vector2(0, 0),
     )
 
-    assert [b.can_see(p) for p in (NW, N, NE)] == [True, True, True]
-    assert [b.can_see(p) for p in (E, SE, S, SW, W)] == [
+    assert [b.can_see_point(p) for p in (NW, N, NE)] == [
+        True,
+        True,
+        True,
+    ]
+    assert [b.can_see_point(p) for p in (E, SE, S, SW, W)] == [
         False,
         False,
         False,
