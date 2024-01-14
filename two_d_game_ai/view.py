@@ -33,6 +33,7 @@ class View(Observer):
     def __init__(self, world: World, name: str) -> None:
         super().__init__(name)
         self.world = world
+
         self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
@@ -42,6 +43,9 @@ class View(Observer):
         self.window = pygame.display.set_mode((world.radius * 2, world.radius * 2))
         pygame.display.set_caption(View.CAPTION)
         self.clock = pygame.Clock()
+
+        for bot in world.bots.values():
+            bot.register_observer(self)
 
     def render(self) -> None:
         """Output a representation of the world to the window."""
