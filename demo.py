@@ -27,14 +27,11 @@ the_world.add_bot(
 # ... with a destination
 the_world.bots["b1"].destination = Vector2(25, -50)
 
-
 # Create a View of the World
 view = View(
     name="the_view",
     world=the_world,
 )
-the_world.bots["b0"].register_observer(view)
-the_world.bots["b1"].register_observer(view)
 
 while view.running:
     view.handle_window_close()

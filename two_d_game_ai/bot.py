@@ -48,6 +48,22 @@ class Bot(Subject):
         """Return speed."""
         return self.velocity.magnitude()
 
+    @property
+    def is_at_destination(self) -> bool:
+        """Return True if at destination."""
+        if self.destination:
+            return point_in_or_on_circle(
+                self.pos,
+                self.destination,
+                self.DESTINATION_ARRIVAL_TOLERANCE,
+            )
+        return False
+
+    @property
+    def max_rotation_delta(self) -> float:
+        """Return maximum rotation in one simulation step."""
+        return self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
+
     def can_see(self, point: Vector2) -> bool:
         """Determine whether the Bot can see a point.
 
@@ -62,25 +78,20 @@ class Bot(Subject):
 
     def update(self) -> None:
         """Update Bot, including move over 1 simulation step."""
-        # if arrived at destination, stop
-        if self.destination and point_in_or_on_circle(
-            self.pos,
-            self.destination,
-            self.DESTINATION_ARRIVAL_TOLERANCE,
-        ):
+        if self.is_at_destination:
             self.notify_observers("I've reached destination")
             self.destination = None
             self.velocity = Vector2(0)
+            return
 
         if self.destination:
             destination_relative_bearing = relative_bearing_degrees(
                 self.heading,
-                self.destination,
+                self.destination - self.pos,
             )
-            max_rotation_delta = self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
 
-            #  if can complete rotation to face destination this step...
-            if abs(destination_relative_bearing) <= max_rotation_delta:
+            #  if Bot can complete rotation to face destination this step...
+            if self.max_rotation_delta >= abs(destination_relative_bearing):
                 # face destination precisely
                 self.heading.rotate_ip(destination_relative_bearing)
                 # move towards destination
@@ -89,6 +100,9 @@ class Bot(Subject):
             else:
                 # turn towards destination
                 self.heading.rotate_ip(
-                    math.copysign(max_rotation_delta, destination_relative_bearing),
+                    math.copysign(
+                        self.max_rotation_delta,
+                        destination_relative_bearing,
+                    ),
                 )
         self.move()
