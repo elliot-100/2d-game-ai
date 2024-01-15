@@ -3,17 +3,22 @@
 Experimental Python project to explore video game-style 'AI' behaviour in a 2D top-down
 environment.
 
-Intended to focus on simulated entities' ('Bot') behaviour at an 'action'/'tactical'
+Intended to focus on simulated 'Bot' entities'  behaviour at an 'action'/'tactical'
 level, e.g. searching, spotting, assessing and attacking.
 
-Functional decisions:
+## World/simulation behaviour
 
-- Bot is initially stationary.
-- Bot is either stationary or moving at its maximum speed.
-- Bot can only move in the direction it is facing.
-- Bot can rotate at a constant rate.
-- Bot is modelled as a point.
+- Nominally 60 updates/second, but see below.
 
-To be decided:
+## Bot behaviour
 
-- Can Bot rotate while moving, i.e. constant speed but varying velocity?
+- Modelled as a point
+- Initially stationary
+- While stationary, can rotate at a constant rate
+- Can move at a constant rate in the direction it is facing
+- Can be given a destination; will move to it
+
+## View/renderer behaviour
+
+- Displays all Bots
+- Renders every World update; is allowed to lag, i.e. may run slower than real-time.

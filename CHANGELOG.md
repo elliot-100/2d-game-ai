@@ -13,17 +13,20 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
-- CHANGELOG.md
+- Introduced Observer pattern for Bot and View
+- CHANGELOG.md (this document)
 - Trivial logging
 
 ### Fixed
 
+- Bot ignored own position when calculating bearing to destination
 - Illegal package name
 
 ### Changed
 
-- Tighten ruff config
+- Upgrade dependency: pygame-ce to 2.4.0
 - Upgrade dev/test dependencies: black, mypy, pytest, pre-commit, ruff
+- Tighten ruff config
 - Upgrade CI dependencies: actions/setup-python
 
 
