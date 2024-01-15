@@ -29,6 +29,8 @@ class Bot(Subject):
         Heading
     visible_bots : set[Bot]
         The Bot's visible peers.
+    known_bots : set[Bot]
+        The Bot's known but not visible peers.
     """
 
     MAX_SPEED = 60  # units per simulated second
@@ -44,6 +46,7 @@ class Bot(Subject):
         self.velocity = Vector2(0, 0)
         self.heading = Bot.INITIAL_HEADING.copy()
         self.visible_bots: set[Bot] = set()
+        self.known_bots: set[Bot] = set()
         logging.info("Bot `%s` created.", self.name)
 
     @property
@@ -85,6 +88,7 @@ class Bot(Subject):
             for newly_lost_bot in newly_lost_bots:
                 self.notify_observers(f"I've lost sight of `{newly_lost_bot.name}`")
                 self.visible_bots.remove(newly_lost_bot)
+                self.known_bots.add(newly_lost_bot)
 
         if self.is_at_destination:
             self.notify_observers("I've reached destination")

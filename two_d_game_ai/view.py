@@ -25,7 +25,8 @@ class View(Observer):
     BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
     FOREGROUND_COLOR = RED = (255, 0, 0)
     LABEL_COLOR = WHITE = (255, 255, 255)
-    VISION_COLOR = BLUE = (102, 102, 255)
+    VISION_COLOR = BLUE_LIGHT = (153, 153, 255)
+    KNOWN_COLOR = BLUE_DARK = (102, 102, 255)
     CAPTION = "2dGameAI"
     FONT_SIZE = 24
     ICON_RADIUS = 10
@@ -115,6 +116,9 @@ class View(Observer):
         if bot.visible_bots:
             for visible_bot in bot.visible_bots:
                 self.draw_bot_visible_line(bot, visible_bot)
+        if bot.known_bots:
+            for known_bot in bot.known_bots:
+                self.draw_bot_known_line(bot, known_bot)
         self.draw_bot_icon(bot)
         self.draw_bot_label(bot)
 
@@ -185,5 +189,15 @@ class View(Observer):
             View.VISION_COLOR,
             self.to_display(bot.pos),
             self.to_display(other_bot.pos),
-            2,
+            4,
+        )
+
+    def draw_bot_known_line(self, bot: Bot, other_bot: Bot) -> None:
+        """Draw line from Bot to other known Bot."""
+        pygame.draw.line(
+            self.window,
+            View.KNOWN_COLOR,
+            self.to_display(bot.pos),
+            self.to_display(other_bot.pos),
+            1,
         )
