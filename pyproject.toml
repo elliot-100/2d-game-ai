@@ -62,8 +62,9 @@ pretty = true  # additional to 'strict' config
 
 [tool.ruff]
 # Enable rulesets:
-# flake8-ANNotations, flake8-COMmas, pyDocstyle, pycodestylE, pyFlakes, flake8-Future-Annotations, flake8-bandit (S)
-select = ["ANN", "COM", "D", "E", "F", "FA", "S"]
+# flake8-ANNotations, flake8-COMmas, pyDocstyle, pycodestylE, pyFlakes,
+# flake8-Future-Annotations, flake8-bandit (S), flake8-type-checking (TCH)
+select = ["ANN", "COM", "D", "E", "F", "FA", "S", "TCH"]
 # Ignore rules:
 # ANN101: Missing type annotation for `self` in method
 # D205: 1 blank line required between summary line and description

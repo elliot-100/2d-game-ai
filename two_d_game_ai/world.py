@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from pygame import Vector2
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pygame import Vector2
 
 from two_d_game_ai.bot import Bot
 
