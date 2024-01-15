@@ -13,6 +13,8 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
+- Bot keeps track of visible and known (but no-longer visible) others
+- View renders can-see and knows-about relationships as lines
 - Introduced Observer pattern for Bot and View
 - CHANGELOG.md (this document)
 - Trivial logging
