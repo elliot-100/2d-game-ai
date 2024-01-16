@@ -5,7 +5,7 @@ import logging
 from pygame import Vector2
 
 from two_d_game_ai.bot import Bot
-from two_d_game_ai.view import View
+from two_d_game_ai.render.view import View
 from two_d_game_ai.world import World
 
 logging.basicConfig(level=logging.INFO)
