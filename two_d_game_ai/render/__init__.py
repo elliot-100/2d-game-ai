@@ -6,9 +6,6 @@ from two_d_game_ai.world import World
 BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
 FOREGROUND_COLOR = RED = (255, 0, 0)
 
-CAPTION = "2dGameAI"
-FONT_SIZE = 24
-
 
 def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2:
     """Convert world coordinates to display window coordinates.
