@@ -1,4 +1,4 @@
-"""TO DO."""
+"""BotRenderer class."""
 import pygame
 from pygame import Font, Surface, Vector2
 
@@ -9,16 +9,20 @@ AppColor = tuple[int, int, int]
 
 
 class BotRenderer:
-    """Renderer for a Bot.
+    """Renders a Bot to a Surface.
 
     Provides methods to draw Bot icon and related elements.
 
     Attributes
     ----------
     bot: Bot
+        The Bot to render
     surface: Surface
+        Pygame Surface to render to
     scale_factor: float
+        Rendering scale factor
     font: Font
+        # TODO
     """
 
     ICON_RADIUS = 10
@@ -41,7 +45,7 @@ class BotRenderer:
         self.font = font
 
     def draw_icon(self) -> None:
-        """TO DO."""
+        """Draw unscaled icon to surface."""
         pygame.draw.circle(
             self.surface,
             FOREGROUND_COLOR,
@@ -50,7 +54,7 @@ class BotRenderer:
             0,
         )
 
-        # Heading indicator (line from centre to edge of icon)
+        # Heading indicator (line from centre to 'nose')
         nose_offset = Vector2(self.ICON_RADIUS, 0).rotate(
             self.bot.heading.as_polar()[1],
         )
@@ -62,7 +66,7 @@ class BotRenderer:
         )
 
     def draw_label(self) -> None:
-        """Draw Bot name label."""
+        """Draw Bot name label to surface."""
         label = self.font.render(
             text=self.bot.name,
             antialias=True,
@@ -75,7 +79,7 @@ class BotRenderer:
         )
 
     def draw_destination(self) -> None:
-        """Draw Bot destination icon and line to it."""
+        """Draw Bot destination icon, and line to it."""
         if not self.bot.destination:
             raise TypeError
 

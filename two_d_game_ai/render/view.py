@@ -1,4 +1,4 @@
-"""Renderer using Pygame."""
+"""View class: Renderer using Pygame."""
 
 import pygame
 from pygame import Vector2
@@ -12,18 +12,19 @@ from two_d_game_ai.world import World
 
 
 class View(Observer):
-    """The View class.
+    """Renders window, World and decorations.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards
 
     Attributes
     ----------
-    name
-    world
+    name: str
+    world: World
         The World to be viewed
-    scale_factor
-    window
-        Top level 'display surface'
+    scale_factor: float
+        Rendering scale factor
+    window: Window
+        Top level Pygame Surface.
     """
 
     CAPTION = "2dGameAI"
@@ -60,7 +61,7 @@ class View(Observer):
                 self.running = False
 
     def render(self) -> None:
-        """Output a representation of the world to the window.
+        """Render the World to the Pygame window.
 
         Drawn in order, bottom layer to top.
         """
@@ -77,7 +78,7 @@ class View(Observer):
         pygame.display.flip()
 
     def draw_world_limits(self) -> None:
-        """Draw the world limits as a circle."""
+        """Draw the World limits as a circle."""
         pygame.draw.circle(
             self.window,
             FOREGROUND_COLOR,
@@ -87,9 +88,14 @@ class View(Observer):
         )
 
     def draw_bot(self, bot: Bot) -> None:
-        """Draw unscaled Bot icon and decorations.
+        """Draw a Bot and decorations.
 
         Drawn in order, bottom layer to top.
+
+        Attributes
+        ----------
+        bot: Bot
+            The Bot to render
         """
         bot_renderer = BotRenderer(
             bot=bot,

@@ -1,4 +1,4 @@
-"""Define the World class."""
+"""World class."""
 
 from __future__ import annotations
 

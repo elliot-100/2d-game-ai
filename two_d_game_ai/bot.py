@@ -1,4 +1,4 @@
-"""Define the Bot class."""
+"""Bot class."""
 
 from __future__ import annotations
 

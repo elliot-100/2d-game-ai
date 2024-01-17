@@ -8,7 +8,7 @@ FOREGROUND_COLOR = RED = (255, 0, 0)
 
 
 def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2:
-    """Convert world coordinates to display window coordinates.
+    """Scale and offset world coordinates to display window coordinates.
 
     Parameters
     ----------

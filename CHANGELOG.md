@@ -15,9 +15,10 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bot keeps track of visible and known (but no-longer visible) others
 - View renders can-see and knows-about relationships as lines
+- View scaling
 - Introduced Observer pattern for Bot and View
-- CHANGELOG.md (this document)
 - Trivial logging
+- CHANGELOG.md (this document)
 
 ### Fixed
 
@@ -26,9 +27,12 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
+- Bots are now created in their own right, with reference to World, instead of World
+  method: `Bot(the_world, ...)` instead of `World.add_bot(...)`
+- Refactor: extract `render` package and `render.BotRenderer` class
+- Tighten ruff config
 - Upgrade dependency: pygame-ce to 2.4.0
 - Upgrade dev/test dependencies: black, mypy, pytest, pre-commit, ruff
-- Tighten ruff config
 - Upgrade CI dependencies: actions/setup-python
 
 
