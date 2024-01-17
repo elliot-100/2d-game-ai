@@ -24,15 +24,18 @@ class View(Observer):
 
     Attributes
     ----------
+    name
     world
         The World to be viewed
+    scale_factor
     window
         Top level 'display surface'
     """
 
-    def __init__(self, world: World, name: str) -> None:
+    def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
         self.world = world
+        self.scale_factor = scale_factor
 
         self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
@@ -40,7 +43,12 @@ class View(Observer):
 
         pygame.init()
         self.font = pygame.font.Font(None, FONT_SIZE)
-        self.window = pygame.display.set_mode((world.radius * 2, world.radius * 2))
+        self.window = pygame.display.set_mode(
+            (
+                world.radius * 2 * self.scale_factor,
+                world.radius * 2 * self.scale_factor,
+            ),
+        )
         pygame.display.set_caption(CAPTION)
         self.clock = pygame.Clock()
 
@@ -60,8 +68,8 @@ class View(Observer):
         pygame.draw.circle(
             self.window,
             FOREGROUND_COLOR,
-            to_display(self.world, Vector2(0, 0)),
-            self.world.radius,
+            to_display(self.world, Vector2(0, 0), self.scale_factor),
+            self.world.radius * self.scale_factor,
             1,
         )
         # render all bots as icons
@@ -98,15 +106,16 @@ class View(Observer):
         bot_renderer = BotRenderer(
             bot=bot,
             surface=self.window,
+            scale_factor=self.scale_factor,
             font=self.font,
         )
         if bot.destination:
             bot_renderer.draw_destination()
         if bot.visible_bots:
             for visible_bot in bot.visible_bots:
-                bot_renderer.draw_visible_line(bot, visible_bot)
+                bot_renderer.draw_visible_line(visible_bot)
         if bot.known_bots:
             for known_bot in bot.known_bots:
-                bot_renderer.draw_known_line(bot, known_bot)
+                bot_renderer.draw_known_line(known_bot)
         bot_renderer.draw_icon()
         bot_renderer.draw_label()

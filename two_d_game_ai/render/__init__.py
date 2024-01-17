@@ -10,21 +10,22 @@ CAPTION = "2dGameAI"
 FONT_SIZE = 24
 
 
-def to_display(world: World, world_pos: Vector2) -> Vector2:
-    """Convert world coordinates to window coordinates.
+def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2:
+    """Convert world coordinates to display window coordinates.
 
     Parameters
     ----------
     world: World
-
     world_pos
         World coordinates
+    scale_factor
 
     Returns
     -------
     Vector2
-        Window coordinates, with origin at centre
+        Display window coordinates.
+        Origin is at centre, positive y upwards (opposite to Pygame, etc).
     """
-    display_pos = (world_pos[0], -world_pos[1])
-    offset = Vector2(world.radius, world.radius)
+    display_pos = scale_factor * Vector2(world_pos.x, -world_pos.y)
+    offset = scale_factor * Vector2(world.radius, world.radius)
     return display_pos + offset

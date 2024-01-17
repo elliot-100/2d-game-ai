@@ -12,4 +12,4 @@ def test_to_display() -> None:
     w = World(radius=100)
     v = View(world=w, name="the_view")
     world_origin = Vector2(0, 0)
-    assert to_display(v.world, world_origin) == Vector2(100, 100)
+    assert to_display(v.world, world_origin, 1) == Vector2(100, 100)

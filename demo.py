@@ -34,6 +34,7 @@ b1.destination = Vector2(25, -50)
 view = View(
     name="the_view",
     world=the_world,
+    scale_factor=2,
 )
 
 while view.running:

@@ -5,6 +5,8 @@ from pygame import Font, Surface, Vector2
 from two_d_game_ai.bot import Bot
 from two_d_game_ai.render import BACKGROUND_COLOR, FOREGROUND_COLOR, to_display
 
+AppColor = tuple[int, int, int]
+
 
 class BotRenderer:
     """Renderer for a Bot.
@@ -15,6 +17,7 @@ class BotRenderer:
     ----------
     bot: Bot
     surface: Surface
+    scale_factor: float
     font: Font
     """
 
@@ -29,10 +32,12 @@ class BotRenderer:
         *,
         bot: Bot,
         surface: Surface,
+        scale_factor: float,
         font: Font,
     ) -> None:
         self.bot = bot
         self.surface = surface
+        self.scale_factor = scale_factor
         self.font = font
 
     def draw_icon(self) -> None:
@@ -40,21 +45,19 @@ class BotRenderer:
         pygame.draw.circle(
             self.surface,
             FOREGROUND_COLOR,
-            to_display(self.bot.world, self.bot.pos),
+            to_display(self.bot.world, self.bot.pos, self.scale_factor),
             self.ICON_RADIUS,
             0,
         )
 
         # Heading indicator (line from centre to edge of icon)
-        # TODO: review the '-' here - tactical fix
         nose_offset = Vector2(self.ICON_RADIUS, 0).rotate(
-            -self.bot.heading.as_polar()[1],
+            self.bot.heading.as_polar()[1],
         )
-        pygame.draw.line(
-            self.surface,
+        self._draw_scaled_line(
             BACKGROUND_COLOR,
-            to_display(self.bot.world, self.bot.pos),
-            to_display(self.bot.world, self.bot.pos) + nose_offset,
+            self.bot.pos,
+            self.bot.pos + nose_offset,
             3,
         )
 
@@ -67,7 +70,8 @@ class BotRenderer:
         )
         self.surface.blit(
             label,
-            to_display(self.bot.world, self.bot.pos) + self.LABEL_OFFSET,
+            to_display(self.bot.world, self.bot.pos, self.scale_factor)
+            + self.LABEL_OFFSET,
         )
 
     def draw_destination(self) -> None:
@@ -76,50 +80,57 @@ class BotRenderer:
             raise TypeError
 
         # Destination marker (X)
-        offset = self.ICON_RADIUS
-        pygame.draw.line(
-            self.surface,
+        offset = self.ICON_RADIUS / self.scale_factor
+        self._draw_scaled_line(
             FOREGROUND_COLOR,
-            to_display(
-                self.bot.world,
-                self.bot.destination + Vector2(-offset, -offset),
-            ),
-            to_display(self.bot.world, self.bot.destination + Vector2(offset, offset)),
+            self.bot.destination + Vector2(-offset, -offset),
+            self.bot.destination + Vector2(offset, offset),
             1,
         )
-        pygame.draw.line(
-            self.surface,
+        self._draw_scaled_line(
             FOREGROUND_COLOR,
-            to_display(self.bot.world, self.bot.destination + Vector2(offset, -offset)),
-            to_display(self.bot.world, self.bot.destination + Vector2(-offset, offset)),
+            self.bot.destination + Vector2(offset, -offset),
+            self.bot.destination + Vector2(-offset, offset),
             1,
         )
 
         # Line from Bot centre to destination
-        pygame.draw.line(
-            self.surface,
+        self._draw_scaled_line(
             FOREGROUND_COLOR,
-            to_display(self.bot.world, self.bot.pos),
-            to_display(self.bot.world, self.bot.destination),
+            self.bot.pos,
+            self.bot.destination,
             1,
         )
 
-    def draw_visible_line(self, bot: Bot, other_bot: Bot) -> None:
+    def draw_visible_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other visible Bot."""
-        pygame.draw.line(
-            self.surface,
+        self._draw_scaled_line(
             self.VISION_COLOR,
-            to_display(self.bot.world, bot.pos),
-            to_display(self.bot.world, other_bot.pos),
+            self.bot.pos,
+            other_bot.pos,
             4,
         )
 
-    def draw_known_line(self, bot: Bot, other_bot: Bot) -> None:
+    def draw_known_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other known Bot."""
+        self._draw_scaled_line(
+            self.KNOWN_COLOR,
+            self.bot.pos,
+            other_bot.pos,
+            1,
+        )
+
+    def _draw_scaled_line(
+        self,
+        color: AppColor,
+        start_pos: Vector2,
+        end_pos: Vector2,
+        width: int,
+    ) -> None:
         pygame.draw.line(
             self.surface,
-            self.KNOWN_COLOR,
-            to_display(self.bot.world, bot.pos),
-            to_display(self.bot.world, other_bot.pos),
-            1,
+            color,
+            to_display(self.bot.world, start_pos, self.scale_factor),
+            to_display(self.bot.world, end_pos, self.scale_factor),
+            width,
         )
