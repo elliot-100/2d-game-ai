@@ -9,7 +9,7 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
-## [UNRELEASED] - TBC
+## [0.3.0] - 2024-01-08
 
 ### Added
 
@@ -40,5 +40,5 @@ Historic and pre-release versions aren't necessarily included.
 
 Baseline release.
 
-[UNRELEASED]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...HEAD
+[0.3.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/elliot-100/2d-game-ai/releases/tag/v0.2.0
