@@ -27,3 +27,4 @@ level, e.g. searching, spotting, assessing and attacking.
 - Displays all Bots
 - Renders every World update; is allowed to lag, i.e. may run slower than real-time.
 - Renders can-see and knows-about relationships as lines
+- Can be scaled

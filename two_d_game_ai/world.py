@@ -1,13 +1,11 @@
-"""Define the World class."""
+"""World class."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pygame import Vector2
-
-from two_d_game_ai.bot import Bot
+    from two_d_game_ai.bot import Bot
 
 
 class World:
@@ -19,24 +17,18 @@ class World:
     ----------
     radius: float
         Radius
-    bots: dict[str, Bot]
+    bots: list[Bot]
         All bots in the World.
-        Key is Bot.name
-        Value is Bot instance.
     """
 
     def __init__(self, radius: float) -> None:
         self.radius = radius
-        self.bots: dict[str, Bot] = {}
+        self.bots: list[Bot] = []
         self.step_counter = 0
-
-    def add_bot(self, name: str, pos: Vector2) -> None:
-        """Add a Bot to the World."""
-        self.bots[name] = Bot(name, pos)
 
     def update(self) -> None:
         """Change all Bot positions over 1 simulation step."""
-        for bot in self.bots.values():
-            other_bots = [b for b in self.bots.values() if b is not bot]
+        for bot in self.bots:
+            other_bots = [b for b in self.bots if b is not bot]
             bot.update(other_bots)
         self.step_counter += 1
