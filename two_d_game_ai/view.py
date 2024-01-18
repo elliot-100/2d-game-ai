@@ -46,7 +46,7 @@ class View(Observer):
         pygame.display.set_caption(View.CAPTION)
         self.clock = pygame.Clock()
 
-        for bot in world.bots.values():
+        for bot in world.bots:
             bot.register_observer(self)
 
     def render(self) -> None:
@@ -64,7 +64,7 @@ class View(Observer):
             1,
         )
         # render all bots as icons
-        for bot in self.world.bots.values():
+        for bot in self.world.bots:
             self.draw_bot(bot)
 
         # render the step counter...

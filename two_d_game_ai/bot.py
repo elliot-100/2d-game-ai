@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import logging
 import math
+from typing import TYPE_CHECKING
 
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.maths import point_in_or_on_circle, relative_bearing_degrees
 from two_d_game_ai.observer import Subject
+
+if TYPE_CHECKING:
+    from two_d_game_ai.world import World
 
 
 class Bot(Subject):
@@ -31,6 +35,8 @@ class Bot(Subject):
         The Bot's visible peers.
     known_bots : set[Bot]
         The Bot's known but not visible peers.
+    world : World
+
     """
 
     MAX_SPEED = 60  # units per simulated second
@@ -39,14 +45,16 @@ class Bot(Subject):
     VISION_CONE_ANGLE = 90  # degrees
     DESTINATION_ARRIVAL_TOLERANCE = 1
 
-    def __init__(self, name: str, pos: Vector2) -> None:
+    def __init__(self, world: World, name: str, pos: Vector2) -> None:
         super().__init__(name)
+        self.world = world
         self.destination: None | Vector2 = None
         self.pos = pos
         self.velocity = Vector2(0, 0)
         self.heading = Bot.INITIAL_HEADING.copy()
         self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
+        self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
     @property
