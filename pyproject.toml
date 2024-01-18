@@ -10,8 +10,6 @@ python = "^3.11"
 pygame-ce = "^2.4.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.0"
-isort = "^5.13.2"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
 ruff = "^0.3.0"
@@ -19,13 +17,6 @@ ruff = "^0.3.0"
 [tool.poetry.group.test.dependencies]
 pytest = "^8.0.2"
 mypy = "^1.8.0"
-
-[tool.black]
-line-length = 88
-target-version = ['py38']
-
-[tool.isort]
-profile = "black"
 
 [tool.mypy]
 ## Config file:
@@ -67,8 +58,9 @@ pretty = true  # additional to 'strict' config
 select = ["ANN", "COM", "D", "E", "F", "FA", "S", "TCH"]
 # Ignore rules:
 # ANN101: Missing type annotation for `self` in method
+# COM812: missing-trailing-comma
 # D205: 1 blank line required between summary line and description
-ignore = ["ANN101", "D205"]
+ignore = ["ANN101", "COM812", "D205"]
 
 [tool.ruff.lint.per-file-ignores]
 # Use of `assert` detected
