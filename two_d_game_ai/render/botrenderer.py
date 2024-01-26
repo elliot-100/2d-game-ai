@@ -1,4 +1,5 @@
 """BotRenderer class."""
+
 import pygame
 from pygame import Font, Surface, Vector2
 

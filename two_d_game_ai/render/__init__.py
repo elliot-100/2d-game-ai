@@ -1,4 +1,5 @@
 """Package for rendering the model using Pygame."""
+
 from pygame import Vector2
 
 from two_d_game_ai.world import World
