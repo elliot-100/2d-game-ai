@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from pygame import Vector2
+
     from two_d_game_ai.entities import Bot, MovementBlock
 
 
@@ -31,3 +33,7 @@ class World:
             other_bots = [b for b in self.bots if b is not bot]
             bot.update(other_bots)
         self.step_counter += 1
+
+    def point_is_outside_world_bounds(self, point: Vector2) -> bool:
+        """Return True if point is inside the World bounds."""
+        return point.magnitude_squared() >= self.radius**2
