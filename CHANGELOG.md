@@ -9,6 +9,18 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## [UNRELEASED] - TBC
+
+### Added
+
+### Fixed
+
+### Changed
+
+- Upgrade dev/test dependencies: black, ruff
+
+
+
 ## [0.3.0] - 2024-01-08
 
 ### Added
