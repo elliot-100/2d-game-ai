@@ -38,3 +38,10 @@ def test_update() -> None:
     b.velocity = Vector2(1, 0)
     w.update()
     assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
+
+
+def test_point_is_outside_world_bounds() -> None:
+    """Test that points are inside/outside World."""
+    w = World(10)
+    assert not w.point_is_outside_world_bounds(Vector2(0, 0))
+    assert w.point_is_outside_world_bounds(Vector2(-8, 8))

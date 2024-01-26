@@ -28,7 +28,7 @@ b1 = Bot(
 )
 
 # ... with a destination
-b1.destination = Vector2(25, -50)
+b1.destination = Vector2(75, -75)
 
 # Create a View of the World
 view = View(

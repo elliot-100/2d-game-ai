@@ -78,6 +78,11 @@ class Bot(Subject):
         """Return maximum rotation in one simulation step."""
         return self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
 
+    @property
+    def is_outside_world_bounds(self) -> bool:
+        """Return True if inside the World bounds."""
+        return self.world.point_is_outside_world_bounds(self.pos)
+
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
         self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
