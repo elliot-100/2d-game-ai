@@ -17,8 +17,9 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
-- Upgrade dev/test dependencies: black, ruff
+- Upgrade dev/test dependencies: ruff
 
+### Removed
 
 
 ## [0.3.0] - 2024-01-08
