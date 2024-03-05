@@ -1,4 +1,4 @@
-""""Implement Observer pattern."""
+"""Implement Observer pattern."""
 
 from __future__ import annotations
 
