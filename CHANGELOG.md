@@ -13,13 +13,18 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
+- `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
+
 ### Fixed
 
 ### Changed
 
-- Upgrade dev/test dependencies: ruff
+- CI: use ruff format instead of black + isort
+- Upgrade dev/test dependencies: pytest, ruff
 
 ### Removed
+
+- Dev/test/CI dependencies: black, isort
 
 
 ## [0.3.0] - 2024-01-08
