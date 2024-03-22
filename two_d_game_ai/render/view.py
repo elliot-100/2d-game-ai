@@ -6,7 +6,7 @@ from pygame import Vector2
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.bot import Bot
 from two_d_game_ai.observer import Observer
-from two_d_game_ai.render import BACKGROUND_COLOR, FOREGROUND_COLOR, to_display
+from two_d_game_ai.render import colors, to_display
 from two_d_game_ai.render.botrenderer import BotRenderer
 from two_d_game_ai.world import World
 
@@ -68,7 +68,7 @@ class View(Observer):
         # Limit update rate to save CPU
         self.clock.tick(self.max_render_fps)
 
-        self.window.fill(BACKGROUND_COLOR)
+        self.window.fill(colors.BACKGROUND)
         self.draw_world_limits()
         for bot in self.world.bots:
             self.draw_bot(bot)
@@ -81,7 +81,7 @@ class View(Observer):
         """Draw the World limits as a circle."""
         pygame.draw.circle(
             self.window,
-            FOREGROUND_COLOR,
+            colors.FOREGROUND,
             to_display(self.world, Vector2(0, 0), self.scale_factor),
             self.world.radius * self.scale_factor,
             1,
@@ -123,6 +123,6 @@ class View(Observer):
                 f"sim step: {self.world.step_counter}"
             ),
             antialias=True,
-            color=FOREGROUND_COLOR,
+            color=colors.LABEL,
         )
         self.window.blit(text, (0, 0))

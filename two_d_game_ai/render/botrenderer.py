@@ -1,12 +1,10 @@
 """BotRenderer class."""
 
 import pygame
-from pygame import Font, Surface, Vector2
+from pygame import Color, Font, Surface, Vector2
 
 from two_d_game_ai.bot import Bot
-from two_d_game_ai.render import BACKGROUND_COLOR, FOREGROUND_COLOR, to_display
-
-AppColor = tuple[int, int, int]
+from two_d_game_ai.render import colors, to_display
 
 
 class BotRenderer:
@@ -28,9 +26,6 @@ class BotRenderer:
 
     ICON_RADIUS = 10
     LABEL_OFFSET = (10, 10)
-    LABEL_COLOR = WHITE = (255, 255, 255)
-    VISION_COLOR = BLUE_LIGHT = (153, 153, 255)
-    KNOWN_COLOR = BLUE_DARK = (102, 102, 255)
 
     def __init__(
         self,
@@ -49,7 +44,7 @@ class BotRenderer:
         """Draw unscaled icon to surface."""
         pygame.draw.circle(
             self.surface,
-            FOREGROUND_COLOR,
+            colors.FOREGROUND,
             to_display(self.bot.world, self.bot.pos, self.scale_factor),
             self.ICON_RADIUS,
             0,
@@ -58,7 +53,7 @@ class BotRenderer:
         # Heading indicator (line from centre to 'nose')
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading_degrees)
         self._draw_scaled_line(
-            BACKGROUND_COLOR,
+            colors.BACKGROUND,
             self.bot.pos,
             self.bot.pos + nose_offset,
             3,
@@ -69,7 +64,7 @@ class BotRenderer:
         label = self.font.render(
             text=self.bot.name,
             antialias=True,
-            color=self.LABEL_COLOR,
+            color=colors.LABEL,
         )
         self.surface.blit(
             label,
@@ -85,13 +80,13 @@ class BotRenderer:
         # Destination marker (X)
         offset = self.ICON_RADIUS / self.scale_factor
         self._draw_scaled_line(
-            FOREGROUND_COLOR,
+            colors.FOREGROUND,
             self.bot.destination + Vector2(-offset, -offset),
             self.bot.destination + Vector2(offset, offset),
             1,
         )
         self._draw_scaled_line(
-            FOREGROUND_COLOR,
+            colors.FOREGROUND,
             self.bot.destination + Vector2(offset, -offset),
             self.bot.destination + Vector2(-offset, offset),
             1,
@@ -99,7 +94,7 @@ class BotRenderer:
 
         # Line from Bot centre to destination
         self._draw_scaled_line(
-            FOREGROUND_COLOR,
+            colors.FOREGROUND,
             self.bot.pos,
             self.bot.destination,
             1,
@@ -108,7 +103,7 @@ class BotRenderer:
     def draw_visible_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other visible Bot."""
         self._draw_scaled_line(
-            self.VISION_COLOR,
+            colors.VISION,
             self.bot.pos,
             other_bot.pos,
             4,
@@ -117,7 +112,7 @@ class BotRenderer:
     def draw_known_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other known Bot."""
         self._draw_scaled_line(
-            self.KNOWN_COLOR,
+            colors.KNOWS,
             self.bot.pos,
             other_bot.pos,
             1,
@@ -125,7 +120,7 @@ class BotRenderer:
 
     def _draw_scaled_line(
         self,
-        color: AppColor,
+        color: Color,
         start_pos: Vector2,
         end_pos: Vector2,
         width: int,
