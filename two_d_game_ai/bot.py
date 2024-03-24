@@ -23,27 +23,32 @@ class Bot(Subject):
 
     Attributes
     ----------
-    destination : Vector2
-        Destination
-    name : str
-        Name
-    pos : Vector2
-        Position
-    heading : Vector2
-        Heading
-    visible_bots : set[Bot]
+    destination: Vector2
+        Destination point (World coordinates)
+    heading: Vector2
+        Heading (World coordinates)
+    known_bots: set[Bot]
+        The Bot's known but not visible peers
+    name: str
+    pos: Vector2
+        Position (World coordinates)
+    velocity: Vector2
+        Velocity as a vector (World coordinates / s)
+    visible_bots: set[Bot]
         The Bot's visible peers.
-    known_bots : set[Bot]
-        The Bot's known but not visible peers.
-    world : World
+    world: World
 
+    Read-only properties
+    --------------------
+    speed: float
+        Speed as a scalar (World units / s)
     """
 
-    MAX_SPEED = 60  # units per simulated second
-    ROTATION_RATE = 90  # degrees per simulated second
-    INITIAL_HEADING = Vector2(0, 1)
+    MAX_SPEED = 60  # World units / s
+    MAX_ROTATION_RATE = 90  # degrees / s
+    INITIAL_HEADING = Vector2(0, 1) # World coordinates
     VISION_CONE_ANGLE = 90  # degrees
-    DESTINATION_ARRIVAL_TOLERANCE = 1
+    DESTINATION_ARRIVAL_TOLERANCE = 1  # World units
 
     def __init__(self, world: World, name: str, pos: Vector2) -> None:
         super().__init__(name)
@@ -76,7 +81,7 @@ class Bot(Subject):
     @property
     def max_rotation_delta(self) -> float:
         """Return maximum rotation in one simulation step."""
-        return self.ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
+        return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
 
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
