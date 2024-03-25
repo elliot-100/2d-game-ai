@@ -24,11 +24,11 @@ def test_create() -> None:
     assert b.velocity == Vector2(0, 0)
     assert b.speed == 0
     # Test Bot defaults
-    assert b.heading == Bot.INITIAL_HEADING == Vector2(0, 1)
+    assert b.heading_degrees == Bot.INITIAL_HEADING_DEGREES
 
 
-def test_can_see() -> None:
-    """Test Bot vision.
+def test_can_see_point__in_range() -> None:
+    """Test Bot vision for points inside visual range.
 
     With default North heading, can see only points on/within 90 degree cone.
     """

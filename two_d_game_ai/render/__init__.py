@@ -4,9 +4,6 @@ from pygame import Vector2
 
 from two_d_game_ai.world import World
 
-BACKGROUND_COLOR = GREY_80 = (51, 51, 51)
-FOREGROUND_COLOR = RED = (255, 0, 0)
-
 
 def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2:
     """Scale and offset world coordinates to display window coordinates.
