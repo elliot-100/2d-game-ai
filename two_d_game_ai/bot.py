@@ -9,7 +9,12 @@ from typing import TYPE_CHECKING
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
-from two_d_game_ai.maths import point_in_or_on_circle, relative_bearing_degrees
+from two_d_game_ai.navigation import (
+    bearing_from_vector,
+    point_in_or_on_circle,
+    relative_bearing_normalised,
+    vector_from_bearing,
+)
 from two_d_game_ai.observer import Subject
 
 if TYPE_CHECKING:
@@ -46,7 +51,7 @@ class Bot(Subject):
 
     MAX_SPEED = 60  # World units / s
     MAX_ROTATION_RATE = 90  # degrees / s
-    INITIAL_HEADING = Vector2(0, 1) # World coordinates
+    INITIAL_HEADING_DEGREES = 0  # degrees
     VISION_CONE_ANGLE = 90  # degrees
     DESTINATION_ARRIVAL_TOLERANCE = 1  # World units
 
@@ -56,7 +61,7 @@ class Bot(Subject):
         self.destination: None | Vector2 = None
         self.pos = pos
         self.velocity = Vector2(0, 0)
-        self.heading = Bot.INITIAL_HEADING.copy()
+        self.heading = vector_from_bearing(Bot.INITIAL_HEADING_DEGREES)
         self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
         self.world.bots.append(self)
@@ -66,6 +71,11 @@ class Bot(Subject):
     def speed(self) -> float:
         """Return speed."""
         return self.velocity.magnitude()
+
+    @property
+    def heading_degrees(self) -> float:
+        """Return heading in degrees."""
+        return bearing_from_vector(self.heading)
 
     @property
     def is_at_destination(self) -> bool:
@@ -110,7 +120,7 @@ class Bot(Subject):
             return
 
         if self.destination:
-            destination_relative_bearing = relative_bearing_degrees(
+            destination_relative_bearing = relative_bearing_normalised(
                 self.heading,
                 self.destination - self.pos,
             )
@@ -118,7 +128,8 @@ class Bot(Subject):
             #  if Bot can complete rotation to face destination this step...
             if self.max_rotation_delta >= abs(destination_relative_bearing):
                 # face destination precisely
-                self.heading.rotate_ip(destination_relative_bearing)
+                # NB legacy use of Pygame CCW rotation here:
+                self.heading.rotate_ip(-destination_relative_bearing)
                 # move towards destination
                 self.velocity = self.heading * Bot.MAX_SPEED
 
@@ -127,7 +138,8 @@ class Bot(Subject):
                 self.heading.rotate_ip(
                     math.copysign(
                         self.max_rotation_delta,
-                        destination_relative_bearing,
+                        # NB legacy use of Pygame CCW rotation here:
+                        -destination_relative_bearing,
                     ),
                 )
         self.move()
@@ -144,5 +156,5 @@ class Bot(Subject):
 
         Considers only the Bot vision cone angle.
         """
-        relative_bearing_to_point = relative_bearing_degrees(self.heading, point)
+        relative_bearing_to_point = relative_bearing_normalised(self.heading, point)
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2

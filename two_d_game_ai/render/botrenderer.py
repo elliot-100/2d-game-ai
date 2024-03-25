@@ -56,9 +56,7 @@ class BotRenderer:
         )
 
         # Heading indicator (line from centre to 'nose')
-        nose_offset = Vector2(self.ICON_RADIUS, 0).rotate(
-            self.bot.heading.as_polar()[1],
-        )
+        nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading_degrees)
         self._draw_scaled_line(
             BACKGROUND_COLOR,
             self.bot.pos,
