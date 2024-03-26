@@ -2,6 +2,8 @@
 
 from pygame import Vector2
 
+CIRCLE_DEGREES = 360
+
 
 def vector_from_bearing(bearing: float) -> Vector2:
     """Return conventional Cartesian coordinate vector from bearing.
@@ -18,7 +20,7 @@ def vector_from_bearing(bearing: float) -> Vector2:
     North at (0,1); East at (1,0).
     """
     vector2 = Vector2()
-    vector2.from_polar((1, bearing - 90))
+    vector2.from_polar((1, bearing - CIRCLE_DEGREES / 4))
     return Vector2(vector2.x, -vector2.y)
 
 
@@ -36,9 +38,9 @@ def bearing_from_vector(vector: Vector2) -> float:
     The bearing (aka azimuthal angle) in degrees clockwise
     0 >= bearing < 360
     """
-    angle = -vector.as_polar()[1] + 90
+    angle = -vector.as_polar()[1] + CIRCLE_DEGREES / 4
     if angle < 0:
-        angle += 360
+        angle += CIRCLE_DEGREES
     return angle
 
 
@@ -52,7 +54,7 @@ def relative_bearing(heading: Vector2, displacement: Vector2) -> float:
     """
     angle = -heading.angle_to(displacement)
     if angle < 0:
-        angle += 360
+        angle += CIRCLE_DEGREES
     return angle
 
 
@@ -66,8 +68,8 @@ def relative_bearing_normalised(heading: Vector2, displacement: Vector2) -> floa
     -180 < bearing <= 180
     """
     angle = relative_bearing(heading, displacement)
-    if angle > 180:
-        angle -= 360
+    if angle > CIRCLE_DEGREES / 2:
+        angle -= CIRCLE_DEGREES
     return angle
 
 

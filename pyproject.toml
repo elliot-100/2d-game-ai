@@ -53,21 +53,27 @@ show_error_codes = true  # additional to 'strict' config
 pretty = true  # additional to 'strict' config
 
 [tool.ruff.lint]
-# Enable rulesets:
-# flake8-ANNotations, flake8-COMmas, pyDocstyle, pycodestylE, pyFlakes,
-# flake8-Future-Annotations, Isort, flake8-bandit (S), flake8-Type-CHecking
-select = ["ANN", "COM", "D", "E", "F", "FA", "I", "S", "TCH"]
-# Ignore rules:
-# ANN101: Missing type annotation for `self` in method
-# COM812: missing-trailing-comma
-# D205: 1 blank line required between summary line and description
-ignore = ["ANN101", "COM812", "D205"]
+select = ["ALL"]
+# Ignore rules that conflict with Ruff formatter:
+#   COM812: Trailing comma missing
+#   ISC001: Implicitly concatenated string literals on one line
+# Ignore other rules:
+#   ANN101: Missing type annotation for `self` in method
+#   D205: 1 blank line required between summary line and description
+#   FIX002: Line contains TODO, consider resolving the issue
+#   TD002: Missing author in TODO
+#   TD003: Missing issue link on the line following this TODO
+ignore = ["COM812", "ISC001", "ANN101","D205", "FIX002", "TD002", "TD003" ]
 
 [tool.ruff.lint.per-file-ignores]
-# assert: fine in tests!
-"**/{tests}/*" = ["S101"]
-# any-type: used by Invoke
-"tasks.py" = ["ANN401"]
+# Ignore rules that aren't relevant in tests:
+#   PLR2004: Magic value used in comparison: fine in tests
+#   S101: Use of assert detected: fine in tests
+"tests/*" = ["PLR2004", "S101"]
+# Ignore rules for Invoke command-line tooling:
+#   ANN401: Dynamically typed expressions (typing.Any)
+#   T201 `print` found
+"tasks.py" = ["ANN401", "T201"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
