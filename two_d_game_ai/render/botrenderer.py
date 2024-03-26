@@ -50,6 +50,7 @@ class BotRenderer:
         """Draws the Bot and decorations to the surface."""
         if self.bot.destination:
             self.draw_destination()
+        self.draw_vision_cone()
         if self.bot.visible_bots:
             for visible_bot in self.bot.visible_bots:
                 self.draw_visible_line(visible_bot)
@@ -69,6 +70,7 @@ class BotRenderer:
         )
 
         # Heading indicator (line from centre to 'nose')
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading_degrees)
         self._draw_scaled_line(
             color=colors.BACKGROUND,
@@ -130,6 +132,32 @@ class BotRenderer:
             color=colors.KNOWS,
             start_pos=self.bot.pos,
             end_pos=other_bot.pos,
+        )
+
+    def draw_vision_cone(self) -> None:
+        """Draw Bot vision cone to surface."""
+        start_angle = self.bot.heading_degrees - self.bot.VISION_CONE_ANGLE / 2
+        end_angle = self.bot.heading_degrees + self.bot.VISION_CONE_ANGLE / 2
+        vision_limit_offset = Vector2(0, 10)
+
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
+        start_wedge_point = self.bot.pos + vision_limit_offset.rotate(-start_angle)
+        end_wedge_point = self.bot.pos + vision_limit_offset.rotate(-end_angle)
+
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.bot.pos,
+            end_pos=start_wedge_point,
+        )
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=start_wedge_point,
+            end_pos=end_wedge_point,
+        )
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.bot.pos,
+            end_pos=end_wedge_point,
         )
 
     def _draw_scaled_line(

@@ -128,7 +128,7 @@ class Bot(Subject):
             #  if Bot can complete rotation to face destination this step...
             if self.max_rotation_delta >= abs(destination_relative_bearing):
                 # face destination precisely
-                # NB legacy use of Pygame CCW rotation here:
+                # NB legacy use of Pygame CCW rotation here, thus negative angle:
                 self.heading.rotate_ip(-destination_relative_bearing)
                 # move towards destination
                 self.velocity = self.heading * Bot.MAX_SPEED
@@ -138,7 +138,8 @@ class Bot(Subject):
                 self.heading.rotate_ip(
                     math.copysign(
                         self.max_rotation_delta,
-                        # NB legacy use of Pygame CCW rotation here:
+                        # NB legacy use of Pygame CCW rotation here, thus negative
+                        # angle:
                         -destination_relative_bearing,
                     ),
                 )
