@@ -1,7 +1,7 @@
 """Command line task runners.
 
-`inv -l` to list commands.
-
+`inv {task}` to run a task.
+`inv -l` to list tasks.
 """
 
 from typing import Any
@@ -12,14 +12,17 @@ from invoke import task
 
 @task
 def fmt(c: Any) -> None:
-    """Format project."""
+    """Format project with Ruff."""
+    print("Formatting with Ruff...")
     c.run("ruff format")
 
 
 @task
 def lint(c: Any) -> None:
-    """Lint and autofix; typecheck project."""
+    """Lint and autofix project with Ruff; typecheck project with Mypy."""
+    print("Linting and auto-fixing with Ruff...")
     c.run("ruff check --fix")
+    print("Type checking with Mypy...")
     c.run("mypy .")
 
 
