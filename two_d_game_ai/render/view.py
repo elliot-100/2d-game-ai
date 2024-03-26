@@ -55,6 +55,7 @@ class View(Observer):
 
     def handle_window_close(self) -> None:
         """Wrap Pygame window close handling."""
+        # TODO: More efficient event checking
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
@@ -93,10 +94,10 @@ class View(Observer):
 
     def draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
+        elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
         text = self.font.render(
             text=(
-                "sim elapsed: "
-                f"{self.world.step_counter * SIMULATION_STEP_INTERVAL_S:.1f} s\n"
+                f"sim elapsed: {elapsed_time:.1f} s\n"
                 f"sim step: {self.world.step_counter}"
             ),
             antialias=True,
