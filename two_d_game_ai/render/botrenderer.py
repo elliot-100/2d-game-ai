@@ -46,6 +46,19 @@ class BotRenderer:
         self.scale_factor = scale_factor
         self.font = font
 
+    def draw(self) -> None:
+        """Draws the Bot and decorations to the surface."""
+        if self.bot.destination:
+            self.draw_destination()
+        if self.bot.visible_bots:
+            for visible_bot in self.bot.visible_bots:
+                self.draw_visible_line(visible_bot)
+        if self.bot.known_bots:
+            for known_bot in self.bot.known_bots:
+                self.draw_known_line(known_bot)
+        self.draw_icon()
+        self.draw_label()
+
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
         pygame.draw.circle(
