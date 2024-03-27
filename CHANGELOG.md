@@ -17,10 +17,14 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Fixed
 
+- Mypy warning: `--strict-concatenate is deprecated ...`
+
 ### Changed
 
+- Refactor bearing calculations, colours, draw/blit calls
 - CI: use ruff format instead of black + isort
 - Upgrade dev/test dependencies: pytest, ruff
+- Remove `poetry.lock` from repo for now
 
 ### Removed
 

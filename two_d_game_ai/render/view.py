@@ -4,7 +4,6 @@ import pygame
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
-from two_d_game_ai.bot import Bot
 from two_d_game_ai.observer import Observer
 from two_d_game_ai.render import colors, to_display
 from two_d_game_ai.render.botrenderer import BotRenderer
@@ -56,6 +55,7 @@ class View(Observer):
 
     def handle_window_close(self) -> None:
         """Wrap Pygame window close handling."""
+        # TODO: More efficient event checking
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
@@ -71,7 +71,12 @@ class View(Observer):
         self.window.fill(colors.BACKGROUND)
         self.draw_world_limits()
         for bot in self.world.bots:
-            self.draw_bot(bot)
+            BotRenderer(
+                bot=bot,
+                surface=self.window,
+                scale_factor=self.scale_factor,
+                font=self.font,
+            ).draw()
         self.draw_step_counter()
 
         # update entire display
@@ -87,39 +92,12 @@ class View(Observer):
             1,
         )
 
-    def draw_bot(self, bot: Bot) -> None:
-        """Draw a Bot and decorations.
-
-        Drawn in order, bottom layer to top.
-
-        Attributes
-        ----------
-        bot: Bot
-            The Bot to render
-        """
-        bot_renderer = BotRenderer(
-            bot=bot,
-            surface=self.window,
-            scale_factor=self.scale_factor,
-            font=self.font,
-        )
-        if bot.destination:
-            bot_renderer.draw_destination()
-        if bot.visible_bots:
-            for visible_bot in bot.visible_bots:
-                bot_renderer.draw_visible_line(visible_bot)
-        if bot.known_bots:
-            for known_bot in bot.known_bots:
-                bot_renderer.draw_known_line(known_bot)
-        bot_renderer.draw_icon()
-        bot_renderer.draw_label()
-
     def draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
+        elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
         text = self.font.render(
             text=(
-                "sim elapsed: "
-                f"{self.world.step_counter * SIMULATION_STEP_INTERVAL_S:.1f} s\n"
+                f"sim elapsed: {elapsed_time:.1f} s\n"
                 f"sim step: {self.world.step_counter}"
             ),
             antialias=True,
