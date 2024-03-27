@@ -1,4 +1,4 @@
-"""View class: Renderer using Pygame."""
+"""View class: renders a World using Pygame."""
 
 import pygame
 from pygame import Vector2

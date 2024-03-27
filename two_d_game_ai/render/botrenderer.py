@@ -1,4 +1,4 @@
-"""BotRenderer class."""
+"""BotRenderer class: responsible for rendering a Bot and decorations."""
 
 from __future__ import annotations
 
