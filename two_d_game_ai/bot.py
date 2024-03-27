@@ -10,11 +10,9 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.navigation import (
-    bearing_from_vector,
     point_in_or_on_circle,
-    relative_bearing_normalised,
-    vector_from_bearing,
 )
+from two_d_game_ai.navigation.bearing import Bearing
 from two_d_game_ai.observer import Subject
 
 if TYPE_CHECKING:
@@ -61,7 +59,7 @@ class Bot(Subject):
         self.destination: None | Vector2 = None
         self.pos = pos
         self.velocity = Vector2(0, 0)
-        self.heading = vector_from_bearing(Bot.INITIAL_HEADING_DEGREES)
+        self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES).to_vector()
         self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
         self.world.bots.append(self)
@@ -75,7 +73,7 @@ class Bot(Subject):
     @property
     def heading_degrees(self) -> float:
         """Return heading in degrees."""
-        return bearing_from_vector(self.heading)
+        return Bearing.from_vector(self.heading)
 
     @property
     def is_at_destination(self) -> bool:
@@ -120,7 +118,7 @@ class Bot(Subject):
             return
 
         if self.destination:
-            destination_relative_bearing = relative_bearing_normalised(
+            destination_relative_bearing = Bearing.relative_normalised(
                 self.heading,
                 self.destination - self.pos,
             )
@@ -157,5 +155,5 @@ class Bot(Subject):
 
         Considers only the Bot vision cone angle.
         """
-        relative_bearing_to_point = relative_bearing_normalised(self.heading, point)
+        relative_bearing_to_point = Bearing.relative_normalised(self.heading, point)
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
