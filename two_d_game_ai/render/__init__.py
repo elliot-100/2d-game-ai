@@ -8,7 +8,7 @@ from two_d_game_ai.world import World
 
 
 def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2:
-    """Scale and offset world coordinates to display window coordinates.
+    """Convert world coordinates to Pygame-compatible coordinates.
 
     Parameters
     ----------
