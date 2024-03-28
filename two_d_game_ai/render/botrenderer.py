@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+from math import radians
 from typing import TYPE_CHECKING
 
 import pygame
 from pygame import Color, Font, Rect, Surface, Vector2
 
-from two_d_game_ai.render import colors, to_display_angle_rad
+from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:
     from two_d_game_ai.bot import Bot
@@ -200,8 +201,8 @@ class BotRenderer:
             surface=self.view.window,
             color=color,
             rect=enclosing_rect,
-            start_angle=to_display_angle_rad(stop_angle),
-            stop_angle=to_display_angle_rad(start_angle),
+            start_angle=_to_display_radians(stop_angle),
+            stop_angle=_to_display_radians(start_angle),
             width=width,
         )
 
@@ -214,6 +215,24 @@ class BotRenderer:
     ) -> None:
         self.view.window.blit(
             source=source,
-            dest=self.view.to_display(dest)
-            + display_offset,
+            dest=self.view.to_display(dest) + display_offset,
         )
+
+
+def _to_display_radians(bearing_deg: float) -> float:
+    """Convert bearing (degrees) to Pygame-compatible angle (radians).
+
+    For use in e.g. calls to `pygame.draw.arc`
+
+    Parameters
+    ----------
+    bearing_deg
+        Conventional bearing angle in degrees CCW from North
+
+    Returns
+    -------
+    float
+        Pygame-compatible angle in radians CW from East
+
+    """
+    return radians(-bearing_deg + 90)
