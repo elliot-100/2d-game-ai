@@ -35,16 +35,18 @@ class Bot(Subject):
     name: str
     pos: Vector2
         Position (World coordinates)
-    velocity: Vector2
-        Velocity as a vector (World coordinates / s)
     visible_bots: set[Bot]
         The Bot's visible peers.
     world: World
 
-    Read-only properties
-    --------------------
-    speed: float
+    Non-public attributes/properties
+    --------------------------------
+    _speed: float
         Speed as a scalar (World units / s)
+        Read-only.
+    _velocity: Vector2
+        Velocity as a vector (World coordinates / s)
+
     """
 
     MAX_SPEED = 60  # World units / s
@@ -58,7 +60,7 @@ class Bot(Subject):
         self.world = world
         self.destination: None | Vector2 = None
         self.pos = pos
-        self.velocity = Vector2(0, 0)
+        self._velocity = Vector2(0, 0)
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
@@ -66,9 +68,9 @@ class Bot(Subject):
         logging.info("Bot `%s` created.", self.name)
 
     @property
-    def speed(self) -> float:
+    def _speed(self) -> float:
         """Return speed."""
-        return self.velocity.magnitude()
+        return self._velocity.magnitude()
 
     @property
     def is_at_destination(self) -> bool:
@@ -93,7 +95,7 @@ class Bot(Subject):
         if self.is_at_destination:
             self.notify_observers("I've reached destination")
             self.destination = None
-            self.velocity = Vector2(0)
+            self._velocity = Vector2(0)
             return
 
         if self.destination:
@@ -106,7 +108,7 @@ class Bot(Subject):
                 # face destination precisely
                 self.rotate(-destination_relative_bearing)
                 # initiate move towards destination
-                self.velocity = self.heading.vector * Bot.MAX_SPEED
+                self._velocity = self.heading.vector * Bot.MAX_SPEED
 
             else:
                 # turn towards destination
@@ -132,7 +134,7 @@ class Bot(Subject):
 
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
-        self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
+        self.pos += self._velocity * SIMULATION_STEP_INTERVAL_S
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
