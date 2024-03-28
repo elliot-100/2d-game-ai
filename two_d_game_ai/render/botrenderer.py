@@ -1,4 +1,4 @@
-"""BotRenderer class."""
+"""BotRenderer class: responsible for rendering a Bot and decorations."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from two_d_game_ai.render import colors, to_display, to_display_angle_rad
 
 if TYPE_CHECKING:
     from two_d_game_ai.bot import Bot
+    from two_d_game_ai.render.view import View
 
 
 class BotRenderer:
@@ -20,12 +21,10 @@ class BotRenderer:
 
     Attributes
     ----------
+    view:
+        The View context
     bot: Bot
         The Bot to render
-    surface: Surface
-        Pygame Surface to render to
-    scale_factor: float
-        Rendering scale factor
     font: Font
         # TODO
     """
@@ -36,14 +35,12 @@ class BotRenderer:
     def __init__(
         self,
         *,
+        view: View,
         bot: Bot,
-        surface: Surface,
-        scale_factor: float,
         font: Font,
     ) -> None:
+        self.view = view
         self.bot = bot
-        self.surface = surface
-        self.scale_factor = scale_factor
         self.font = font
 
     def draw(self) -> None:
@@ -62,9 +59,11 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        bot_display_center = to_display(self.bot.world, self.bot.pos, self.scale_factor)
+        bot_display_center = to_display(
+            self.view.world, self.bot.pos, self.view.scale_factor
+        )
         pygame.draw.circle(
-            surface=self.surface,
+            surface=self.view.window,
             color=colors.FOREGROUND,
             center=bot_display_center,
             radius=self.ICON_RADIUS,
@@ -76,7 +75,7 @@ class BotRenderer:
         self._draw_scaled_line(
             color=colors.BACKGROUND,
             start_pos=self.bot.pos,
-            end_pos=self.bot.pos + nose_offset / self.scale_factor,
+            end_pos=self.bot.pos + nose_offset / self.view.scale_factor,
             width=3,
         )
 
@@ -99,7 +98,7 @@ class BotRenderer:
             raise TypeError
 
         # Destination marker (X)
-        offset = self.ICON_RADIUS / self.scale_factor
+        offset = self.ICON_RADIUS / self.view.scale_factor
         self._draw_scaled_line(
             color=colors.FOREGROUND,
             start_pos=self.bot.destination + Vector2(-offset, -offset),
@@ -174,10 +173,10 @@ class BotRenderer:
         width: int = 1,
     ) -> None:
         pygame.draw.line(
-            surface=self.surface,
+            surface=self.view.window,
             color=color,
-            start_pos=to_display(self.bot.world, start_pos, self.scale_factor),
-            end_pos=to_display(self.bot.world, end_pos, self.scale_factor),
+            start_pos=to_display(self.view.world, start_pos, self.view.scale_factor),
+            end_pos=to_display(self.view.world, end_pos, self.view.scale_factor),
             width=width,
         )
 
@@ -193,14 +192,14 @@ class BotRenderer:
         """Draw a circular arc, scaled to display coordinates."""
         enclosing_rect = Rect(0, 0, 0, 0)
         enclosing_rect.width = enclosing_rect.height = int(
-            2 * radius * self.scale_factor
+            2 * radius * self.view.scale_factor
         )
-        display_center = to_display(self.bot.world, center, self.scale_factor)
+        display_center = to_display(self.view.world, center, self.view.scale_factor)
         # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
         enclosing_rect.center = int(display_center.x), int(display_center.y)
 
         pygame.draw.arc(
-            surface=self.surface,
+            surface=self.view.window,
             color=color,
             rect=enclosing_rect,
             start_angle=to_display_angle_rad(stop_angle),
@@ -215,7 +214,8 @@ class BotRenderer:
         dest: Vector2,
         display_offset: tuple[int, int],
     ) -> None:
-        self.surface.blit(
+        self.view.window.blit(
             source=source,
-            dest=to_display(self.bot.world, dest, self.scale_factor) + display_offset,
+            dest=to_display(self.view.world, dest, self.view.scale_factor)
+            + display_offset,
         )

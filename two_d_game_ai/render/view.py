@@ -1,4 +1,4 @@
-"""View class: Renderer using Pygame."""
+"""View class: renders a World using Pygame."""
 
 import pygame
 from pygame import Vector2
@@ -72,9 +72,8 @@ class View(Observer):
         self.draw_world_limits()
         for bot in self.world.bots:
             BotRenderer(
+                view=self,
                 bot=bot,
-                surface=self.window,
-                scale_factor=self.scale_factor,
                 font=self.font,
             ).draw()
         self.draw_step_counter()
