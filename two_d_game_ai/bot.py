@@ -9,11 +9,9 @@ from typing import TYPE_CHECKING
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai.bearing import Bearing
 from two_d_game_ai.navigation import (
-    bearing_from_vector,
     point_in_or_on_circle,
-    relative_bearing_normalised,
-    vector_from_bearing,
 )
 from two_d_game_ai.observer import Subject
 
@@ -30,8 +28,8 @@ class Bot(Subject):
     ----------
     destination: Vector2
         Destination point (World coordinates)
-    heading: Vector2
-        Heading (World coordinates)
+    heading: Bearing
+        Heading
     known_bots: set[Bot]
         The Bot's known but not visible peers
     name: str
@@ -61,7 +59,7 @@ class Bot(Subject):
         self.destination: None | Vector2 = None
         self.pos = pos
         self.velocity = Vector2(0, 0)
-        self.heading = vector_from_bearing(Bot.INITIAL_HEADING_DEGREES)
+        self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
         self.world.bots.append(self)
@@ -71,11 +69,6 @@ class Bot(Subject):
     def speed(self) -> float:
         """Return speed."""
         return self.velocity.magnitude()
-
-    @property
-    def heading_degrees(self) -> float:
-        """Return heading in degrees."""
-        return bearing_from_vector(self.heading)
 
     @property
     def is_at_destination(self) -> bool:
@@ -89,16 +82,59 @@ class Bot(Subject):
         return False
 
     @property
-    def max_rotation_delta(self) -> float:
+    def max_rotation_step(self) -> float:
         """Return maximum rotation in one simulation step."""
         return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
+
+    def update(self, other_bots: list[Bot]) -> None:
+        """Update Bot, including move over 1 simulation step."""
+        self._handle_sensing(other_bots)
+
+        if self.is_at_destination:
+            self.notify_observers("I've reached destination")
+            self.destination = None
+            self.velocity = Vector2(0)
+            return
+
+        if self.destination:
+            destination_relative_bearing = self.heading.relative(
+                self.destination - self.pos
+            ).degrees_normalised
+
+            #  if Bot can complete rotation to face destination this step...
+            if abs(destination_relative_bearing) <= self.max_rotation_step:
+                # face destination precisely
+                self.rotate(-destination_relative_bearing)
+                # initiate move towards destination
+                self.velocity = self.heading.vector * Bot.MAX_SPEED
+
+            else:
+                # turn towards destination
+                self.rotate(
+                    math.copysign(
+                        self.max_rotation_step,
+                        destination_relative_bearing,
+                    ),
+                )
+        self.move()
+
+    def rotate(self, rotation_delta: float) -> None:
+        """Change Bot rotation over 1 simulation step.
+
+        Parameters
+        ----------
+        rotation_delta : float
+            Rotation in degrees
+
+        """
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
+        self.heading.vector.rotate_ip(-rotation_delta)
 
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
         self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
 
-    def update(self, other_bots: list[Bot]) -> None:
-        """Update Bot, including move over 1 simulation step."""
+    def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
         newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
@@ -113,38 +149,6 @@ class Bot(Subject):
                 self.visible_bots.remove(newly_lost_bot)
                 self.known_bots.add(newly_lost_bot)
 
-        if self.is_at_destination:
-            self.notify_observers("I've reached destination")
-            self.destination = None
-            self.velocity = Vector2(0)
-            return
-
-        if self.destination:
-            destination_relative_bearing = relative_bearing_normalised(
-                self.heading,
-                self.destination - self.pos,
-            )
-
-            #  if Bot can complete rotation to face destination this step...
-            if self.max_rotation_delta >= abs(destination_relative_bearing):
-                # face destination precisely
-                # NB legacy use of Pygame CCW rotation here, thus negative angle:
-                self.heading.rotate_ip(-destination_relative_bearing)
-                # move towards destination
-                self.velocity = self.heading * Bot.MAX_SPEED
-
-            else:
-                # turn towards destination
-                self.heading.rotate_ip(
-                    math.copysign(
-                        self.max_rotation_delta,
-                        # NB legacy use of Pygame CCW rotation here, thus negative
-                        # angle:
-                        -destination_relative_bearing,
-                    ),
-                )
-        self.move()
-
     def can_see(self, other_bot: Bot) -> bool:
         """Determine whether the Bot can see another Bot.
 
@@ -157,5 +161,8 @@ class Bot(Subject):
 
         Considers only the Bot vision cone angle.
         """
-        relative_bearing_to_point = relative_bearing_normalised(self.heading, point)
+        relative_bearing_to_point = self.heading.relative(
+            point - self.pos
+        ).degrees_normalised
+
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2

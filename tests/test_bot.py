@@ -24,7 +24,7 @@ def test_create() -> None:
     assert b.velocity == Vector2(0, 0)
     assert b.speed == 0
     # Test Bot defaults
-    assert b.heading_degrees == Bot.INITIAL_HEADING_DEGREES
+    assert b.heading.vector == Vector2(0, 1)
 
 
 def test_can_see_point__in_range() -> None:

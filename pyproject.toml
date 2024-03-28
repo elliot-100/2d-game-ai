@@ -59,11 +59,13 @@ select = ["ALL"]
 #   ISC001: Implicitly concatenated string literals on one line
 # Ignore other rules:
 #   ANN101: Missing type annotation for `self` in method
+#   ANN102: Missing type annotation for `cls` in classmethod
 #   D205: 1 blank line required between summary line and description
+#   ERA001 Found commented-out code
 #   FIX002: Line contains TODO, consider resolving the issue
 #   TD002: Missing author in TODO
 #   TD003: Missing issue link on the line following this TODO
-ignore = ["COM812", "ISC001", "ANN101","D205", "FIX002", "TD002", "TD003" ]
+ignore = ["COM812", "ISC001", "ANN101", "ANN102", "D205", "ERA001", "FIX002", "TD002", "TD003" ]
 
 [tool.ruff.lint.per-file-ignores]
 # Ignore rules that aren't relevant in tests:
