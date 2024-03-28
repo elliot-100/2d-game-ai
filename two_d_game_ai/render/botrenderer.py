@@ -62,10 +62,11 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
+        bot_display_center = to_display(self.bot.world, self.bot.pos, self.scale_factor)
         pygame.draw.circle(
             surface=self.surface,
             color=colors.FOREGROUND,
-            center=to_display(self.bot.world, self.bot.pos, self.scale_factor),
+            center=bot_display_center,
             radius=self.ICON_RADIUS,
         )
 
@@ -75,7 +76,7 @@ class BotRenderer:
         self._draw_scaled_line(
             color=colors.BACKGROUND,
             start_pos=self.bot.pos,
-            end_pos=self.bot.pos + nose_offset,
+            end_pos=self.bot.pos + nose_offset / self.scale_factor,
             width=3,
         )
 
