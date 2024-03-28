@@ -13,6 +13,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
+- Draw Bot vision cone indicator (doesn't reflect infinite vision range)
 - `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
 
 ### Fixed
