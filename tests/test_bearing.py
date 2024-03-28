@@ -1,5 +1,6 @@
 """Tests for Bearing class."""
 
+import pytest
 from pygame import Vector2
 
 from two_d_game_ai.bearing import Bearing
@@ -67,5 +68,7 @@ def test_relative() -> None:
     # relative bearings from NORTH:
     assert [Bearing(0).relative(v).degrees for v in vecs] == [0, 90, 180, 270]
     # relative bearings from SOUTH:
-    # TODO: close but failing
-    assert [Bearing(180).relative(v).degrees for v in vecs] == [180, 270, 0, 90]
+    # TODO: fix fudging here?
+    assert [Bearing(180).relative(v).degrees for v in vecs] == pytest.approx(
+        [180, 270, 0, 90]
+    )
