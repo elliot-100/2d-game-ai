@@ -69,19 +69,19 @@ class View(Observer):
         self.clock.tick(self.max_render_fps)
 
         self.window.fill(colors.BACKGROUND)
-        self.draw_world_limits()
+        self._draw_world_limits()
         for bot in self.world.bots:
             BotRenderer(
                 view=self,
                 bot=bot,
                 font=self.font,
             ).draw()
-        self.draw_step_counter()
+        self._draw_step_counter()
 
         # update entire display
         pygame.display.flip()
 
-    def draw_world_limits(self) -> None:
+    def _draw_world_limits(self) -> None:
         """Draw the World limits as a circle."""
         pygame.draw.circle(
             self.window,
@@ -91,7 +91,7 @@ class View(Observer):
             1,
         )
 
-    def draw_step_counter(self) -> None:
+    def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
         text = self.font.render(
