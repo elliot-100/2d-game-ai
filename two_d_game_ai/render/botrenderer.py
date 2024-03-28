@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Color, Font, Rect, Surface, Vector2
 
-from two_d_game_ai.render import colors, to_display, to_display_angle_rad
+from two_d_game_ai.render import colors, to_display_angle_rad
 
 if TYPE_CHECKING:
     from two_d_game_ai.bot import Bot
@@ -59,9 +59,7 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        bot_display_center = to_display(
-            self.view.world, self.bot.pos, self.view.scale_factor
-        )
+        bot_display_center = self.view.to_display(self.bot.pos)
         pygame.draw.circle(
             surface=self.view.window,
             color=colors.FOREGROUND,
@@ -175,8 +173,8 @@ class BotRenderer:
         pygame.draw.line(
             surface=self.view.window,
             color=color,
-            start_pos=to_display(self.view.world, start_pos, self.view.scale_factor),
-            end_pos=to_display(self.view.world, end_pos, self.view.scale_factor),
+            start_pos=self.view.to_display(start_pos),
+            end_pos=self.view.to_display(end_pos),
             width=width,
         )
 
@@ -194,7 +192,7 @@ class BotRenderer:
         enclosing_rect.width = enclosing_rect.height = int(
             2 * radius * self.view.scale_factor
         )
-        display_center = to_display(self.view.world, center, self.view.scale_factor)
+        display_center = self.view.to_display(center)
         # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
         enclosing_rect.center = int(display_center.x), int(display_center.y)
 
@@ -216,6 +214,6 @@ class BotRenderer:
     ) -> None:
         self.view.window.blit(
             source=source,
-            dest=to_display(self.view.world, dest, self.view.scale_factor)
+            dest=self.view.to_display(dest)
             + display_offset,
         )

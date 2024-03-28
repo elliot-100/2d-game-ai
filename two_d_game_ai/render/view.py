@@ -5,7 +5,7 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.observer import Observer
-from two_d_game_ai.render import colors, to_display
+from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
 from two_d_game_ai.world import World
 
@@ -86,7 +86,7 @@ class View(Observer):
         pygame.draw.circle(
             self.window,
             colors.FOREGROUND,
-            to_display(self.world, Vector2(0, 0), self.scale_factor),
+            self.to_display(Vector2(0, 0)),
             self.world.radius * self.scale_factor,
             1,
         )
@@ -103,3 +103,21 @@ class View(Observer):
             color=colors.LABEL,
         )
         self.window.blit(text, (0, 0))
+
+    def to_display(self, world_pos: Vector2) -> Vector2:
+        """Convert world coordinates to Pygame-compatible coordinates.
+
+        Parameters
+        ----------
+        world_pos
+            World coordinates
+
+        Returns
+        -------
+        Vector2
+            Display window coordinates.
+            Origin is at centre, positive y upwards (opposite to Pygame, etc).
+        """
+        display_pos = self.scale_factor * Vector2(world_pos.x, -world_pos.y)
+        offset = self.scale_factor * Vector2(self.world.radius, self.world.radius)
+        return display_pos + offset
