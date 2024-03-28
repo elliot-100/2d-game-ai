@@ -12,7 +12,7 @@ def to_display(world: World, world_pos: Vector2, scale_factor: float) -> Vector2
 
     Parameters
     ----------
-    world: World
+    world
     world_pos
         World coordinates
     scale_factor
@@ -35,7 +35,7 @@ def to_display_angle_rad(bearing_deg: float) -> float:
 
     Parameters
     ----------
-    bearing_deg: float
+    bearing_deg
         Conventional bearing angle in degrees CCW from North
 
     Returns

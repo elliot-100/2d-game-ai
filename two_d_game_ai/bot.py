@@ -123,7 +123,7 @@ class Bot(Subject):
 
         Parameters
         ----------
-        rotation_delta : float
+        rotation_delta
             Rotation in degrees
 
         """
