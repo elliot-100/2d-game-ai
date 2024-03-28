@@ -45,9 +45,15 @@ def test_bearing_create_cardinal_negative_values() -> None:
 
 
 def test_bearing_cardinal_degrees_preserved() -> None:
-    """# TODO."""
-    degs = [0, 90, 180, 270]
-    assert [Bearing(d).degrees for d in degs] == [0, 90, 180, 270]
+    """0 <= degrees < 360."""
+    degs = [0, 90, 180, 270, 360]
+    assert [Bearing(d).degrees for d in degs] == [0, 90, 180, 270, 0]
+
+
+def test_bearing_degrees_normalised() -> None:
+    """-180 <= degrees < 180."""
+    degs = [0, 90, 180, 270, 360]
+    assert [Bearing(d).degrees_normalised for d in degs] == [0, 90, -180, -90, 0]
 
 
 def test_relative() -> None:
