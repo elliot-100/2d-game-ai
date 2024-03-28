@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pygame
-from pygame import Color, Font, Surface, Vector2
+from pygame import Color, Font, Rect, Surface, Vector2
 
-from two_d_game_ai.render import colors, to_display
+from two_d_game_ai.render import colors, to_display, to_display_angle_rad
 
 if TYPE_CHECKING:
     from two_d_game_ai.bot import Bot
@@ -50,6 +50,7 @@ class BotRenderer:
         """Draws the Bot and decorations to the surface."""
         if self.bot.destination:
             self.draw_destination()
+        self.draw_vision_cone()
         if self.bot.visible_bots:
             for visible_bot in self.bot.visible_bots:
                 self.draw_visible_line(visible_bot)
@@ -69,6 +70,7 @@ class BotRenderer:
         )
 
         # Heading indicator (line from centre to 'nose')
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading_degrees)
         self._draw_scaled_line(
             color=colors.BACKGROUND,
@@ -132,6 +134,36 @@ class BotRenderer:
             end_pos=other_bot.pos,
         )
 
+    def draw_vision_cone(self) -> None:
+        """Draw Bot vision cone to surface."""
+        vision_start_angle = self.bot.heading_degrees - self.bot.VISION_CONE_ANGLE / 2
+        vision_end_angle = self.bot.heading_degrees + self.bot.VISION_CONE_ANGLE / 2
+        vision_limit_offset = Vector2(0, 10)
+
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
+        start_wedge_point = self.bot.pos + vision_limit_offset.rotate(
+            -vision_start_angle
+        )
+        end_wedge_point = self.bot.pos + vision_limit_offset.rotate(-vision_end_angle)
+
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.bot.pos,
+            end_pos=start_wedge_point,
+        )
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.bot.pos,
+            end_pos=end_wedge_point,
+        )
+        self._draw_scaled_circular_arc(
+            color=colors.VISION,
+            center=self.bot.pos,
+            start_angle=vision_start_angle,
+            stop_angle=vision_end_angle,
+            radius=10,
+        )
+
     def _draw_scaled_line(
         self,
         *,
@@ -145,6 +177,33 @@ class BotRenderer:
             color=color,
             start_pos=to_display(self.bot.world, start_pos, self.scale_factor),
             end_pos=to_display(self.bot.world, end_pos, self.scale_factor),
+            width=width,
+        )
+
+    def _draw_scaled_circular_arc(
+        self,
+        color: Color,
+        center: Vector2,
+        radius: int,
+        start_angle: float,
+        stop_angle: float,
+        width: int = 1,
+    ) -> None:
+        """Draw a circular arc, scaled to display coordinates."""
+        enclosing_rect = Rect(0, 0, 0, 0)
+        enclosing_rect.width = enclosing_rect.height = int(
+            2 * radius * self.scale_factor
+        )
+        display_center = to_display(self.bot.world, center, self.scale_factor)
+        # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
+        enclosing_rect.center = int(display_center.x), int(display_center.y)
+
+        pygame.draw.arc(
+            surface=self.surface,
+            color=color,
+            rect=enclosing_rect,
+            start_angle=to_display_angle_rad(stop_angle),
+            stop_angle=to_display_angle_rad(start_angle),
             width=width,
         )
 

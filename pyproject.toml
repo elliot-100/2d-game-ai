@@ -75,6 +75,9 @@ ignore = ["COM812", "ISC001", "ANN101","D205", "FIX002", "TD002", "TD003" ]
 #   T201 `print` found
 "tasks.py" = ["ANN401", "T201"]
 
+[tool.ruff.lint.pylint]
+max-args = 7
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
