@@ -23,6 +23,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
+- Refactor: new Bearing class
 - Refactor bearing calculations, colours, draw/blit calls
 - CI: use ruff format instead of black + isort
 - Upgrade dev/test dependencies: pytest, ruff
