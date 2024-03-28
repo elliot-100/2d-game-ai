@@ -12,7 +12,6 @@ from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.bearing import Bearing
 from two_d_game_ai.navigation import (
     point_in_or_on_circle,
-    relative_bearing_normalised,
 )
 from two_d_game_ai.observer import Subject
 
@@ -162,7 +161,8 @@ class Bot(Subject):
 
         Considers only the Bot vision cone angle.
         """
-        relative_bearing_to_point = relative_bearing_normalised(
-            self.heading.vector, point
-        )
+        relative_bearing_to_point = self.heading.relative(
+            point - self.pos
+        ).degrees_normalised
+
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
