@@ -71,7 +71,7 @@ class BotRenderer:
 
         # Heading indicator (line from centre to 'nose')
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
-        nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading_degrees)
+        nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading.degrees)
         self._draw_scaled_line(
             color=colors.BACKGROUND,
             start_pos=self.bot.pos,
@@ -136,8 +136,8 @@ class BotRenderer:
 
     def draw_vision_cone(self) -> None:
         """Draw Bot vision cone to surface."""
-        vision_start_angle = self.bot.heading_degrees - self.bot.VISION_CONE_ANGLE / 2
-        vision_end_angle = self.bot.heading_degrees + self.bot.VISION_CONE_ANGLE / 2
+        vision_start_angle = self.bot.heading.degrees - self.bot.VISION_CONE_ANGLE / 2
+        vision_end_angle = self.bot.heading.degrees + self.bot.VISION_CONE_ANGLE / 2
         vision_limit_offset = Vector2(0, 10)
 
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
