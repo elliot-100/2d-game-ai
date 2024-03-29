@@ -37,9 +37,10 @@ class Bearing:
 
     @property
     def degrees(self) -> float:
-        """Return the bearing in degrees clockwise from North.
+        """Get bearing: 0 <= degrees < 360, clockwise.
 
-        0 <= degrees < 360
+        Intended for absolute bearings, where North is 0, East is 90, etc.
+
         """
         angle = -self.vector.as_polar()[1] + CIRCLE_DEGREES / 4
         if angle < 0:
@@ -50,7 +51,14 @@ class Bearing:
 
     @property
     def degrees_normalised(self) -> float:
-        """Return -180 <= degrees < 180."""
+        """Get bearing: -180 <= degrees < 180, positive clockwise.
+
+        Intended for relative bearings, where negative value is to left/port; positive
+        is to right/starboard.
+
+        Note: Due south is -180.
+
+        """
         if self.degrees >= CIRCLE_DEGREES / 2:
             return self.degrees - CIRCLE_DEGREES
         return self.degrees

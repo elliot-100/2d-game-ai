@@ -69,12 +69,12 @@ class Bot(Subject):
 
     @property
     def _speed(self) -> float:
-        """Return speed."""
+        """Get speed, in World units / s."""
         return self._velocity.magnitude()
 
     @property
     def is_at_destination(self) -> bool:
-        """Return True if at destination."""
+        """Get whether Bot is at destination (True) or not (False)."""
         if self.destination:
             return point_in_or_on_circle(
                 self.pos,
@@ -85,7 +85,7 @@ class Bot(Subject):
 
     @property
     def max_rotation_step(self) -> float:
-        """Return maximum rotation in one simulation step."""
+        """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
 
     def update(self, other_bots: list[Bot]) -> None:
