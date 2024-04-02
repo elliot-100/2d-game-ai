@@ -35,6 +35,6 @@ def test_update() -> None:
         name="b0",
         pos=Vector2(0, 0),
     )
-    b.velocity = Vector2(1, 0)
+    b._velocity = Vector2(1, 0)
     w.update()
     assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)

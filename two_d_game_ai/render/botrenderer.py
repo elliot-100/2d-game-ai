@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+from math import radians
 from typing import TYPE_CHECKING
 
 import pygame
 from pygame import Color, Font, Rect, Surface, Vector2
 
-from two_d_game_ai.render import colors, to_display, to_display_angle_rad
+from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:
     from two_d_game_ai.bot import Bot
@@ -59,9 +60,7 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        bot_display_center = to_display(
-            self.view.world, self.bot.pos, self.view.scale_factor
-        )
+        bot_display_center = self.view.to_display(self.bot.pos)
         pygame.draw.circle(
             surface=self.view.window,
             color=colors.FOREGROUND,
@@ -175,8 +174,8 @@ class BotRenderer:
         pygame.draw.line(
             surface=self.view.window,
             color=color,
-            start_pos=to_display(self.view.world, start_pos, self.view.scale_factor),
-            end_pos=to_display(self.view.world, end_pos, self.view.scale_factor),
+            start_pos=self.view.to_display(start_pos),
+            end_pos=self.view.to_display(end_pos),
             width=width,
         )
 
@@ -194,7 +193,7 @@ class BotRenderer:
         enclosing_rect.width = enclosing_rect.height = int(
             2 * radius * self.view.scale_factor
         )
-        display_center = to_display(self.view.world, center, self.view.scale_factor)
+        display_center = self.view.to_display(center)
         # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
         enclosing_rect.center = int(display_center.x), int(display_center.y)
 
@@ -202,8 +201,8 @@ class BotRenderer:
             surface=self.view.window,
             color=color,
             rect=enclosing_rect,
-            start_angle=to_display_angle_rad(stop_angle),
-            stop_angle=to_display_angle_rad(start_angle),
+            start_angle=_to_display_radians(stop_angle),
+            stop_angle=_to_display_radians(start_angle),
             width=width,
         )
 
@@ -216,6 +215,24 @@ class BotRenderer:
     ) -> None:
         self.view.window.blit(
             source=source,
-            dest=to_display(self.view.world, dest, self.view.scale_factor)
-            + display_offset,
+            dest=self.view.to_display(dest) + display_offset,
         )
+
+
+def _to_display_radians(bearing_deg: float) -> float:
+    """Convert bearing (degrees) to Pygame-compatible angle (radians).
+
+    For use in e.g. calls to `pygame.draw.arc`
+
+    Parameters
+    ----------
+    bearing_deg
+        Conventional bearing angle in degrees CCW from North
+
+    Returns
+    -------
+    float
+        Pygame-compatible angle in radians CW from East
+
+    """
+    return radians(-bearing_deg + 90)

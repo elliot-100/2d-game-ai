@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
+
 from pygame import Vector2
 
 CIRCLE_DEGREES = 360
 
 
+@dataclass
 class Bearing:
     """Represents a conventional bearing (aka azimuthal angle).
 
@@ -27,19 +30,21 @@ class Bearing:
         The bearing as a standard (positive, right-handed, y-axis up) coordinate vector
     """
 
-    # degrees: float
-    # vector: Vector2
+    vector: Vector2 = field(default_factory=Vector2, init=False)
+    _degrees: float
 
-    def __init__(self, degrees: float) -> None:
+    def __post_init__(self) -> None:
+        """Construct vector from bearing angle."""
         v = Vector2()
-        v.from_polar((1, degrees - CIRCLE_DEGREES / 4))
+        v.from_polar((1, self._degrees - CIRCLE_DEGREES / 4))
         self.vector = _flip_vector_y(v)
 
     @property
     def degrees(self) -> float:
-        """Return the bearing in degrees clockwise from North.
+        """Get bearing: 0 <= degrees < 360, clockwise.
 
-        0 <= degrees < 360
+        Intended for absolute bearings, where North is 0, East is 90, etc.
+
         """
         angle = -self.vector.as_polar()[1] + CIRCLE_DEGREES / 4
         if angle < 0:
@@ -50,7 +55,14 @@ class Bearing:
 
     @property
     def degrees_normalised(self) -> float:
-        """Return -180 <= degrees < 180."""
+        """Get bearing: -180 <= degrees < 180, positive clockwise.
+
+        Intended for relative bearings, where negative value is to left/port; positive
+        is to right/starboard.
+
+        Note: Due south is -180.
+
+        """
         if self.degrees >= CIRCLE_DEGREES / 2:
             return self.degrees - CIRCLE_DEGREES
         return self.degrees

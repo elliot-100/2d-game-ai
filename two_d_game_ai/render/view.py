@@ -5,7 +5,7 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.observer import Observer
-from two_d_game_ai.render import colors, to_display
+from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
 from two_d_game_ai.world import World
 
@@ -69,29 +69,29 @@ class View(Observer):
         self.clock.tick(self.max_render_fps)
 
         self.window.fill(colors.BACKGROUND)
-        self.draw_world_limits()
+        self._draw_world_limits()
         for bot in self.world.bots:
             BotRenderer(
                 view=self,
                 bot=bot,
                 font=self.font,
             ).draw()
-        self.draw_step_counter()
+        self._draw_step_counter()
 
         # update entire display
         pygame.display.flip()
 
-    def draw_world_limits(self) -> None:
+    def _draw_world_limits(self) -> None:
         """Draw the World limits as a circle."""
         pygame.draw.circle(
             self.window,
             colors.FOREGROUND,
-            to_display(self.world, Vector2(0, 0), self.scale_factor),
+            self.to_display(Vector2(0, 0)),
             self.world.radius * self.scale_factor,
             1,
         )
 
-    def draw_step_counter(self) -> None:
+    def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
         text = self.font.render(
@@ -103,3 +103,21 @@ class View(Observer):
             color=colors.LABEL,
         )
         self.window.blit(text, (0, 0))
+
+    def to_display(self, world_pos: Vector2) -> Vector2:
+        """Convert world coordinates to Pygame-compatible coordinates.
+
+        Parameters
+        ----------
+        world_pos
+            World coordinates
+
+        Returns
+        -------
+        Vector2
+            Display window coordinates.
+            Origin is at centre, positive y upwards (opposite to Pygame, etc).
+        """
+        display_pos = self.scale_factor * Vector2(world_pos.x, -world_pos.y)
+        offset = self.scale_factor * Vector2(self.world.radius, self.world.radius)
+        return display_pos + offset

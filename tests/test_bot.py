@@ -21,8 +21,8 @@ def test_create() -> None:
     assert b.pos == Vector2(0.7, 100.35)
 
     # Test that Bot is initially stationary.
-    assert b.velocity == Vector2(0, 0)
-    assert b.speed == 0
+    assert b._velocity == Vector2(0, 0)
+    assert b._speed == 0
     # Test Bot defaults
     assert b.heading.vector == Vector2(0, 1)
 
@@ -61,7 +61,7 @@ def test_move() -> None:
         name="b0",
         pos=Vector2(0, 0),
     )
-    b.velocity = Vector2(1, 0)
+    b._velocity = Vector2(1, 0)
     b.move()
     assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
 
