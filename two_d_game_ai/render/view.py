@@ -49,6 +49,9 @@ class View(Observer):
                 window_dimension,
             ),
         )
+        self._display_offset = self.scale_factor * Vector2(
+            self.world.radius, self.world.radius
+        )
         pygame.display.set_caption(self.CAPTION)
         self.clock = pygame.Clock()
 
@@ -62,9 +65,9 @@ class View(Observer):
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                click_pos = Vector2(event.pos)
+                click_pos = self.from_display(Vector2(event.pos))
                 log_msg = (
-                    f"Mouse button {event.button} pressed at window {click_pos}"
+                    f"Mouse button {event.button} pressed at world {click_pos}"
                 )
                 logging.info(log_msg)
 
@@ -113,7 +116,7 @@ class View(Observer):
         self.window.blit(text, (0, 0))
 
     def to_display(self, world_pos: Vector2) -> Vector2:
-        """Convert world coordinates to Pygame-compatible coordinates.
+        """Convert world coordinates to Pygame display window coordinates.
 
         Parameters
         ----------
@@ -124,8 +127,29 @@ class View(Observer):
         -------
         Vector2
             Display window coordinates.
-            Origin is at centre, positive y upwards (opposite to Pygame, etc).
+            Origin is at centre, positive y upwards.
         """
-        display_pos = self.scale_factor * Vector2(world_pos.x, -world_pos.y)
-        offset = self.scale_factor * Vector2(self.world.radius, self.world.radius)
-        return display_pos + offset
+        pos = world_pos.copy()
+        pos.y = -pos.y
+        pos *= self.scale_factor
+        return pos + self._display_offset
+
+    def from_display(self, display_pos: Vector2) -> Vector2:
+        """Convert Pygame window coordinates to world coordinates.
+        coordinates.
+
+        Parameters
+        ----------
+        display_pos
+            Display window coordinates.
+            Origin is at centre, positive y upwards.
+
+        Returns
+        -------
+        Vector2
+            World coordinates.
+        """
+        pos = display_pos - self._display_offset
+        pos /= self.scale_factor
+        pos.y = -pos.y
+        return pos
