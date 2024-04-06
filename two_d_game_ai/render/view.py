@@ -1,5 +1,7 @@
 """View class: renders a World using Pygame."""
 
+import logging
+
 import pygame
 from pygame import Vector2
 
@@ -53,12 +55,18 @@ class View(Observer):
         for bot in world.bots:
             bot.register_observer(self)
 
-    def handle_window_close(self) -> None:
+    def handle_inputs(self) -> None:
         """Wrap Pygame window close handling."""
         # TODO: More efficient event checking
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                click_pos = Vector2(event.pos)
+                log_msg = (
+                    f"Mouse button {event.button} pressed at window {click_pos}"
+                )
+                logging.info(log_msg)
 
     def render(self) -> None:
         """Render the World to the Pygame window.
