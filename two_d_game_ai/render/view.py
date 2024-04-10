@@ -70,7 +70,14 @@ class View(Observer):
         for bot in world.bots:
             bot.register_observer(self)
 
-        self._bot_renderers: list[BotRenderer] = []
+        self._bot_renderers = [
+            BotRenderer(
+                view=self,
+                bot=bot,
+                font=self._font,
+            )
+            for bot in self.world.bots
+        ]
 
     def handle_inputs(self) -> None:
         """Wrap Pygame window close handling."""
@@ -85,6 +92,7 @@ class View(Observer):
                     ):
                         log_msg = f"{bot_renderer} clicked."
                         logging.info(log_msg)
+                        bot_renderer.highlight = not bot_renderer.highlight
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -96,14 +104,6 @@ class View(Observer):
 
         self.window.fill(colors.BACKGROUND)
         self._draw_world_limits()
-        self._bot_renderers = [
-            BotRenderer(
-                view=self,
-                bot=bot,
-                font=self._font,
-            )
-            for bot in self.world.bots
-        ]
 
         for bot_renderer in self._bot_renderers:
             bot_renderer.draw()
