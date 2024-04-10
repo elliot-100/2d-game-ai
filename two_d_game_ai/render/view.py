@@ -36,12 +36,12 @@ class View(Observer):
         self.world = world
         self.scale_factor = scale_factor
 
-        self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
+        self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
 
         pygame.init()
-        self.font = pygame.font.Font(None, self.FONT_SIZE)
+        self._font = pygame.font.Font(None, self.FONT_SIZE)
         window_dimension = world.radius * 2 * self.scale_factor
         self.window = pygame.display.set_mode(
             (
@@ -53,7 +53,7 @@ class View(Observer):
             self.world.radius, self.world.radius
         )
         pygame.display.set_caption(self.CAPTION)
-        self.clock = pygame.Clock()
+        self._clock = pygame.Clock()
 
         for bot in world.bots:
             bot.register_observer(self)
@@ -77,7 +77,7 @@ class View(Observer):
         Drawn in order, bottom layer to top.
         """
         # Limit update rate to save CPU
-        self.clock.tick(self.max_render_fps)
+        self._clock.tick(self._max_render_fps)
 
         self.window.fill(colors.BACKGROUND)
         self._draw_world_limits()
@@ -85,7 +85,7 @@ class View(Observer):
             BotRenderer(
                 view=self,
                 bot=bot,
-                font=self.font,
+                font=self._font,
             ).draw()
         self._draw_step_counter()
 
@@ -105,7 +105,7 @@ class View(Observer):
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
-        text = self.font.render(
+        text = self._font.render(
             text=(
                 f"sim elapsed: {elapsed_time:.1f} s\n"
                 f"sim step: {self.world.step_counter}"
