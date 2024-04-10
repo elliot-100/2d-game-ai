@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Color, Font, Rect, Surface, Vector2
 
+from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:
@@ -221,6 +222,22 @@ class BotRenderer:
             source=source,
             dest=self.view.to_display(dest) + display_offset,
         )
+
+    def is_clicked(self, click_pos: Vector2) -> bool:
+        """
+        Determine if the clicked location is on the BotRenderer icon.
+
+        Parameters
+        ----------
+        click_pos
+            The position of the click in window coordinates.
+
+        Returns
+        -------
+        bool
+            True if the click position is within or on the icon radius.
+        """
+        return point_in_or_on_circle(click_pos, self.pos, BotRenderer.ICON_RADIUS)
 
 
 def _to_display_radians(bearing_deg: float) -> float:

@@ -10,7 +10,6 @@ import pygame
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
-from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
@@ -78,6 +77,7 @@ class View(Observer):
             )
             for bot in self.world.bots
         ]
+        self._selected: None | BotRenderer = None
 
     def handle_inputs(self) -> None:
         """Wrap Pygame window close handling."""
@@ -85,14 +85,15 @@ class View(Observer):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            elif (
+                event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
+            ):  # normally left-click
+                self._selected = self._get_clicked(event.pos)
                 for bot_renderer in self._bot_renderers:
-                    if point_in_or_on_circle(
-                        event.pos, bot_renderer.pos, BotRenderer.ICON_RADIUS
-                    ):
-                        log_msg = f"{bot_renderer} clicked."
-                        logging.info(log_msg)
-                        bot_renderer.highlight = not bot_renderer.highlight
+                    bot_renderer.highlight = False
+                    if bot_renderer is self._selected:
+                        bot_renderer.highlight = True
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -111,6 +112,14 @@ class View(Observer):
 
         # update entire display
         pygame.display.flip()
+
+    def _get_clicked(self, click_pos: Vector2) -> BotRenderer | None:
+        for bot_renderer in self._bot_renderers:
+            if bot_renderer.is_clicked(click_pos):
+                log_msg = f"{bot_renderer.bot.name} clicked."
+                logging.info(log_msg)
+                return bot_renderer
+        return None
 
     def _draw_world_limits(self) -> None:
         """Draw the World limits as a circle."""
