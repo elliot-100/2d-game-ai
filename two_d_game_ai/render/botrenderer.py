@@ -44,6 +44,11 @@ class BotRenderer:
         self.bot = bot
         self.font = font
 
+    @property
+    def pos(self) -> Vector2:
+        """Get position in window coordinates."""
+        return self.view.to_display(self.bot.pos)
+
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""
         if self.bot.destination:
@@ -60,11 +65,10 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        bot_display_center = self.view.to_display(self.bot.pos)
         pygame.draw.circle(
             surface=self.view.window,
             color=colors.FOREGROUND,
-            center=bot_display_center,
+            center=self.pos,
             radius=self.ICON_RADIUS,
         )
 

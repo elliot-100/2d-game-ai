@@ -1,15 +1,22 @@
 """View class: renders a World using Pygame."""
 
+
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
 
 import pygame
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
-from two_d_game_ai.world import World
+
+if TYPE_CHECKING:
+    from two_d_game_ai.world import World
 
 
 class View(Observer):
@@ -26,6 +33,11 @@ class View(Observer):
         Rendering scale factor
     window: Window
         Top level Pygame Surface.
+
+    Non-public attributes (incomplete)
+    ----------------------------------
+    _bot_renderers: list[BotRenderer]
+        All Bot render instances
     """
 
     CAPTION = "2dGameAI"
@@ -58,6 +70,8 @@ class View(Observer):
         for bot in world.bots:
             bot.register_observer(self)
 
+        self._bot_renderers: list[BotRenderer] = []
+
     def handle_inputs(self) -> None:
         """Wrap Pygame window close handling."""
         # TODO: More efficient event checking
@@ -65,11 +79,12 @@ class View(Observer):
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                click_pos = self.from_display(Vector2(event.pos))
-                log_msg = (
-                    f"Mouse button {event.button} pressed at world {click_pos}"
-                )
-                logging.info(log_msg)
+                for bot_renderer in self._bot_renderers:
+                    if point_in_or_on_circle(
+                        event.pos, bot_renderer.pos, BotRenderer.ICON_RADIUS
+                    ):
+                        log_msg = f"{bot_renderer} clicked."
+                        logging.info(log_msg)
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -81,12 +96,17 @@ class View(Observer):
 
         self.window.fill(colors.BACKGROUND)
         self._draw_world_limits()
-        for bot in self.world.bots:
+        self._bot_renderers = [
             BotRenderer(
                 view=self,
                 bot=bot,
                 font=self._font,
-            ).draw()
+            )
+            for bot in self.world.bots
+        ]
+
+        for bot_renderer in self._bot_renderers:
+            bot_renderer.draw()
         self._draw_step_counter()
 
         # update entire display
