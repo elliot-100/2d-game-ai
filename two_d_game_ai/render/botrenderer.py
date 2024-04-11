@@ -189,10 +189,8 @@ class BotRenderer:
         width: int = 1,
     ) -> None:
         """Draw a circular arc, scaled to display coordinates."""
-        enclosing_rect = Rect(0, 0, 0, 0)
-        enclosing_rect.width = enclosing_rect.height = int(
-            2 * radius * self.view.scale_factor
-        )
+        enclosing_rect_dimension = int(2 * radius * self.view.scale_factor)
+        enclosing_rect = Rect(0, 0, enclosing_rect_dimension, enclosing_rect_dimension)
         display_center = self.view.to_display(center)
         # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
         enclosing_rect.center = int(display_center.x), int(display_center.y)
