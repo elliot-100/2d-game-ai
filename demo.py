@@ -38,6 +38,6 @@ view = View(
 )
 
 while view.running:
-    view.handle_window_close()
+    view.handle_inputs()
     the_world.update()
     view.render()

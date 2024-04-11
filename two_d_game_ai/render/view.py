@@ -1,5 +1,11 @@
 """View class: renders a World using Pygame."""
 
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING
+
 import pygame
 from pygame import Vector2
 
@@ -7,7 +13,9 @@ from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
-from two_d_game_ai.world import World
+
+if TYPE_CHECKING:
+    from two_d_game_ai.world import World
 
 
 class View(Observer):
@@ -24,6 +32,11 @@ class View(Observer):
         Rendering scale factor
     window: Window
         Top level Pygame Surface.
+
+    Non-public attributes (incomplete)
+    ----------------------------------
+    _bot_renderers: list[BotRenderer]
+        All Bot render instances
     """
 
     CAPTION = "2dGameAI"
@@ -31,15 +44,16 @@ class View(Observer):
 
     def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
+        self._bot_renderers = []
         self.world = world
         self.scale_factor = scale_factor
 
-        self.max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
+        self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
 
         pygame.init()
-        self.font = pygame.font.Font(None, self.FONT_SIZE)
+        self._font = pygame.font.Font(None, self.FONT_SIZE)
         window_dimension = world.radius * 2 * self.scale_factor
         self.window = pygame.display.set_mode(
             (
@@ -47,18 +61,38 @@ class View(Observer):
                 window_dimension,
             ),
         )
+        self._display_offset = self.scale_factor * Vector2(
+            self.world.radius, self.world.radius
+        )
         pygame.display.set_caption(self.CAPTION)
-        self.clock = pygame.Clock()
+        self._clock = pygame.Clock()
 
         for bot in world.bots:
             bot.register_observer(self)
+            self._bot_renderers.append(
+                BotRenderer(
+                    view=self,
+                    bot=bot,
+                    font=self._font,
+                )
+            )
 
-    def handle_window_close(self) -> None:
-        """Wrap Pygame window close handling."""
-        # TODO: More efficient event checking
+        self._selected: None | BotRenderer = None
+
+    def handle_inputs(self) -> None:
+        """Handle user inputs."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
+
+            elif (
+                event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
+            ):  # normally left-click
+                self._selected = self._get_clicked(event.pos)
+                for bot_renderer in self._bot_renderers:
+                    bot_renderer.highlight = False
+                    if bot_renderer is self._selected:
+                        bot_renderer.highlight = True
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -66,20 +100,25 @@ class View(Observer):
         Drawn in order, bottom layer to top.
         """
         # Limit update rate to save CPU
-        self.clock.tick(self.max_render_fps)
+        self._clock.tick(self._max_render_fps)
 
         self.window.fill(colors.BACKGROUND)
         self._draw_world_limits()
-        for bot in self.world.bots:
-            BotRenderer(
-                view=self,
-                bot=bot,
-                font=self.font,
-            ).draw()
+
+        for bot_renderer in self._bot_renderers:
+            bot_renderer.draw()
         self._draw_step_counter()
 
         # update entire display
         pygame.display.flip()
+
+    def _get_clicked(self, click_pos: Vector2) -> BotRenderer | None:
+        for bot_renderer in self._bot_renderers:
+            if bot_renderer.is_clicked(click_pos):
+                log_msg = f"{bot_renderer.bot.name} clicked."
+                logging.info(log_msg)
+                return bot_renderer
+        return None
 
     def _draw_world_limits(self) -> None:
         """Draw the World limits as a circle."""
@@ -94,7 +133,7 @@ class View(Observer):
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
-        text = self.font.render(
+        text = self._font.render(
             text=(
                 f"sim elapsed: {elapsed_time:.1f} s\n"
                 f"sim step: {self.world.step_counter}"
@@ -105,7 +144,7 @@ class View(Observer):
         self.window.blit(text, (0, 0))
 
     def to_display(self, world_pos: Vector2) -> Vector2:
-        """Convert world coordinates to Pygame-compatible coordinates.
+        """Convert world coordinates to Pygame display window coordinates.
 
         Parameters
         ----------
@@ -116,8 +155,29 @@ class View(Observer):
         -------
         Vector2
             Display window coordinates.
-            Origin is at centre, positive y upwards (opposite to Pygame, etc).
+            Origin is at centre, positive y upwards.
         """
-        display_pos = self.scale_factor * Vector2(world_pos.x, -world_pos.y)
-        offset = self.scale_factor * Vector2(self.world.radius, self.world.radius)
-        return display_pos + offset
+        pos = world_pos.copy()
+        pos.y = -pos.y
+        pos *= self.scale_factor
+        return pos + self._display_offset
+
+    def from_display(self, display_pos: Vector2) -> Vector2:
+        """Convert Pygame window coordinates to world coordinates.
+        coordinates.
+
+        Parameters
+        ----------
+        display_pos
+            Display window coordinates.
+            Origin is at centre, positive y upwards.
+
+        Returns
+        -------
+        Vector2
+            World coordinates.
+        """
+        pos = display_pos - self._display_offset
+        pos /= self.scale_factor
+        pos.y = -pos.y
+        return pos

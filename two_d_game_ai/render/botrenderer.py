@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Color, Font, Rect, Surface, Vector2
 
+from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:
@@ -43,6 +44,12 @@ class BotRenderer:
         self.view = view
         self.bot = bot
         self.font = font
+        self.highlight = False
+
+    @property
+    def pos(self) -> Vector2:
+        """Get position in window coordinates."""
+        return self.view.to_display(self.bot.pos)
 
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""
@@ -60,11 +67,11 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        bot_display_center = self.view.to_display(self.bot.pos)
+        fill_color = colors.SELECTED if self.highlight else colors.FOREGROUND
         pygame.draw.circle(
             surface=self.view.window,
-            color=colors.FOREGROUND,
-            center=bot_display_center,
+            color=fill_color,
+            center=self.pos,
             radius=self.ICON_RADIUS,
         )
 
@@ -215,6 +222,22 @@ class BotRenderer:
             source=source,
             dest=self.view.to_display(dest) + display_offset,
         )
+
+    def is_clicked(self, click_pos: Vector2) -> bool:
+        """
+        Determine if the clicked location is on the BotRenderer icon.
+
+        Parameters
+        ----------
+        click_pos
+            The position of the click in window coordinates.
+
+        Returns
+        -------
+        bool
+            True if the click position is within or on the icon radius.
+        """
+        return point_in_or_on_circle(click_pos, self.pos, BotRenderer.ICON_RADIUS)
 
 
 def _to_display_radians(bearing_deg: float) -> float:
