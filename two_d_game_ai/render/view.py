@@ -44,6 +44,7 @@ class View(Observer):
 
     def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
+        self._bot_renderers = []
         self.world = world
         self.scale_factor = scale_factor
 
@@ -68,20 +69,18 @@ class View(Observer):
 
         for bot in world.bots:
             bot.register_observer(self)
-
-        self._bot_renderers = [
-            BotRenderer(
-                view=self,
-                bot=bot,
-                font=self._font,
+            self._bot_renderers.append(
+                BotRenderer(
+                    view=self,
+                    bot=bot,
+                    font=self._font,
+                )
             )
-            for bot in self.world.bots
-        ]
+
         self._selected: None | BotRenderer = None
 
     def handle_inputs(self) -> None:
-        """Wrap Pygame window close handling."""
-        # TODO: More efficient event checking
+        """Handle user inputs."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
