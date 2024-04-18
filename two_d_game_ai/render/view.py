@@ -82,9 +82,12 @@ class View(Observer):
     def handle_inputs(self) -> None:
         """Handle user inputs."""
         for event in pygame.event.get():
+
+            # WINDOW/HIGH LEVEL EVENTS
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
 
+            # MOUSE EVENTS
             elif (
                 event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
             ):  # normally left-click
@@ -93,6 +96,12 @@ class View(Observer):
                     bot_renderer.highlight = False
                     if bot_renderer is self._selected:
                         bot_renderer.highlight = True
+
+            # KEYBOARD EVENTS
+            elif (
+                event.type == pygame.KEYDOWN and event.key == pygame.K_p
+            ):  # toggle [P]ause
+                self.world.is_paused = not self.world.is_paused
 
     def render(self) -> None:
         """Render the World to the Pygame window.

@@ -38,5 +38,6 @@ view = View(
 
 while view.running:
     view.handle_inputs()
-    the_world.update()
+    if not the_world.is_paused:
+        the_world.update()
     view.render()
