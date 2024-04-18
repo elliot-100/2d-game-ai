@@ -25,6 +25,7 @@ class World:
         self.radius = radius
         self.bots: list[Bot] = []
         self.step_counter = 0
+        self.is_paused: bool = True
 
     def update(self) -> None:
         """Change all Bot positions over 1 simulation step."""
