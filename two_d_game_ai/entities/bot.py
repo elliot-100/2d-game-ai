@@ -20,8 +20,8 @@ class Bot(GenericEntity):
 
     Assumed circular.
 
-    Attributes
-    ----------
+    Public attributes/properties
+    ----------------------------
     destination: Vector2
         Destination point (World coordinates)
     heading: Bearing
@@ -53,7 +53,7 @@ class Bot(GenericEntity):
 
     def __init__(self, world: World, name: str, pos: Vector2) -> None:
         super().__init__(world, name, pos)
-        self.destination: None | Vector2 = None
+        self.destination: Vector2 | None = None
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
         self.visible_bots: set[Bot] = set()
@@ -61,6 +61,16 @@ class Bot(GenericEntity):
 
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
+
+    @property
+    def destination(self) -> Vector2 | None:
+        """Get destination point."""
+        return self._destination
+
+    @destination.setter
+    def destination(self, value: Vector2 | None) -> None:
+        self.stop()
+        self._destination = value
 
     @property
     def _speed(self) -> float:
@@ -90,7 +100,7 @@ class Bot(GenericEntity):
         if self.is_at_destination:
             self.notify_observers("I've reached destination")
             self.destination = None
-            self._velocity = Vector2(0)
+            self.stop()
             return
 
         if self.destination:
@@ -130,6 +140,10 @@ class Bot(GenericEntity):
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
         self.pos += self._velocity * SIMULATION_STEP_INTERVAL_S
+
+    def stop(self) -> None:
+        """Stop."""
+        self._velocity = Vector2(0)
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
