@@ -7,11 +7,9 @@ import math
 from typing import TYPE_CHECKING
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
-from two_d_game_ai.bearing import Bearing
 from two_d_game_ai.entities.generic_entity import GenericEntity
-from two_d_game_ai.navigation import (
-    point_in_or_on_circle,
-)
+from two_d_game_ai.geometry.bearing import Bearing
+from two_d_game_ai.geometry.utils import point_in_or_on_circle
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World

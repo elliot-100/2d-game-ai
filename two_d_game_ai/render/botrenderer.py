@@ -9,7 +9,7 @@ import pygame
 from pygame import Color, Font, Rect, Surface
 
 from two_d_game_ai import Vector2
-from two_d_game_ai.navigation import point_in_or_on_circle
+from two_d_game_ai.geometry.utils import point_in_or_on_circle
 from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:

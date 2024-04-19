@@ -3,7 +3,7 @@
 import pytest
 
 from two_d_game_ai import Vector2
-from two_d_game_ai.bearing import Bearing
+from two_d_game_ai.geometry.bearing import Bearing
 
 VECTOR_NORTH = Vector2(0, 1)
 VECTOR_EAST = Vector2(1, 0)
