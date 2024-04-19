@@ -45,7 +45,7 @@ class BotRenderer:
         self.view = view
         self.bot = bot
         self.font = font
-        self.highlight = False
+        self.is_selected = False
 
     @property
     def pos(self) -> Vector2:
@@ -68,7 +68,7 @@ class BotRenderer:
 
     def draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        fill_color = colors.SELECTED if self.highlight else colors.FOREGROUND
+        fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
         pygame.draw.circle(
             surface=self.view.window,
             color=fill_color,

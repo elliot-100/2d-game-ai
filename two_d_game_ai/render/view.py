@@ -15,6 +15,9 @@ from two_d_game_ai.render.botrenderer import BotRenderer
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
+PRIMARY_MOUSE_BUTTON = 1
+SECONDARY_MOUSE_BUTTON = 3
+
 
 class View(Observer):
     """Renders window, World and decorations.
@@ -35,6 +38,8 @@ class View(Observer):
     ----------------------------------
     _bot_renderers: list[BotRenderer]
         All Bot render instances
+    _selected: None | BotRenderer
+        The selected entity
     """
 
     CAPTION = "2dGameAI"
@@ -80,25 +85,24 @@ class View(Observer):
     def handle_inputs(self) -> None:
         """Handle user inputs."""
         for event in pygame.event.get():
-            # WINDOW/HIGH LEVEL EVENTS
-            if event.type == pygame.QUIT:  # user clicked window close
-                self.running = False
+            match event.type:
+                # WINDOW/HIGH LEVEL EVENTS
+                case pygame.QUIT:  # user clicked window close
+                    self.running = False
 
-            # MOUSE EVENTS
-            elif (
-                event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
-            ):  # normally left-click
-                self._selected = self._get_clicked(event.pos)
-                for bot_renderer in self._bot_renderers:
-                    bot_renderer.highlight = False
-                    if bot_renderer is self._selected:
-                        bot_renderer.highlight = True
+                # MOUSE EVENTS
+                case pygame.MOUSEBUTTONDOWN:
+                    if event.button == PRIMARY_MOUSE_BUTTON:
+                        self._selected = self.clicked_entity(event.pos)
+                        for bot_renderer in self._bot_renderers:
+                            bot_renderer.is_selected = False
+                        if isinstance(self._selected, BotRenderer):
+                            self._selected.is_selected = True  # TODO: ugly!
 
-            # KEYBOARD EVENTS
-            elif (
-                event.type == pygame.KEYDOWN and event.key == pygame.K_p
-            ):  # toggle [P]ause
-                self.world.is_paused = not self.world.is_paused
+                # KEYBOARD EVENTS
+                case pygame.KEYDOWN:
+                    if event.key == pygame.K_p:  # toggle [P]ause
+                        self.world.is_paused = not self.world.is_paused
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -118,7 +122,8 @@ class View(Observer):
         # update entire display
         pygame.display.flip()
 
-    def _get_clicked(self, click_pos: Vector2) -> BotRenderer | None:
+    def clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
+        """Render the clicked BotRenderer, or None."""
         for bot_renderer in self._bot_renderers:
             if bot_renderer.is_clicked(click_pos):
                 log_msg = f"{bot_renderer.bot.name} clicked."
