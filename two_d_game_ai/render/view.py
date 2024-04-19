@@ -98,6 +98,11 @@ class View(Observer):
                             bot_renderer.is_selected = False
                         if isinstance(self._selected, BotRenderer):
                             self._selected.is_selected = True  # TODO: ugly!
+                    elif event.button == SECONDARY_MOUSE_BUTTON:
+                        if isinstance(self._selected, BotRenderer):
+                            self._selected.bot.destination = self.from_display(
+                                event.pos
+                            )
 
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
