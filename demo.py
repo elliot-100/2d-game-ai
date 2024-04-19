@@ -3,7 +3,7 @@
 import logging
 
 from two_d_game_ai import Vector2
-from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.render.view import View
 from two_d_game_ai.world import World
 

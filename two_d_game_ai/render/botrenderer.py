@@ -12,7 +12,7 @@ from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.render import colors
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities.bot import Bot
+    from two_d_game_ai.entities import Bot
     from two_d_game_ai.render.view import View
 
 
