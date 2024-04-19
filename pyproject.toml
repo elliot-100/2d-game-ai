@@ -54,6 +54,7 @@ pretty = true  # additional to 'strict' config
 
 [tool.ruff.lint]
 select = ["ALL"]
+
 # Ignore rules that conflict with Ruff formatter:
 #   COM812: Trailing comma missing
 #   ISC001: Implicitly concatenated string literals on one line
@@ -66,6 +67,10 @@ select = ["ALL"]
 #   TD002: Missing author in TODO
 #   TD003: Missing issue link on the line following this TODO
 ignore = ["COM812", "ISC001", "ANN101", "ANN102", "D205", "ERA001", "FIX002", "TD002", "TD003" ]
+
+# Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag
+#    TCH001: Move application import into a type-checking block
+extend-safe-fixes = ["TCH001"]
 
 [tool.ruff.lint.per-file-ignores]
 # Ignore rules that aren't relevant in tests:
