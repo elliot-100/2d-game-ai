@@ -7,8 +7,7 @@ from typing import TYPE_CHECKING
 from two_d_game_ai.entities.observer import Subject
 
 if TYPE_CHECKING:
-    from pygame import Vector2
-
+    from two_d_game_ai import Vector2
     from two_d_game_ai.world import World
 
 

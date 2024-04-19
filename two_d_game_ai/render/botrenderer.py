@@ -6,8 +6,9 @@ from math import radians
 from typing import TYPE_CHECKING
 
 import pygame
-from pygame import Color, Font, Rect, Surface, Vector2
+from pygame import Color, Font, Rect, Surface
 
+from two_d_game_ai import Vector2
 from two_d_game_ai.navigation import point_in_or_on_circle
 from two_d_game_ai.render import colors
 

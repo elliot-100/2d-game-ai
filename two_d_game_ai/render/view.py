@@ -6,9 +6,8 @@ import logging
 from typing import TYPE_CHECKING
 
 import pygame
-from pygame import Vector2
 
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer

@@ -6,9 +6,7 @@ import logging
 import math
 from typing import TYPE_CHECKING
 
-from pygame import Vector2
-
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.bearing import Bearing
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.navigation import (
