@@ -4,7 +4,7 @@ import logging
 
 import pytest
 
-from two_d_game_ai.observer import Observer, ObserverException, Subject
+from two_d_game_ai.entities.observer import Observer, ObserverException, Subject
 
 
 class TestSubject:

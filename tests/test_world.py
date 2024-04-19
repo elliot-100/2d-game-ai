@@ -1,9 +1,7 @@
 """Tests for the World class."""
 
-from pygame import Vector2
-
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
-from two_d_game_ai.bot import Bot
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.world import World
 
 

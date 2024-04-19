@@ -6,20 +6,18 @@ import logging
 import math
 from typing import TYPE_CHECKING
 
-from pygame import Vector2
-
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.bearing import Bearing
+from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.navigation import (
     point_in_or_on_circle,
 )
-from two_d_game_ai.observer import Subject
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class Bot(Subject):
+class Bot(GenericEntity):
     """Simulated entity.
 
     Assumed circular.
@@ -56,14 +54,13 @@ class Bot(Subject):
     DESTINATION_ARRIVAL_TOLERANCE = 1  # World units
 
     def __init__(self, world: World, name: str, pos: Vector2) -> None:
-        super().__init__(name)
-        self.world = world
+        super().__init__(world, name, pos)
         self.destination: None | Vector2 = None
-        self.pos = pos
-        self._velocity = Vector2(0, 0)
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
-        self.visible_bots: set[Bot] = set()
         self.known_bots: set[Bot] = set()
+        self.visible_bots: set[Bot] = set()
+        self._velocity = Vector2(0, 0)
+
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 

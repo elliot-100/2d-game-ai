@@ -1,6 +1,6 @@
 """Test suite."""
 
-from pygame import Vector2
+from two_d_game_ai import Vector2
 
 """Define compass directions as vectors in conventional Cartesian system."""
 

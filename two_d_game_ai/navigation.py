@@ -1,6 +1,6 @@
 """Basic Cartesian navigation functions wrapped around Pygame.Vector2 library."""
 
-from pygame import Vector2
+from two_d_game_ai import Vector2
 
 CIRCLE_DEGREES = 360
 
