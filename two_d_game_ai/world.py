@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from two_d_game_ai.bot import Bot
+    from two_d_game_ai.entities.bot import Bot
 
 
 class World:

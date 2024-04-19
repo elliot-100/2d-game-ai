@@ -1,6 +1,5 @@
 """View class: renders a World using Pygame."""
 
-
 from __future__ import annotations
 
 import logging
@@ -10,7 +9,7 @@ import pygame
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
-from two_d_game_ai.observer import Observer
+from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.botrenderer import BotRenderer
 
@@ -82,7 +81,6 @@ class View(Observer):
     def handle_inputs(self) -> None:
         """Handle user inputs."""
         for event in pygame.event.get():
-
             # WINDOW/HIGH LEVEL EVENTS
             if event.type == pygame.QUIT:  # user clicked window close
                 self.running = False
@@ -143,11 +141,10 @@ class View(Observer):
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
 
-
         text_content = (
-                f"sim elapsed: {elapsed_time:.1f} s\n"
-                f"sim step: {self.world.step_counter}\n"
-            )
+            f"sim elapsed: {elapsed_time:.1f} s\n"
+            f"sim step: {self.world.step_counter}\n"
+        )
         if self.world.is_paused:
             text_content += "paused"
         text = self._font.render(

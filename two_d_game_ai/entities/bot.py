@@ -10,10 +10,10 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.bearing import Bearing
+from two_d_game_ai.entities.observer import Subject
 from two_d_game_ai.navigation import (
     point_in_or_on_circle,
 )
-from two_d_game_ai.observer import Subject
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
