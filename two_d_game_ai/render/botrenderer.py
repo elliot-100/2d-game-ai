@@ -30,6 +30,14 @@ class BotRenderer:
         The Bot to render
     font: Font
         # TODO
+    is_selected: bool
+        Whether the BotRender is selected
+
+    Non-public attributes/properties
+    ----------
+    _pos_v: Vector2
+        Position (display coordinates)
+
     """
 
     ICON_RADIUS = 10  # in pixels
@@ -48,31 +56,31 @@ class BotRenderer:
         self.is_selected = False
 
     @property
-    def pos_v(self) -> Vector2:
+    def _pos_v(self) -> Vector2:
         """Get position in window coordinates."""
         return self.view.to_display(self.bot.pos_v)
 
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""
         if self.bot.destination_v:
-            self.draw_destination()
-        self.draw_vision_cone()
+            self._draw_destination()
+        self._draw_vision_cone()
         if self.bot.visible_bots:
             for visible_bot in self.bot.visible_bots:
-                self.draw_visible_line(visible_bot)
+                self._draw_visible_line(visible_bot)
         if self.bot.known_bots:
             for known_bot in self.bot.known_bots:
-                self.draw_known_line(known_bot)
-        self.draw_icon()
-        self.draw_label()
+                self._draw_known_line(known_bot)
+        self._draw_icon()
+        self._draw_label()
 
-    def draw_icon(self) -> None:
+    def _draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
         fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
         pygame.draw.circle(
             surface=self.view.window,
             color=fill_color,
-            center=self.pos_v,
+            center=self._pos_v,
             radius=self.ICON_RADIUS,
         )
 
@@ -86,7 +94,7 @@ class BotRenderer:
             width=3,
         )
 
-    def draw_label(self) -> None:
+    def _draw_label(self) -> None:
         """Draw Bot name label to surface."""
         label = self.font.render(
             text=self.bot.name,
@@ -99,7 +107,7 @@ class BotRenderer:
             display_offset=self.LABEL_OFFSET,
         )
 
-    def draw_destination(self) -> None:
+    def _draw_destination(self) -> None:
         """Draw Bot destination icon, and line to it."""
         if not self.bot.destination_v:
             raise TypeError
@@ -124,7 +132,7 @@ class BotRenderer:
             end_pos=self.bot.destination_v,
         )
 
-    def draw_visible_line(self, other_bot: Bot) -> None:
+    def _draw_visible_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other visible Bot."""
         self._draw_scaled_line(
             color=colors.VISION,
@@ -133,7 +141,7 @@ class BotRenderer:
             width=4,
         )
 
-    def draw_known_line(self, other_bot: Bot) -> None:
+    def _draw_known_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other known Bot."""
         self._draw_scaled_line(
             color=colors.KNOWS,
@@ -141,7 +149,7 @@ class BotRenderer:
             end_pos=other_bot.pos_v,
         )
 
-    def draw_vision_cone(self) -> None:
+    def _draw_vision_cone(self) -> None:
         """Draw Bot vision cone to surface."""
         vision_start_angle = self.bot.heading.degrees - self.bot.VISION_CONE_ANGLE / 2
         vision_end_angle = self.bot.heading.degrees + self.bot.VISION_CONE_ANGLE / 2
@@ -151,9 +159,7 @@ class BotRenderer:
         start_wedge_point = self.bot.pos_v + vision_limit_offset.rotate(
             -vision_start_angle
         )
-        end_wedge_point = self.bot.pos_v + vision_limit_offset.rotate(
-            -vision_end_angle
-        )
+        end_wedge_point = self.bot.pos_v + vision_limit_offset.rotate(-vision_end_angle)
 
         self._draw_scaled_line(
             color=colors.VISION,
@@ -227,8 +233,7 @@ class BotRenderer:
         )
 
     def is_clicked(self, click_pos: Vector2) -> bool:
-        """
-        Determine if the clicked location is on the BotRenderer icon.
+        """Determine if the clicked location is on the BotRenderer icon.
 
         Parameters
         ----------
@@ -240,7 +245,7 @@ class BotRenderer:
         bool
             True if the click position is within or on the icon radius.
         """
-        return point_in_or_on_circle(click_pos, self.pos_v, BotRenderer.ICON_RADIUS)
+        return point_in_or_on_circle(click_pos, self._pos_v, BotRenderer.ICON_RADIUS)
 
 
 def _to_display_radians(bearing_deg: float) -> float:
