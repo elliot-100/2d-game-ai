@@ -15,7 +15,6 @@ Implemented as a library. User interface uses [pygame-ce](https://pyga.me/).
 
 ```
 # Namespace may change...
-from two_d_game_ai import Vector2
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.render.view import View
 from two_d_game_ai.world import World
@@ -31,18 +30,11 @@ the_world = World(100)
 b0 = Bot(
     name="b0",
     world=the_world,
-    pos=Vector2(20, 20),
-)
-
-# Add another Bot to the World...
-b1 = Bot(
-    name="b1",
-    world=the_world,
-    pos=Vector2(0, 0),
+    pos=(20, 20),
 )
 
 # ... with a destination
-b1.destination = Vector2(25, -50)
+b1.destination = (25, -50)
 
 # Create a View to the World.
 # Provides user interface, but not required: e.g. Bot, World test suites don't have one.
@@ -67,7 +59,7 @@ while view.running:
 
 - Circular (for now)
 - Origin (0, 0) at centre
-- Uses Vector2 class for coordinates
+
 
 ### Bot
 
