@@ -15,8 +15,8 @@ from two_d_game_ai.render.botrenderer import BotRenderer
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
-PRIMARY_MOUSE_BUTTON = 1
-SECONDARY_MOUSE_BUTTON = 3
+_PRIMARY_MOUSE_BUTTON = 1
+_SECONDARY_MOUSE_BUTTON = 3
 
 
 class View(Observer):
@@ -92,13 +92,13 @@ class View(Observer):
 
                 # MOUSE EVENTS
                 case pygame.MOUSEBUTTONDOWN:
-                    if event.button == PRIMARY_MOUSE_BUTTON:
-                        self._selected = self.clicked_entity(event.pos)
+                    if event.button == _PRIMARY_MOUSE_BUTTON:
+                        self._selected = self._clicked_entity(event.pos)
                         for bot_renderer in self._bot_renderers:
                             bot_renderer.is_selected = False
                         if isinstance(self._selected, BotRenderer):
                             self._selected.is_selected = True  # TODO: ugly!
-                    elif event.button == SECONDARY_MOUSE_BUTTON:
+                    elif event.button == _SECONDARY_MOUSE_BUTTON:
                         if isinstance(self._selected, BotRenderer):
                             self._selected.bot.destination_v = self.from_display(
                                 event.pos
@@ -108,6 +108,15 @@ class View(Observer):
                 case pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # toggle [P]ause
                         self.world.is_paused = not self.world.is_paused
+
+    def _clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
+        """Return the clicked BotRenderer, or None."""
+        for bot_renderer in self._bot_renderers:
+            if bot_renderer.is_clicked(click_pos):
+                log_msg = f"{bot_renderer.bot.name} clicked."
+                logging.info(log_msg)
+                return bot_renderer
+        return None
 
     def render(self) -> None:
         """Render the World to the Pygame window.
@@ -126,15 +135,6 @@ class View(Observer):
 
         # update entire display
         pygame.display.flip()
-
-    def clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
-        """Render the clicked BotRenderer, or None."""
-        for bot_renderer in self._bot_renderers:
-            if bot_renderer.is_clicked(click_pos):
-                log_msg = f"{bot_renderer.bot.name} clicked."
-                logging.info(log_msg)
-                return bot_renderer
-        return None
 
     def _draw_world_limits(self) -> None:
         """Draw the World limits as a circle."""
