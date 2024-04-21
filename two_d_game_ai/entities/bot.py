@@ -20,16 +20,20 @@ class Bot(GenericEntity):
 
     Assumed circular.
 
-    Public attributes/properties
-    ----------------------------
-    destination: Vector2
+    Attributes
+    ----------
+    destination: tuple[float, float] | None
+        Destination point (World coordinates)
+    destination_v: Vector2 | None
         Destination point (World coordinates)
     heading: Bearing
         Heading
     known_bots: set[Bot]
         The Bot's known but not visible peers
     name: str
-    pos: Vector2
+    pos: tuple[float, float]
+        Position (World coordinates)
+    pos_v: Vector2
         Position (World coordinates)
     visible_bots: set[Bot]
         The Bot's visible peers.
@@ -40,9 +44,8 @@ class Bot(GenericEntity):
     _speed: float
         Speed as a scalar (World units / s)
         Read-only.
-    _velocity: Vector2
-        Velocity as a vector (World coordinates / s)
-
+    _velocity_v: Vector2
+        Velocity (World coordinates / s)
     """
 
     MAX_SPEED = 60  # World units / s
@@ -51,39 +54,39 @@ class Bot(GenericEntity):
     VISION_CONE_ANGLE = 90  # degrees
     DESTINATION_ARRIVAL_TOLERANCE = 1  # World units
 
-    def __init__(self, world: World, name: str, pos: Vector2) -> None:
+    def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(world, name, pos)
-        self.destination: Vector2 | None = None
+        self.destination_v: Vector2 | None = None
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
         self.visible_bots: set[Bot] = set()
-        self._velocity = Vector2(0, 0)
+        self._velocity_v = Vector2(0, 0)
 
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
     @property
-    def destination(self) -> Vector2 | None:
+    def destination(self) -> tuple[float, float]:
         """Get destination point."""
-        return self._destination
+        return self.destination
 
     @destination.setter
-    def destination(self, value: Vector2 | None) -> None:
+    def destination(self, value: tuple[float, float]) -> None:
         self.stop()
-        self._destination = value
+        self.destination_v = Vector2(value)
 
     @property
     def _speed(self) -> float:
         """Get speed, in World units / s."""
-        return self._velocity.magnitude()
+        return self._velocity_v.magnitude()
 
     @property
     def is_at_destination(self) -> bool:
         """Get whether Bot is at destination (True) or not (False)."""
-        if self.destination:
+        if self.destination_v:
             return point_in_or_on_circle(
-                self.pos,
-                self.destination,
+                self.pos_v,
+                self.destination_v,
                 self.DESTINATION_ARRIVAL_TOLERANCE,
             )
         return False
@@ -99,13 +102,13 @@ class Bot(GenericEntity):
 
         if self.is_at_destination:
             self.notify_observers("I've reached destination")
-            self.destination = None
+            self.destination_v = None
             self.stop()
             return
 
-        if self.destination:
+        if self.destination_v:
             destination_relative_bearing = self.heading.relative(
-                self.destination - self.pos
+                self.destination_v - self.pos_v
             ).degrees_normalised
 
             #  if Bot can complete rotation to face destination this step...
@@ -113,7 +116,7 @@ class Bot(GenericEntity):
                 # face destination precisely
                 self.rotate(-destination_relative_bearing)
                 # initiate move towards destination
-                self._velocity = self.heading.vector * Bot.MAX_SPEED
+                self._velocity_v = self.heading.vector * Bot.MAX_SPEED
 
             else:
                 # turn towards destination
@@ -139,11 +142,11 @@ class Bot(GenericEntity):
 
     def move(self) -> None:
         """Change Bot position over 1 simulation step."""
-        self.pos += self._velocity * SIMULATION_STEP_INTERVAL_S
+        self.pos_v += self._velocity_v * SIMULATION_STEP_INTERVAL_S
 
     def stop(self) -> None:
         """Stop."""
-        self._velocity = Vector2(0)
+        self._velocity_v = Vector2(0)
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
@@ -165,7 +168,7 @@ class Bot(GenericEntity):
 
         Considers only the Bot vision cone angle.
         """
-        return self.can_see_point(other_bot.pos)
+        return self.can_see_point(other_bot.pos_v)
 
     def can_see_point(self, point: Vector2) -> bool:
         """Determine whether the Bot can see a point.
@@ -173,7 +176,7 @@ class Bot(GenericEntity):
         Considers only the Bot vision cone angle.
         """
         relative_bearing_to_point = self.heading.relative(
-            point - self.pos
+            point - self.pos_v
         ).degrees_normalised
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2

@@ -100,7 +100,7 @@ class View(Observer):
                             self._selected.is_selected = True  # TODO: ugly!
                     elif event.button == SECONDARY_MOUSE_BUTTON:
                         if isinstance(self._selected, BotRenderer):
-                            self._selected.bot.destination = self.from_display(
+                            self._selected.bot.destination_v = self.from_display(
                                 event.pos
                             )
 

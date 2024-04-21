@@ -8,20 +8,23 @@ from two_d_game_ai.world import World
 
 def test_create() -> None:
     """Test Bot initial state."""
+    # arrange
     w = World(10)
+
+    # act
     b = Bot(
         world=w,
         name="b1",
-        pos=Vector2(0.7, 100.35),
+        pos=(0.7, 100.35),
     )
 
     assert b.name == "b1"
-    assert b.pos == Vector2(0.7, 100.35)
+    assert b.pos_v == Vector2(0.7, 100.35)
 
-    # Test that Bot is initially stationary.
-    assert b._velocity == Vector2(0, 0)
+    # Bot is initially stationary.
+    assert b._velocity_v == Vector2(0, 0)
     assert b._speed == 0
-    # Test Bot defaults
+    # Defaults
     assert b.heading.vector == Vector2(0, 1)
 
 
@@ -34,7 +37,7 @@ def test_can_see_point__in_range() -> None:
     b = Bot(
         world=w,
         name="b0",
-        pos=Vector2(0, 0),
+        pos=(0, 0),
     )
 
     assert [b.can_see_point(p) for p in (NW, N, NE)] == [
@@ -53,24 +56,32 @@ def test_can_see_point__in_range() -> None:
 
 def test_move() -> None:
     """Test Bot linear move."""
+    # arrange
     w = World(10)
     b = Bot(
         world=w,
         name="b0",
-        pos=Vector2(0, 0),
+        pos=(0, 0),
     )
-    b._velocity = Vector2(1, 0)
+    b._velocity_v = Vector2(1, 0)
+
+    # act
     b.move()
-    assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
+
+    assert b.pos_v == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
 
 
 def test_move_negative() -> None:
     """Test that Bot does not change position by default, as velocity is zero."""
+    # arrange
     w = World(10)
     b = Bot(
         world=w,
         name="b0",
-        pos=Vector2(0, 0),
+        pos=(0, 0),
     )
+
+    # act
     b.move()
-    assert b.pos == Vector2(0, 0)
+
+    assert b.pos_v == Vector2(0, 0)

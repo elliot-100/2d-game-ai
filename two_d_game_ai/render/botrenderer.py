@@ -48,13 +48,13 @@ class BotRenderer:
         self.is_selected = False
 
     @property
-    def pos(self) -> Vector2:
+    def pos_v(self) -> Vector2:
         """Get position in window coordinates."""
-        return self.view.to_display(self.bot.pos)
+        return self.view.to_display(self.bot.pos_v)
 
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""
-        if self.bot.destination:
+        if self.bot.destination_v:
             self.draw_destination()
         self.draw_vision_cone()
         if self.bot.visible_bots:
@@ -72,7 +72,7 @@ class BotRenderer:
         pygame.draw.circle(
             surface=self.view.window,
             color=fill_color,
-            center=self.pos,
+            center=self.pos_v,
             radius=self.ICON_RADIUS,
         )
 
@@ -81,8 +81,8 @@ class BotRenderer:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.bot.heading.degrees)
         self._draw_scaled_line(
             color=colors.BACKGROUND,
-            start_pos=self.bot.pos,
-            end_pos=self.bot.pos + nose_offset / self.view.scale_factor,
+            start_pos=self.bot.pos_v,
+            end_pos=self.bot.pos_v + nose_offset / self.view.scale_factor,
             width=3,
         )
 
@@ -95,41 +95,41 @@ class BotRenderer:
         )
         self._scaled_blit(
             source=label,
-            dest=self.bot.pos,
+            dest=self.bot.pos_v,
             display_offset=self.LABEL_OFFSET,
         )
 
     def draw_destination(self) -> None:
         """Draw Bot destination icon, and line to it."""
-        if not self.bot.destination:
+        if not self.bot.destination_v:
             raise TypeError
 
         # Destination marker (X)
         offset = self.ICON_RADIUS / self.view.scale_factor
         self._draw_scaled_line(
             color=colors.FOREGROUND,
-            start_pos=self.bot.destination + Vector2(-offset, -offset),
-            end_pos=self.bot.destination + Vector2(offset, offset),
+            start_pos=self.bot.destination_v + Vector2(-offset, -offset),
+            end_pos=self.bot.destination_v + Vector2(offset, offset),
         )
         self._draw_scaled_line(
             color=colors.FOREGROUND,
-            start_pos=self.bot.destination + Vector2(offset, -offset),
-            end_pos=self.bot.destination + Vector2(-offset, offset),
+            start_pos=self.bot.destination_v + Vector2(offset, -offset),
+            end_pos=self.bot.destination_v + Vector2(-offset, offset),
         )
 
         # Line from Bot centre to destination
         self._draw_scaled_line(
             color=colors.FOREGROUND,
-            start_pos=self.bot.pos,
-            end_pos=self.bot.destination,
+            start_pos=self.bot.pos_v,
+            end_pos=self.bot.destination_v,
         )
 
     def draw_visible_line(self, other_bot: Bot) -> None:
         """Draw line from Bot to other visible Bot."""
         self._draw_scaled_line(
             color=colors.VISION,
-            start_pos=self.bot.pos,
-            end_pos=other_bot.pos,
+            start_pos=self.bot.pos_v,
+            end_pos=other_bot.pos_v,
             width=4,
         )
 
@@ -137,8 +137,8 @@ class BotRenderer:
         """Draw line from Bot to other known Bot."""
         self._draw_scaled_line(
             color=colors.KNOWS,
-            start_pos=self.bot.pos,
-            end_pos=other_bot.pos,
+            start_pos=self.bot.pos_v,
+            end_pos=other_bot.pos_v,
         )
 
     def draw_vision_cone(self) -> None:
@@ -148,24 +148,26 @@ class BotRenderer:
         vision_limit_offset = Vector2(0, 10)
 
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
-        start_wedge_point = self.bot.pos + vision_limit_offset.rotate(
+        start_wedge_point = self.bot.pos_v + vision_limit_offset.rotate(
             -vision_start_angle
         )
-        end_wedge_point = self.bot.pos + vision_limit_offset.rotate(-vision_end_angle)
+        end_wedge_point = self.bot.pos_v + vision_limit_offset.rotate(
+            -vision_end_angle
+        )
 
         self._draw_scaled_line(
             color=colors.VISION,
-            start_pos=self.bot.pos,
+            start_pos=self.bot.pos_v,
             end_pos=start_wedge_point,
         )
         self._draw_scaled_line(
             color=colors.VISION,
-            start_pos=self.bot.pos,
+            start_pos=self.bot.pos_v,
             end_pos=end_wedge_point,
         )
         self._draw_scaled_circular_arc(
             color=colors.VISION,
-            center=self.bot.pos,
+            center=self.bot.pos_v,
             start_angle=vision_start_angle,
             stop_angle=vision_end_angle,
             radius=10,
@@ -238,7 +240,7 @@ class BotRenderer:
         bool
             True if the click position is within or on the icon radius.
         """
-        return point_in_or_on_circle(click_pos, self.pos, BotRenderer.ICON_RADIUS)
+        return point_in_or_on_circle(click_pos, self.pos_v, BotRenderer.ICON_RADIUS)
 
 
 def _to_display_radians(bearing_deg: float) -> float:

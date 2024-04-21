@@ -72,10 +72,9 @@ select = ["ALL"]
 #   D205 1 blank line required between summary line and description
 #   ERA001 Found commented-out code
 #   FIX002 Line contains TODO, consider resolving the issue
-#   SLF001 Private member accessed
 #   TD002 Missing author in TODO
 #   TD003 Missing issue link on the line following this TODO
-ignore = ["COM812", "ISC001", "ANN101", "ANN102", "D205", "ERA001", "FIX002",  "SLF001",
+ignore = ["COM812", "ISC001", "ANN101", "ANN102", "D205", "ERA001", "FIX002",
     "TD002", "TD003"]
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
