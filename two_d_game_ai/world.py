@@ -19,6 +19,10 @@ class World:
         Radius
     bots: list[Bot]
         All bots in the World.
+    step_counter: int
+        Number of update steps taken.
+    is_paused: bool
+        Whether the World is paused.
     """
 
     def __init__(self, radius: float) -> None:
