@@ -156,15 +156,14 @@ class Bot(GenericEntity):
         newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
 
-        if newly_spotted_bots:
-            for newly_spotted_bot in newly_spotted_bots:
-                self.notify_observers(f"I've spotted `{newly_spotted_bot.name}`")
-                self.visible_bots.add(newly_spotted_bot)
-        if newly_lost_bots:
-            for newly_lost_bot in newly_lost_bots:
-                self.notify_observers(f"I've lost sight of `{newly_lost_bot.name}`")
-                self.visible_bots.remove(newly_lost_bot)
-                self.known_bots.add(newly_lost_bot)
+        for bot in newly_spotted_bots:
+            self.notify_observers(f"I've spotted `{bot.name}`")
+        for bot in newly_lost_bots:
+            self.notify_observers(f"I've lost sight of `{bot.name}`")
+
+        self.visible_bots.update(newly_spotted_bots)
+        self.visible_bots.difference_update(newly_lost_bots)
+        self.known_bots.update(newly_lost_bots)
 
     def can_see(self, other_bot: Bot) -> bool:
         """Determine whether the Bot can see another Bot.
