@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pygame
-from pygame import Color, Rect
-
 from two_d_game_ai import Vector2
-from two_d_game_ai.render import _to_display_radians, colors
+from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import GenericEntityRenderer
+from two_d_game_ai.render.primitives import _circle, _scaled_circular_arc, _scaled_line
 
 if TYPE_CHECKING:
     from pygame import Color
@@ -56,19 +54,22 @@ class BotRenderer(GenericEntityRenderer):
 
         # Destination marker (X)
         offset = self.ICON_RADIUS / self.view.scale_factor
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.destination_v + Vector2(-offset, -offset),
             end_pos=self.entity.destination_v + Vector2(offset, offset),
         )
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.destination_v + Vector2(offset, -offset),
             end_pos=self.entity.destination_v + Vector2(-offset, offset),
         )
 
         # Line from Bot centre to destination
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.pos_v,
             end_pos=self.entity.destination_v,
@@ -92,28 +93,32 @@ class BotRenderer(GenericEntityRenderer):
             -vision_end_angle
         )
 
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.VISION,
             start_pos=self.entity.pos_v,
             end_pos=start_wedge_point,
         )
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.VISION,
             start_pos=self.entity.pos_v,
             end_pos=end_wedge_point,
         )
-        self._draw_scaled_circular_arc(
+        _scaled_circular_arc(
+            self.view,
             color=colors.VISION,
             center=self.entity.pos_v,
+            radius=10,
             start_angle=vision_start_angle,
             stop_angle=vision_end_angle,
-            radius=10,
         )
 
     def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:
         """Draw lines from Bot to other bots based on visibility or knowledge."""
         for bot in bots:
-            self._draw_scaled_line(
+            _scaled_line(
+                self.view,
                 color=color,
                 start_pos=self.entity.pos_v,
                 end_pos=bot.pos_v,
@@ -123,8 +128,8 @@ class BotRenderer(GenericEntityRenderer):
     def _draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
         fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
-        pygame.draw.circle(
-            surface=self.view.window,
+        _circle(
+            self.view,
             color=fill_color,
             center=self._pos_v,
             radius=self.ICON_RADIUS,
@@ -133,50 +138,10 @@ class BotRenderer(GenericEntityRenderer):
         # Heading indicator (line from centre to 'nose')
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
-        self._draw_scaled_line(
+        _scaled_line(
+            self.view,
             color=colors.BACKGROUND,
             start_pos=self.entity.pos_v,
             end_pos=self.entity.pos_v + nose_offset / self.view.scale_factor,
             width=3,
-        )
-
-    def _draw_scaled_line(
-        self,
-        *,
-        color: Color,
-        start_pos: Vector2,
-        end_pos: Vector2,
-        width: int = 1,
-    ) -> None:
-        pygame.draw.line(
-            surface=self.view.window,
-            color=color,
-            start_pos=self.view.to_display(start_pos),
-            end_pos=self.view.to_display(end_pos),
-            width=width,
-        )
-
-    def _draw_scaled_circular_arc(
-        self,
-        color: Color,
-        center: Vector2,
-        radius: int,
-        start_angle: float,
-        stop_angle: float,
-        width: int = 1,
-    ) -> None:
-        """Draw a circular arc, scaled to display coordinates."""
-        enclosing_rect_dimension = int(2 * radius * self.view.scale_factor)
-        enclosing_rect = Rect(0, 0, enclosing_rect_dimension, enclosing_rect_dimension)
-        display_center = self.view.to_display(center)
-        # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
-        enclosing_rect.center = int(display_center.x), int(display_center.y)
-
-        pygame.draw.arc(
-            surface=self.view.window,
-            color=color,
-            rect=enclosing_rect,
-            start_angle=_to_display_radians(stop_angle),
-            stop_angle=_to_display_radians(start_angle),
-            width=width,
         )

@@ -6,9 +6,10 @@ from typing import TYPE_CHECKING
 
 from two_d_game_ai.geometry.utils import point_in_or_on_circle
 from two_d_game_ai.render import colors
+from two_d_game_ai.render.primitives import _scaled_blit
 
 if TYPE_CHECKING:
-    from pygame import Font, Surface
+    from pygame import Font
 
     from two_d_game_ai import Vector2
     from two_d_game_ai.entities import Bot
@@ -76,20 +77,9 @@ class GenericEntityRenderer:
             antialias=True,
             color=colors.LABEL,
         )
-        self._scaled_blit(
+        _scaled_blit(
+            self.view,
             source=label,
             dest=self.entity.pos_v,
             display_offset=self.LABEL_OFFSET,
-        )
-
-    def _scaled_blit(
-        self,
-        *,
-        source: Surface,
-        dest: Vector2,
-        display_offset: tuple[int, int],
-    ) -> None:
-        self.view.window.blit(
-            source=source,
-            dest=self.view.to_display(dest) + display_offset,
         )
