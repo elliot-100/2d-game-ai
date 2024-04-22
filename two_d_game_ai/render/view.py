@@ -100,8 +100,8 @@ class View(Observer):
                             self._selected.is_selected = True  # TODO: ugly!
                     elif event.button == _SECONDARY_MOUSE_BUTTON:
                         if isinstance(self._selected, BotRenderer):
-                            self._selected.bot.set_destination_v(
-                                self.from_display(event.pos)
+                            self._selected.bot.destination_v = self.from_display(
+                                event.pos
                             )
 
                 # KEYBOARD EVENTS
