@@ -61,8 +61,6 @@ class Bot(GenericEntity):
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
         self.visible_bots: set[Bot] = set()
-        self._velocity_v = Vector2(0, 0)
-
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
@@ -139,7 +137,7 @@ class Bot(GenericEntity):
                         destination_relative_bearing,
                     ),
                 )
-        self.move()
+        super().update()
 
     def rotate(self, rotation_delta: float) -> None:
         """Change Bot rotation over 1 simulation step.
@@ -152,14 +150,6 @@ class Bot(GenericEntity):
         """
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         self.heading.vector.rotate_ip(-rotation_delta)
-
-    def move(self) -> None:
-        """Change Bot position over 1 simulation step."""
-        self.pos_v += self._velocity_v * SIMULATION_STEP_INTERVAL_S
-
-    def stop(self) -> None:
-        """Stop."""
-        self._velocity_v = Vector2(0)
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
