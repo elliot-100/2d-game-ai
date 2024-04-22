@@ -1,0 +1,182 @@
+"""BotRenderer class: responsible for rendering a Bot and decorations."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import pygame
+from pygame import Color, Rect
+
+from two_d_game_ai import Vector2
+from two_d_game_ai.render import _to_display_radians, colors
+from two_d_game_ai.render.generic_entity_renderer import GenericEntityRenderer
+
+if TYPE_CHECKING:
+    from pygame import Color
+
+    from two_d_game_ai.entities import Bot
+
+
+class BotRenderer(GenericEntityRenderer):
+    """Renders a Bot to a Surface.
+
+    Provides methods to draw Bot icon and related elements.
+
+    Attributes
+    ----------
+    view:
+        The View context
+    entity: Bot
+        The entity to render
+    font: Font
+        # TODO
+    is_selected: bool
+        Whether the rendered bot is selected
+
+    Non-public attributes/properties
+    ----------
+    _pos_v: Vector2
+        Position (display coordinates)
+    """
+
+    def draw(self) -> None:
+        """Draws the Bot and decorations to the surface."""
+        super().draw()
+        if self.entity.destination_v is not None:
+            self._draw_destination()
+        self._draw_vision_cone()
+        self._draw_lines_to_others(self.entity.visible_bots, colors.VISION, 4)
+        self._draw_lines_to_others(self.entity.known_bots, colors.KNOWS, 1)
+        self._draw_icon()
+
+    def _draw_destination(self) -> None:
+        """Draw Bot destination icon, and line to it."""
+        if not self.entity.destination_v:
+            return  # Guard clause
+
+        # Destination marker (X)
+        offset = self.ICON_RADIUS / self.view.scale_factor
+        self._draw_scaled_line(
+            color=colors.FOREGROUND,
+            start_pos=self.entity.destination_v + Vector2(-offset, -offset),
+            end_pos=self.entity.destination_v + Vector2(offset, offset),
+        )
+        self._draw_scaled_line(
+            color=colors.FOREGROUND,
+            start_pos=self.entity.destination_v + Vector2(offset, -offset),
+            end_pos=self.entity.destination_v + Vector2(-offset, offset),
+        )
+
+        # Line from Bot centre to destination
+        self._draw_scaled_line(
+            color=colors.FOREGROUND,
+            start_pos=self.entity.pos_v,
+            end_pos=self.entity.destination_v,
+        )
+
+    def _draw_vision_cone(self) -> None:
+        """Draw Bot vision cone to surface."""
+        vision_start_angle = (
+            self.entity.heading.degrees - self.entity.VISION_CONE_ANGLE / 2
+        )
+        vision_end_angle = (
+            self.entity.heading.degrees + self.entity.VISION_CONE_ANGLE / 2
+        )
+        vision_limit_offset = Vector2(0, 10)
+
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
+        start_wedge_point = self.entity.pos_v + vision_limit_offset.rotate(
+            -vision_start_angle
+        )
+        end_wedge_point = self.entity.pos_v + vision_limit_offset.rotate(
+            -vision_end_angle
+        )
+
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.entity.pos_v,
+            end_pos=start_wedge_point,
+        )
+        self._draw_scaled_line(
+            color=colors.VISION,
+            start_pos=self.entity.pos_v,
+            end_pos=end_wedge_point,
+        )
+        self._draw_scaled_circular_arc(
+            color=colors.VISION,
+            center=self.entity.pos_v,
+            start_angle=vision_start_angle,
+            stop_angle=vision_end_angle,
+            radius=10,
+        )
+
+    def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:
+        """Draw lines from Bot to other bots based on visibility or knowledge."""
+        for bot in bots:
+            self._draw_scaled_line(
+                color=color,
+                start_pos=self.entity.pos_v,
+                end_pos=bot.pos_v,
+                width=width,
+            )
+
+    def _draw_icon(self) -> None:
+        """Draw unscaled icon to surface."""
+        fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
+        pygame.draw.circle(
+            surface=self.view.window,
+            color=fill_color,
+            center=self._pos_v,
+            radius=self.ICON_RADIUS,
+        )
+
+        # Heading indicator (line from centre to 'nose')
+        # NB legacy use of Pygame CCW rotation here, thus negative angle:
+        nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
+        self._draw_scaled_line(
+            color=colors.BACKGROUND,
+            start_pos=self.entity.pos_v,
+            end_pos=self.entity.pos_v + nose_offset / self.view.scale_factor,
+            width=3,
+        )
+
+    def _draw_scaled_line(
+        self,
+        *,
+        color: Color,
+        start_pos: Vector2,
+        end_pos: Vector2,
+        width: int = 1,
+    ) -> None:
+        pygame.draw.line(
+            surface=self.view.window,
+            color=color,
+            start_pos=self.view.to_display(start_pos),
+            end_pos=self.view.to_display(end_pos),
+            width=width,
+        )
+
+    def _draw_scaled_circular_arc(
+        self,
+        color: Color,
+        center: Vector2,
+        radius: int,
+        start_angle: float,
+        stop_angle: float,
+        width: int = 1,
+    ) -> None:
+        """Draw a circular arc, scaled to display coordinates."""
+        enclosing_rect_dimension = int(2 * radius * self.view.scale_factor)
+        enclosing_rect = Rect(0, 0, enclosing_rect_dimension, enclosing_rect_dimension)
+        display_center = self.view.to_display(center)
+        # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
+        enclosing_rect.center = int(display_center.x), int(display_center.y)
+
+        pygame.draw.arc(
+            surface=self.view.window,
+            color=color,
+            rect=enclosing_rect,
+            start_angle=_to_display_radians(stop_angle),
+            stop_angle=_to_display_radians(start_angle),
+            width=width,
+        )

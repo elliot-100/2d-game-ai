@@ -10,7 +10,7 @@ import pygame
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
-from two_d_game_ai.render.botrenderer import BotRenderer
+from two_d_game_ai.render.bot_renderer import BotRenderer
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
