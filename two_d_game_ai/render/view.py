@@ -36,7 +36,7 @@ class View(Observer):
 
     Non-public attributes (incomplete)
     ----------------------------------
-    _bot_renderers: list[BotRenderer]
+    _entity_renderers: list[BotRenderer]
         All Bot render instances
     _selected: None | BotRenderer
         The selected entity
@@ -47,10 +47,10 @@ class View(Observer):
 
     def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
-        self._bot_renderers = []
         self.world = world
         self.scale_factor = scale_factor
 
+        self._entity_renderers = []
         self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
@@ -72,12 +72,8 @@ class View(Observer):
 
         for bot in world.bots:
             bot.register_observer(self)
-            self._bot_renderers.append(
-                BotRenderer(
-                    view=self,
-                    bot=bot,
-                    font=self._font,
-                )
+            self._entity_renderers.append(
+                BotRenderer(view=self, entity=bot, font=self._font)
             )
 
         self._selected: None | BotRenderer = None
@@ -94,13 +90,13 @@ class View(Observer):
                 case pygame.MOUSEBUTTONDOWN:
                     if event.button == _PRIMARY_MOUSE_BUTTON:
                         self._selected = self._clicked_entity(event.pos)
-                        for bot_renderer in self._bot_renderers:
-                            bot_renderer.is_selected = False
+                        for renderer in self._entity_renderers:
+                            renderer.is_selected = False
                         if isinstance(self._selected, BotRenderer):
                             self._selected.is_selected = True  # TODO: ugly!
                     elif event.button == _SECONDARY_MOUSE_BUTTON:
                         if isinstance(self._selected, BotRenderer):
-                            self._selected.bot.destination_v = self.from_display(
+                            self._selected.entity.destination_v = self.from_display(
                                 event.pos
                             )
 
@@ -111,11 +107,11 @@ class View(Observer):
 
     def _clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
         """Return the clicked BotRenderer, or None."""
-        for bot_renderer in self._bot_renderers:
-            if bot_renderer.is_clicked(click_pos):
-                log_msg = f"{bot_renderer.bot.name} clicked."
+        for renderer in self._entity_renderers:
+            if renderer.is_clicked(click_pos):
+                log_msg = f"{renderer.entity.name} clicked."
                 logging.info(log_msg)
-                return bot_renderer
+                return renderer
         return None
 
     def render(self) -> None:
@@ -129,8 +125,8 @@ class View(Observer):
         self.window.fill(colors.BACKGROUND)
         self._draw_world_limits()
 
-        for bot_renderer in self._bot_renderers:
-            bot_renderer.draw()
+        for renderer in self._entity_renderers:
+            renderer.draw()
         self._draw_step_counter()
 
         # update entire display

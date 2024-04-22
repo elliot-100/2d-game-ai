@@ -22,8 +22,8 @@ class GenericEntityRenderer:
     ----------
     view:
         The View context
-    bot: Bot
-        The Bot to render
+    entity: Bot
+        The entity to render
     font: Font
         # TODO
     is_selected: bool
@@ -39,16 +39,16 @@ class GenericEntityRenderer:
     ICON_RADIUS = 10  # in pixels
     LABEL_OFFSET = (10, 10)  # in pixels
 
-    def __init__(self, view: View, bot: Bot, font: Font) -> None:
+    def __init__(self, view: View, entity: Bot, font: Font) -> None:
         self.view = view
-        self.bot = bot
+        self.entity = entity
         self.font = font
         self.is_selected = False
 
     @property
     def _pos_v(self) -> Vector2:
         """Get position in window coordinates."""
-        return self.view.to_display(self.bot.pos_v)
+        return self.view.to_display(self.entity.pos_v)
 
     def is_clicked(self, click_pos: Vector2) -> bool:
         """Determine if the clicked location is on the entity icon.
@@ -72,13 +72,13 @@ class GenericEntityRenderer:
     def _draw_label(self) -> None:
         """Draw entity name label to surface."""
         label = self.font.render(
-            text=self.bot.name,
+            text=self.entity.name,
             antialias=True,
             color=colors.LABEL,
         )
         self._scaled_blit(
             source=label,
-            dest=self.bot.pos_v,
+            dest=self.entity.pos_v,
             display_offset=self.LABEL_OFFSET,
         )
 
