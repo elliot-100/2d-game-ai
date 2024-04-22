@@ -65,15 +65,6 @@ class Bot(GenericEntity):
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
-    @property
-    def destination(self) -> tuple[float, float]:
-        """Get destination point."""
-        return self.destination
-
-    @destination.setter
-    def destination(self, value: tuple[float, float]) -> None:
-        self.stop()
-        self.destination_v = Vector2(value)
 
     @property
     def _speed(self) -> float:
@@ -95,6 +86,16 @@ class Bot(GenericEntity):
     def max_rotation_step(self) -> float:
         """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
+
+    def set_destination_v(self, dest: Vector2) -> None:
+        """Set destination as vector.
+
+        Parameters
+        ----------
+        dest: Vector2
+        """
+        self.stop()
+        self.destination_v = dest
 
     def update(self, other_bots: list[Bot]) -> None:
         """Update Bot, including move over 1 simulation step."""
