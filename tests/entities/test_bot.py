@@ -85,3 +85,37 @@ def test_move_negative() -> None:
     b.move()
 
     assert b.pos_v == Vector2(0, 0)
+
+
+def test_give_destination() -> None:
+    """Test that Bot can be given destination and this also sets destination_v."""
+    # arrange
+    w = World(10)
+    b = Bot(
+        world=w,
+        name="b0",
+        pos=(0, 0),
+    )
+    # act
+    b.destination = (25, -50)
+
+    assert b.destination == (25, -50)
+    assert b.destination_v == Vector2(25, -50)
+
+
+def test_give_destination_v() -> None:
+    """Test that Bot can be given destination vector (used in UI) and this also sets
+    destination_v.
+    """
+    # arrange
+    w = World(10)
+    b = Bot(
+        world=w,
+        name="b0",
+        pos=(0, 0),
+    )
+    # act
+    b.destination_v = Vector2(-17, -12)
+
+    assert b.destination_v == Vector2(-17, -12)
+    assert b.destination == (-17, -12)

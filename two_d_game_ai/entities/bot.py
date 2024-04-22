@@ -56,7 +56,8 @@ class Bot(GenericEntity):
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(world, name, pos)
-        self.destination_v: Vector2 | None = None
+        self._destination = tuple[float, float] | None
+        self._destination_v: Vector2 | None = None
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
         self.visible_bots: set[Bot] = set()
@@ -65,6 +66,27 @@ class Bot(GenericEntity):
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
+    @property
+    def destination(self) -> tuple[float, float] | None:
+        """Return destination."""
+        if self._destination_v is not None:
+            return self._destination_v.x, self._destination_v.y
+        return None
+
+    @destination.setter
+    def destination(self, value: tuple[float, float]) -> None:
+        self.stop()
+        self._destination_v = Vector2(value)
+
+    @property
+    def destination_v(self) -> Vector2 | None:
+        """Return destination vector."""
+        return self._destination_v
+
+    @destination_v.setter
+    def destination_v(self, value: Vector2) -> None:
+        self.stop()
+        self._destination_v = value
 
     @property
     def _speed(self) -> float:
@@ -86,16 +108,6 @@ class Bot(GenericEntity):
     def max_rotation_step(self) -> float:
         """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
-
-    def set_destination_v(self, dest: Vector2) -> None:
-        """Set destination as vector.
-
-        Parameters
-        ----------
-        dest: Vector2
-        """
-        self.stop()
-        self.destination_v = dest
 
     def update(self, other_bots: list[Bot]) -> None:
         """Update Bot, including move over 1 simulation step."""
