@@ -73,7 +73,7 @@ class GenericEntityRenderer:
     def _draw_label(self) -> None:
         """Draw entity name label to surface."""
         label = self.font.render(
-            text=self.entity.name,
+            text=str(self.entity.name),
             antialias=True,
             color=colors.LABEL,
         )
