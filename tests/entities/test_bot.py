@@ -66,7 +66,7 @@ def test_move() -> None:
     b._velocity_v = Vector2(1, 0)
 
     # act
-    b.move()
+    b._move()
 
     assert b.pos_v == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
 
@@ -82,7 +82,7 @@ def test_move_negative() -> None:
     )
 
     # act
-    b.move()
+    b._move()
 
     assert b.pos_v == Vector2(0, 0)
 

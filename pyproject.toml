@@ -69,12 +69,14 @@ select = ["ALL"]
 # Ignore other rules:
 #   ANN101 Missing type annotation for `self` in method
 #   ANN102 Missing type annotation for `cls` in classmethod
+#   ANN401 any-type [in function args]
+#     Appropriate to use for *args, **kwargs
 #   D205 1 blank line required between summary line and description
 #   ERA001 Found commented-out code
 #   FIX002 Line contains TODO, consider resolving the issue
 #   TD002 Missing author in TODO
 #   TD003 Missing issue link on the line following this TODO
-ignore = ["COM812", "ISC001", "ANN101", "ANN102", "D205", "ERA001", "FIX002",
+ignore = ["COM812", "ISC001", "ANN101", "ANN102", "ANN401", "D205", "ERA001", "FIX002",
     "TD002", "TD003"]
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
