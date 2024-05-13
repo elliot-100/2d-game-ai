@@ -12,6 +12,7 @@ from two_d_game_ai.geometry.bearing import Bearing
 from two_d_game_ai.geometry.utils import point_in_or_on_circle
 
 if TYPE_CHECKING:
+    from two_d_game_ai.entities import MovementBlock
     from two_d_game_ai.world import World
 
 
@@ -112,6 +113,10 @@ class Bot(_GenericEntity):
         """Update Bot, including move over 1 simulation step."""
         self._handle_sensing(other_bots)
 
+        if self._is_in_collision(self.world.movement_blocks):
+            self.stop()
+            return
+
         if self.is_at_destination:
             self.notify_observers("I've reached destination")
             self.destination_v = None
@@ -191,3 +196,12 @@ class Bot(_GenericEntity):
         ).degrees_normalised
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
+
+    def _is_in_collision(self, movement_blocks: list[MovementBlock]) -> bool:
+        """Naively check if Bot is in collision."""
+        for movement_block in movement_blocks:
+            if point_in_or_on_circle(
+                self.pos_v, movement_block.pos_v, movement_block.collision_radius
+            ):
+                return True
+        return False
