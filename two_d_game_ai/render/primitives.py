@@ -16,18 +16,14 @@ if TYPE_CHECKING:
     from two_d_game_ai.render.view import View
 
 
-def _circle(
-        view: View,
-        color: Color,
-        center: Vector2,
-        radius: float
-) -> None:
+def _circle(view: View, color: Color, center: Vector2, radius: float) -> None:
     pygame.draw.circle(
         surface=view.window,
         color=color,
         center=center,
         radius=radius,
-)
+    )
+
 
 def _scaled_circular_arc(
     view: View,

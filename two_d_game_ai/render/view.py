@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
@@ -47,10 +48,10 @@ class View(Observer):
 
     def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
+        self._entity_renderers = []
         self.world = world
         self.scale_factor = scale_factor
 
-        self._entity_renderers = []
         self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
@@ -72,9 +73,10 @@ class View(Observer):
 
         for bot in world.bots:
             bot.register_observer(self)
-            self._entity_renderers.append(
-                BotRenderer(view=self, entity=bot, font=self._font)
-            )
+
+        self._entity_renderers = [
+            BotRenderer(view=self, entity=bot, font=self._font) for bot in world.bots
+        ]
 
         self._selected: None | BotRenderer = None
 
@@ -89,30 +91,35 @@ class View(Observer):
                 # MOUSE EVENTS
                 case pygame.MOUSEBUTTONDOWN:
                     if event.button == _PRIMARY_MOUSE_BUTTON:
-                        self._selected = self._clicked_entity(event.pos)
-                        for renderer in self._entity_renderers:
-                            renderer.is_selected = False
-                        if isinstance(self._selected, BotRenderer):
-                            self._selected.is_selected = True  # TODO: ugly!
+                        self._handle_mouse_select(event.pos)
                     elif event.button == _SECONDARY_MOUSE_BUTTON:
-                        if isinstance(self._selected, BotRenderer):
-                            self._selected.entity.destination_v = self.from_display(
-                                event.pos
-                            )
+                        self._handle_mouse_set_destination(event.pos)
 
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # toggle [P]ause
                         self.world.is_paused = not self.world.is_paused
 
-    def _clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
-        """Return the clicked BotRenderer, or None."""
+    def _handle_mouse_select(self, click_pos: Vector2) -> None:
+        self._selected = self._clicked_botrenderer(click_pos)
+        for renderer in self._entity_renderers:
+            renderer.is_selected = renderer == self._selected
+
+    def _clicked_botrenderer(self, click_pos: Vector2) -> BotRenderer | None:
+        """Return the BotRenderer at click position, or None."""
         for renderer in self._entity_renderers:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
                 logging.info(log_msg)
                 return renderer
         return None
+
+    def _handle_mouse_set_destination(self, click_pos: Vector2) -> None:
+        """Set destination, if applicable to current selection."""
+        if isinstance(self._selected, BotRenderer) and isinstance(
+            self._selected.entity, Bot
+        ):
+            self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:
         """Render the World to the Pygame window.
