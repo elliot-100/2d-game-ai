@@ -90,32 +90,37 @@ class View(Observer):
                 # MOUSE EVENTS
                 case pygame.MOUSEBUTTONDOWN:
                     if event.button == _PRIMARY_MOUSE_BUTTON:
-                        self._selected = self._clicked_botrenderer(event.pos)
-                        for renderer in self._entity_renderers:
-                            renderer.is_selected = False
-                        if isinstance(self._selected, BotRenderer):
-                            self._selected.is_selected = True  # TODO: ugly!
+                        self._handle_mouse_select(event.pos)
                     elif event.button == _SECONDARY_MOUSE_BUTTON:
-                        if isinstance(self._selected, BotRenderer) and isinstance(
-                            self._selected.entity, Bot
-                        ):
-                            self._selected.entity.destination_v = self.from_display(
-                                event.pos
-                            )
+                        self._handle_mouse_set_destination(event.pos)
 
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # toggle [P]ause
                         self.world.is_paused = not self.world.is_paused
 
+    def _handle_mouse_select(self, click_pos: Vector2) -> None:
+        self._selected = self._clicked_botrenderer(click_pos)
+        for renderer in self._entity_renderers:
+            renderer.is_selected = renderer == self._selected
+
     def _clicked_botrenderer(self, click_pos: Vector2) -> BotRenderer | None:
-        """Return the clicked BotRenderer, or None."""
+        """Return the BotRenderer at click position, or None."""
         for renderer in self._entity_renderers:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
                 logging.info(log_msg)
                 return renderer
         return None
+
+    def _handle_mouse_set_destination(self, click_pos: Vector2) -> None:
+        """Set destination, if applicable to current selection."""
+        if isinstance(self._selected, BotRenderer) and isinstance(
+            self._selected.entity, Bot
+        ):
+            self._selected.entity.destination_v = self.from_display(
+                click_pos
+            )
 
     def render(self) -> None:
         """Render the World to the Pygame window.
