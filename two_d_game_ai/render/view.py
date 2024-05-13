@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
@@ -89,13 +90,15 @@ class View(Observer):
                 # MOUSE EVENTS
                 case pygame.MOUSEBUTTONDOWN:
                     if event.button == _PRIMARY_MOUSE_BUTTON:
-                        self._selected = self._clicked_entity(event.pos)
+                        self._selected = self._clicked_botrenderer(event.pos)
                         for renderer in self._entity_renderers:
                             renderer.is_selected = False
                         if isinstance(self._selected, BotRenderer):
                             self._selected.is_selected = True  # TODO: ugly!
                     elif event.button == _SECONDARY_MOUSE_BUTTON:
-                        if isinstance(self._selected, BotRenderer):
+                        if isinstance(self._selected, BotRenderer) and isinstance(
+                            self._selected.entity, Bot
+                        ):
                             self._selected.entity.destination_v = self.from_display(
                                 event.pos
                             )
@@ -105,7 +108,7 @@ class View(Observer):
                     if event.key == pygame.K_p:  # toggle [P]ause
                         self.world.is_paused = not self.world.is_paused
 
-    def _clicked_entity(self, click_pos: Vector2) -> BotRenderer | None:
+    def _clicked_botrenderer(self, click_pos: Vector2) -> BotRenderer | None:
         """Return the clicked BotRenderer, or None."""
         for renderer in self._entity_renderers:
             if renderer.is_clicked(click_pos):

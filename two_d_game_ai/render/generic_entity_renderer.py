@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from pygame import Font
 
     from two_d_game_ai import Vector2
-    from two_d_game_ai.entities import Bot
+    from two_d_game_ai.entities import GenericEntity
     from two_d_game_ai.render.view import View
 
 
@@ -21,7 +21,7 @@ class GenericEntityRenderer:
 
     Attributes
     ----------
-    entity: Bot
+    entity: GenericEntity
         The entity to render
     font: Font
         # TODO
@@ -40,7 +40,7 @@ class GenericEntityRenderer:
     ICON_RADIUS = 10  # in pixels
     LABEL_OFFSET = (10, 10)  # in pixels
 
-    def __init__(self, view: View, entity: Bot, font: Font) -> None:
+    def __init__(self, view: View, entity: GenericEntity, font: Font) -> None:
         self.view = view
         self.entity = entity
         self.font = font

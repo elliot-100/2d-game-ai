@@ -5,14 +5,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from two_d_game_ai import Vector2
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import GenericEntityRenderer
 from two_d_game_ai.render.primitives import _circle, _scaled_circular_arc, _scaled_line
 
 if TYPE_CHECKING:
     from pygame import Color
-
-    from two_d_game_ai.entities import Bot
 
 
 class BotRenderer(GenericEntityRenderer):
@@ -40,6 +39,8 @@ class BotRenderer(GenericEntityRenderer):
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""
         super().draw()
+        if not isinstance(self.entity, Bot):
+            raise TypeError
         if self.entity.destination_v is not None:
             self._draw_destination()
         self._draw_vision_cone()
@@ -49,6 +50,8 @@ class BotRenderer(GenericEntityRenderer):
 
     def _draw_destination(self) -> None:
         """Draw Bot destination icon, and line to it."""
+        if not isinstance(self.entity, Bot):
+            raise TypeError
         if not self.entity.destination_v:
             return  # Guard clause
 
@@ -77,6 +80,8 @@ class BotRenderer(GenericEntityRenderer):
 
     def _draw_vision_cone(self) -> None:
         """Draw Bot vision cone to surface."""
+        if not isinstance(self.entity, Bot):
+            raise TypeError
         vision_start_angle = (
             self.entity.heading.degrees - self.entity.VISION_CONE_ANGLE / 2
         )
@@ -127,6 +132,8 @@ class BotRenderer(GenericEntityRenderer):
 
     def _draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
+        if not isinstance(self.entity, Bot):
+            raise TypeError
         fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
         _circle(
             self.view,
