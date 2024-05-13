@@ -21,14 +21,14 @@ class GenericEntityRenderer:
 
     Attributes
     ----------
-    view:
-        The View context
     entity: Bot
         The entity to render
     font: Font
         # TODO
     is_selected: bool
         Whether the rendered entity is selected
+    view:
+        The View context
 
     Non-public attributes/properties
     ----------
