@@ -13,19 +13,21 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
-- Draw Bot vision cone indicator (doesn't reflect infinite vision range)
+- View: user can select a Bot with primary mouse button; set destination with secondary mouse button
+- View: World is initially paused; user can toggle pause with P key
+- View: Draw Bot vision cone indicator (doesn't reflect infinite vision range)
 - `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
 
 ### Fixed
 
+- View: Bot nose indicator wasn't scaled to display
 - Bot: exception if name wasn't a string
-- Bot nose indicator wasn't scaled to display
 - Mypy warning: `--strict-concatenate is deprecated ...`
 
 ### Changed
 
-- Refactor: new Bearing class
-- Refactor bearing calculations, colours, draw/blit calls
+- Bot: `.pos` and `.destination` take `tuple[float, float]` instead of `Vector2`
+- Extensive refactors
 - CI: use ruff format instead of black + isort
 - Upgrade dev/test dependencies: pytest, ruff
 - Remove `poetry.lock` from repo for now
