@@ -18,6 +18,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Fixed
 
+- Bot: exception if name wasn't a string
 - Bot nose indicator wasn't scaled to display
 - Mypy warning: `--strict-concatenate is deprecated ...`
 
