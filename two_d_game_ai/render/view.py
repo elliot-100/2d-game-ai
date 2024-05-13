@@ -48,10 +48,10 @@ class View(Observer):
 
     def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
         super().__init__(name)
+        self._entity_renderers = []
         self.world = world
         self.scale_factor = scale_factor
 
-        self._entity_renderers = []
         self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
 
         self.running = True
@@ -73,9 +73,10 @@ class View(Observer):
 
         for bot in world.bots:
             bot.register_observer(self)
-            self._entity_renderers.append(
-                BotRenderer(view=self, entity=bot, font=self._font)
-            )
+
+        self._entity_renderers = [
+            BotRenderer(view=self, entity=bot, font=self._font) for bot in world.bots
+        ]
 
         self._selected: None | BotRenderer = None
 
@@ -118,9 +119,7 @@ class View(Observer):
         if isinstance(self._selected, BotRenderer) and isinstance(
             self._selected.entity, Bot
         ):
-            self._selected.entity.destination_v = self.from_display(
-                click_pos
-            )
+            self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:
         """Render the World to the Pygame window.
