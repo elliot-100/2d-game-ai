@@ -73,7 +73,6 @@ while view.running:
 
 ### View
 
-
 #### Displays World:
 
 - Centered on origin (0, 0); conventional (positive, right-handed, y-axis up) coordinate system
@@ -81,14 +80,14 @@ while view.running:
 - Updates initially paused, P key toggles pause
 - Renders every update at up to 60 updates/second; is allowed to lag, i.e. may run slower than real-time.
 
+#### Displays Bots:
 
-#### Bots
-
-- Renders all Bots as icons
+- As icons
   - Direction indicator
   - Vision cone
   - Can-see and knows-about relationships as lines
 - Primary mouse click to select a Bot; secondary mouse click to set a destination
+
 
 ## Development
 

@@ -9,24 +9,26 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
-## [UNRELEASED] - TBC
+## [0.4.0] - 2024-05-14
 
 ### Added
 
 - View: user can select a Bot with primary mouse button; set destination with secondary mouse button
 - View: World is initially paused; user can toggle pause with P key
-- View: Draw Bot vision cone indicator (doesn't reflect infinite vision range)
+- View: draw Bot vision cone indicator (doesn't reflect infinite vision range)
+- View: draw World origin
 - `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
 
 ### Fixed
 
-- View: Bot nose indicator wasn't scaled to display
 - Bot: exception if name wasn't a string
+- View: Bot nose indicator wasn't scaled to display
 - Mypy warning: `--strict-concatenate is deprecated ...`
 
 ### Changed
 
-- Bot: `.pos` and `.destination` take `tuple[float, float]` instead of `Vector2`
+- Bot `.pos` and `.destination` take `tuple[float, float]` instead of `Vector2`
+- World is rectangular
 - Extensive refactors
 - CI: use ruff format instead of black + isort
 - Upgrade dev/test dependencies: pytest, ruff
@@ -68,5 +70,6 @@ Historic and pre-release versions aren't necessarily included.
 
 Baseline release.
 
-[0.3.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...HEAD
+[0.4.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/elliot-100/2d-game-ai/releases/tag/v0.2.0
