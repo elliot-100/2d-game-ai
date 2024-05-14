@@ -6,13 +6,13 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
-from two_d_game_ai.entities.observer import Subject
+from two_d_game_ai.entities.observer_pattern import _Subject
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class GenericEntity(Subject, ABC):
+class _GenericEntity(_Subject, ABC):
     """Simulated entity.
 
     Assumed circular.

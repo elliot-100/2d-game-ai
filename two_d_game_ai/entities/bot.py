@@ -7,7 +7,7 @@ import math
 from typing import TYPE_CHECKING
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
-from two_d_game_ai.entities.generic_entity import GenericEntity
+from two_d_game_ai.entities.generic_entity import _GenericEntity
 from two_d_game_ai.geometry.bearing import Bearing
 from two_d_game_ai.geometry.utils import point_in_or_on_circle
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class Bot(GenericEntity):
+class Bot(_GenericEntity):
     """Simulated entity.
 
     Assumed circular.

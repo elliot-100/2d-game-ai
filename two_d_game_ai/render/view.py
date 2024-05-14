@@ -9,7 +9,7 @@ import pygame
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities import Bot
-from two_d_game_ai.entities.observer import Observer
+from two_d_game_ai.entities.observer_pattern import _Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
 from two_d_game_ai.render.primitives import _scaled_line
@@ -21,7 +21,7 @@ _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 
 
-class View(Observer):
+class View(_Observer):
     """Renders window, World and decorations.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards
