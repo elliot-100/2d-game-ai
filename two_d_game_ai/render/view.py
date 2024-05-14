@@ -12,6 +12,7 @@ from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
+from two_d_game_ai.render.primitives import _scaled_line
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -151,6 +152,21 @@ class View(Observer):
                     self.world.y_dimension * self.scale_factor,
                 ),
             ),
+            width=1,
+        )
+        # Origin
+        _scaled_line(
+            self,
+            colors.MIDGROUND,
+            Vector2(0, -self.world.y_dimension / 2),
+            Vector2(0, +self.world.y_dimension / 2),
+            width=1,
+        )
+        _scaled_line(
+            self,
+            colors.MIDGROUND,
+            Vector2(-self.world.x_dimension / 2, 0),
+            Vector2(+self.world.x_dimension / 2, 0),
             width=1,
         )
 
