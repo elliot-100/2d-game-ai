@@ -12,6 +12,7 @@ from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
+from two_d_game_ai.render.primitives import _scaled_line
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -58,15 +59,14 @@ class View(Observer):
 
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
-        window_dimension = world.radius * 2 * self.scale_factor
         self.window = pygame.display.set_mode(
             (
-                window_dimension,
-                window_dimension,
+                self.world.x_dimension * self.scale_factor,
+                self.world.y_dimension * self.scale_factor,
             ),
         )
         self._display_offset = self.scale_factor * Vector2(
-            self.world.radius, self.world.radius
+            self.world.x_dimension / 2, self.world.y_dimension / 2
         )
         pygame.display.set_caption(self.CAPTION)
         self._clock = pygame.Clock()
@@ -140,13 +140,34 @@ class View(Observer):
         pygame.display.flip()
 
     def _draw_world_limits(self) -> None:
-        """Draw the World limits as a circle."""
-        pygame.draw.circle(
+        """Draw the World limits."""
+        # Border
+        pygame.draw.rect(
             self.window,
-            colors.FOREGROUND,
-            self.to_display(Vector2(0, 0)),
-            self.world.radius * self.scale_factor,
-            1,
+            colors.MIDGROUND,
+            (
+                (0, 0),
+                (
+                    self.world.x_dimension * self.scale_factor,
+                    self.world.y_dimension * self.scale_factor,
+                ),
+            ),
+            width=1,
+        )
+        # Origin
+        _scaled_line(
+            self,
+            colors.MIDGROUND,
+            Vector2(0, -self.world.y_dimension / 2),
+            Vector2(0, +self.world.y_dimension / 2),
+            width=1,
+        )
+        _scaled_line(
+            self,
+            colors.MIDGROUND,
+            Vector2(-self.world.x_dimension / 2, 0),
+            Vector2(+self.world.x_dimension / 2, 0),
+            width=1,
         )
 
     def _draw_step_counter(self) -> None:

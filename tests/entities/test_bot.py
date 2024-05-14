@@ -9,7 +9,7 @@ from two_d_game_ai.world import World
 def test_create() -> None:
     """Test Bot initial state."""
     # arrange
-    w = World(10)
+    w = World(10, 10)
 
     # act
     b = Bot(
@@ -33,7 +33,7 @@ def test_can_see_point__in_range() -> None:
 
     With default North heading, can see only points on/within 90 degree cone.
     """
-    w = World(10)
+    w = World(10, 10)
     b = Bot(
         world=w,
         name="b0",
@@ -57,7 +57,7 @@ def test_can_see_point__in_range() -> None:
 def test_move() -> None:
     """Test Bot linear move."""
     # arrange
-    w = World(10)
+    w = World(10, 10)
     b = Bot(
         world=w,
         name="b0",
@@ -74,7 +74,7 @@ def test_move() -> None:
 def test_move_negative() -> None:
     """Test that Bot does not change position by default, as velocity is zero."""
     # arrange
-    w = World(10)
+    w = World(10, 10)
     b = Bot(
         world=w,
         name="b0",
@@ -90,7 +90,7 @@ def test_move_negative() -> None:
 def test_give_destination() -> None:
     """Test that Bot can be given destination and this also sets destination_v."""
     # arrange
-    w = World(10)
+    w = World(10, 10)
     b = Bot(
         world=w,
         name="b0",
@@ -108,7 +108,7 @@ def test_give_destination_v() -> None:
     destination_v.
     """
     # arrange
-    w = World(10)
+    w = World(10, 10)
     b = Bot(
         world=w,
         name="b0",
