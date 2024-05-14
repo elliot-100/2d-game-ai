@@ -113,10 +113,6 @@ class Bot(_GenericEntity):
         """Update Bot, including move over 1 simulation step."""
         self._handle_sensing(other_bots)
 
-        if self._is_in_collision(self.world.movement_blocks):
-            self.stop()
-            return
-
         if self.is_at_destination:
             self.notify_observers("I've reached destination")
             self.destination_v = None
@@ -134,6 +130,11 @@ class Bot(_GenericEntity):
                 self.rotate(-destination_relative_bearing)
                 # initiate move towards destination
                 self._velocity_v = self.heading.vector * Bot.MAX_SPEED
+                proposed_pos_v = (
+                    self.pos_v + self._velocity_v * SIMULATION_STEP_INTERVAL_S
+                )
+                if _in_collision(proposed_pos_v, self.world.movement_blocks):
+                    self.stop()
 
             else:
                 # turn towards destination
@@ -197,11 +198,10 @@ class Bot(_GenericEntity):
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
 
-    def _is_in_collision(self, movement_blocks: list[MovementBlock]) -> bool:
-        """Naively check if Bot is in collision."""
-        for movement_block in movement_blocks:
-            if point_in_or_on_circle(
-                self.pos_v, movement_block.pos_v, movement_block.collision_radius
-            ):
-                return True
-        return False
+
+def _in_collision(future_pos: Vector2, blocks: list[MovementBlock]) -> bool:
+    """Check if future pos would be in collision with a MovementBlock."""
+    return any(
+        point_in_or_on_circle(future_pos, block.pos_v, block.collision_radius)
+        for block in blocks
+    )
