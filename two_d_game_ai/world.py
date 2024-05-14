@@ -9,14 +9,12 @@ if TYPE_CHECKING:
 
 
 class World:
-    """Simulated domain.
-
-    Assumed circular.
+    """Simulated rectangular domain.
 
     Attributes
     ----------
-    radius: float
-        Radius
+    x_dimension: float
+    y_dimension: float
     bots: list[Bot]
         All bots in the World.
     step_counter: int
@@ -25,8 +23,9 @@ class World:
         Whether the World is paused.
     """
 
-    def __init__(self, radius: float) -> None:
-        self.radius = radius
+    def __init__(self, x_dimension: float, y_dimension: float) -> None:
+        self.x_dimension = x_dimension
+        self.y_dimension = y_dimension
         self.bots: list[Bot] = []
         self.step_counter = 0
         self.is_paused: bool = True

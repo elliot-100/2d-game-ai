@@ -22,7 +22,7 @@ from two_d_game_ai.world import World
 # WORLD
 
 # Create a World
-the_world = World(100)
+the_world = World(100, 100)
 
 # ENTITIES
 
@@ -57,8 +57,7 @@ while view.running:
 
 ### World
 
-- Circular (for now)
-- Origin (0, 0) at centre
+- Rectangular
 
 
 ### Bot
@@ -75,9 +74,9 @@ while view.running:
 ### View
 
 
-#### World
+#### Displays World:
 
-- Centered on origin; conventional (positive, right-handed, y-axis up) coordinate system
+- Centered on origin (0, 0); conventional (positive, right-handed, y-axis up) coordinate system
 - By default, 1 World unit : 1 display pixel; can be scaled at initialisation
 - Updates initially paused, P key toggles pause
 - Renders every update at up to 60 updates/second; is allowed to lag, i.e. may run slower than real-time.

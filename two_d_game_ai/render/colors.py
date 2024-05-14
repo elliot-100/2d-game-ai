@@ -3,6 +3,7 @@
 from pygame import Color
 
 BACKGROUND = Color("grey20")
+MIDGROUND = Color("grey40")
 FOREGROUND = Color("white")
 LABEL = Color("grey80")
 VISION = Color("green2")
