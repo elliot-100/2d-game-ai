@@ -25,6 +25,15 @@ def _circle(view: View, color: Color, center: Vector2, radius: float) -> None:
     )
 
 
+def _scaled_circle(view: View, color: Color, center: Vector2, radius: float) -> None:
+    pygame.draw.circle(
+        surface=view.window,
+        color=color,
+        center=view.to_display(center),
+        radius=radius * view.scale_factor,
+    )
+
+
 def _scaled_circular_arc(
     view: View,
     color: Color,

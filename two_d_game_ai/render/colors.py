@@ -2,6 +2,7 @@
 
 from pygame import Color
 
+VOID = Color("black")
 BACKGROUND = Color("grey20")
 MIDGROUND = Color("grey40")
 FOREGROUND = Color("white")

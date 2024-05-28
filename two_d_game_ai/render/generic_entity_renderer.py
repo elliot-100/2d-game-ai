@@ -12,18 +12,18 @@ if TYPE_CHECKING:
     from pygame import Font
 
     from two_d_game_ai import Vector2
-    from two_d_game_ai.entities import GenericEntity
+    from two_d_game_ai.entities.generic_entity import _GenericEntity
     from two_d_game_ai.render.view import View
 
 
-class GenericEntityRenderer(ABC):
+class _GenericEntityRenderer(ABC):
     """Renders an entity to a Surface.
 
     Attributes
     ----------
     clickable_radius: float | None
         Radius in which to register mouse click (display coordinates)
-    entity: GenericEntity
+    entity: _GenericEntity
         The entity to render
     font: Font
         # TODO
@@ -41,7 +41,7 @@ class GenericEntityRenderer(ABC):
 
     LABEL_OFFSET = (10, 10)  # in pixels
 
-    def __init__(self, view: View, entity: GenericEntity, font: Font) -> None:
+    def __init__(self, view: View, entity: _GenericEntity, font: Font) -> None:
         self.view = view
         self.entity = entity
         self.font = font

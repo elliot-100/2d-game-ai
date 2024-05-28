@@ -9,9 +9,10 @@ import pygame
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities import Bot
-from two_d_game_ai.entities.observer import Observer
+from two_d_game_ai.entities.observer_pattern import _Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
+from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.render.primitives import _scaled_line
 
 if TYPE_CHECKING:
@@ -21,7 +22,7 @@ _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 
 
-class View(Observer):
+class View(_Observer):
     """Renders window, World and decorations.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards
@@ -38,9 +39,9 @@ class View(Observer):
 
     Non-public attributes (incomplete)
     ----------------------------------
-    _entity_renderers: list[BotRenderer]
-        All Bot render instances
-    _selected: None | BotRenderer
+    _entity_renderers: list[MovementBlockRenderer | BotRenderer]
+        All entity render instances
+    _selected: None | MovementBlockRenderer | BotRenderer
         The selected entity
     """
 
@@ -70,15 +71,16 @@ class View(Observer):
         )
         pygame.display.set_caption(self.CAPTION)
         self._clock = pygame.Clock()
+        self._entity_renderers = [
+            BotRenderer(view=self, entity=bot, font=self._font) for bot in world.bots
+        ] + [
+            MovementBlockRenderer(view=self, entity=block, font=self._font)
+            for block in world.movement_blocks
+        ]
 
         for bot in world.bots:
             bot.register_observer(self)
-
-        self._entity_renderers = [
-            BotRenderer(view=self, entity=bot, font=self._font) for bot in world.bots
-        ]
-
-        self._selected: None | BotRenderer = None
+        self._selected: None | MovementBlockRenderer | BotRenderer = None
 
     def handle_inputs(self) -> None:
         """Handle user inputs."""
@@ -101,12 +103,14 @@ class View(Observer):
                         self.world.is_paused = not self.world.is_paused
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
-        self._selected = self._clicked_botrenderer(click_pos)
+        self._selected = self._clicked_entity(click_pos)
         for renderer in self._entity_renderers:
             renderer.is_selected = renderer == self._selected
 
-    def _clicked_botrenderer(self, click_pos: Vector2) -> BotRenderer | None:
-        """Return the BotRenderer at click position, or None."""
+    def _clicked_entity(
+        self, click_pos: Vector2
+    ) -> MovementBlockRenderer | BotRenderer | None:
+        """Return the EntityRenderer at click position, or None."""
         for renderer in self._entity_renderers:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
@@ -116,9 +120,9 @@ class View(Observer):
 
     def _handle_mouse_set_destination(self, click_pos: Vector2) -> None:
         """Set destination, if applicable to current selection."""
-        if isinstance(self._selected, BotRenderer) and isinstance(
-            self._selected.entity, Bot
-        ):
+        if isinstance(
+            self._selected, MovementBlockRenderer | BotRenderer
+        ) and isinstance(self._selected.entity, Bot):
             self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:

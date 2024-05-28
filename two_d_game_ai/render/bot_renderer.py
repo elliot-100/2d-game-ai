@@ -8,14 +8,14 @@ from two_d_game_ai import Vector2
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.geometry.utils import point_in_or_on_circle
 from two_d_game_ai.render import colors
-from two_d_game_ai.render.generic_entity_renderer import GenericEntityRenderer
+from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
 from two_d_game_ai.render.primitives import _circle, _scaled_circular_arc, _scaled_line
 
 if TYPE_CHECKING:
     from pygame import Color
 
 
-class BotRenderer(GenericEntityRenderer):
+class BotRenderer(_GenericEntityRenderer):
     """Renders a Bot to a Surface.
 
     Provides methods to draw Bot icon and related elements.

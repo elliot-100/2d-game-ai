@@ -7,15 +7,16 @@ import math
 from typing import TYPE_CHECKING
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
-from two_d_game_ai.entities.generic_entity import GenericEntity
+from two_d_game_ai.entities.generic_entity import _GenericEntity
 from two_d_game_ai.geometry.bearing import Bearing
 from two_d_game_ai.geometry.utils import point_in_or_on_circle
 
 if TYPE_CHECKING:
+    from two_d_game_ai.entities import MovementBlock
     from two_d_game_ai.world import World
 
 
-class Bot(GenericEntity):
+class Bot(_GenericEntity):
     """Simulated entity.
 
     Assumed circular.
@@ -56,6 +57,7 @@ class Bot(GenericEntity):
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(world, name, pos)
+        self._velocity_v = Vector2(0, 0)
         self._destination = tuple[float, float] | None
         self._destination_v: Vector2 | None = None
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
@@ -128,6 +130,11 @@ class Bot(GenericEntity):
                 self.rotate(-destination_relative_bearing)
                 # initiate move towards destination
                 self._velocity_v = self.heading.vector * Bot.MAX_SPEED
+                proposed_pos_v = (
+                    self.pos_v + self._velocity_v * SIMULATION_STEP_INTERVAL_S
+                )
+                if _in_collision(proposed_pos_v, self.world.movement_blocks):
+                    self.stop()
 
             else:
                 # turn towards destination
@@ -137,7 +144,7 @@ class Bot(GenericEntity):
                         destination_relative_bearing,
                     ),
                 )
-        super().update()
+        self._move()
 
     def rotate(self, rotation_delta: float) -> None:
         """Change Bot rotation over 1 simulation step.
@@ -150,6 +157,14 @@ class Bot(GenericEntity):
         """
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         self.heading.vector.rotate_ip(-rotation_delta)
+
+    def stop(self) -> None:
+        """Stop."""
+        self._velocity_v = Vector2(0)
+
+    def _move(self) -> None:
+        """Change position over 1 simulation step."""
+        self.pos_v += self._velocity_v * SIMULATION_STEP_INTERVAL_S
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
@@ -182,3 +197,11 @@ class Bot(GenericEntity):
         ).degrees_normalised
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
+
+
+def _in_collision(future_pos: Vector2, blocks: list[MovementBlock]) -> bool:
+    """Check if future pos would be in collision with a MovementBlock."""
+    return any(
+        point_in_or_on_circle(future_pos, block.pos_v, block.collision_radius)
+        for block in blocks
+    )

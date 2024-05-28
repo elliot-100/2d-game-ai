@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities import Bot
+    from two_d_game_ai.entities import Bot, MovementBlock
 
 
 class World:
@@ -27,6 +27,7 @@ class World:
         self.x_dimension = x_dimension
         self.y_dimension = y_dimension
         self.bots: list[Bot] = []
+        self.movement_blocks: list[MovementBlock] = []
         self.step_counter = 0
         self.is_paused: bool = True
 
