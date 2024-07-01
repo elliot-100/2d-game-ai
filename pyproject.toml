@@ -13,7 +13,7 @@ pygame-ce = "^2.4.0"
 invoke = "^2.2.0"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
-pydoclint = "^0.4.1"
+pydoclint = "^0.5.3"
 pydoctest = "^0.1.22"
 ruff = "^0.4.1"
 
