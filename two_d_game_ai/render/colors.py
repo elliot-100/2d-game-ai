@@ -7,6 +7,7 @@ WINDOW_TEXT = Color("grey80")
 
 WORLD_FILL = Color("grey15")
 WORLD_AXES_LINE = Color("grey25")
+WORLD_GRID_LINE = Color("grey25")
 
 MOVEMENT_BLOCK_FILL = WINDOW_FILL
 
@@ -17,3 +18,5 @@ BOT_CAN_SEE_LINE = Color("green2")
 BOT_KNOWS_LINE = Color("dodgerblue")
 
 SELECTED_FILL = Color("yellow")
+
+DEBUG = Color("magenta")

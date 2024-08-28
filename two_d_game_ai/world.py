@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from two_d_game_ai.pathfinding.grid import Grid
+
 if TYPE_CHECKING:
     from pygame import Vector2
 
@@ -16,8 +18,16 @@ class World:
     Square.
     """
 
-    def __init__(self, size: int) -> None:
+    def __init__(
+        self,
+        size: int,
+        grid_size: int = 2,
+    ) -> None:
         self.size = size
+        self.grid = Grid(size=grid_size)
+        """`Grid` instance."""
+        self.grid_cell_size = self.size / grid_size
+        """Size of a `Grid` cell in `World` units."""
         self.bots: list[Bot] = []
         """All `Bot`s."""
         self.movement_blocks: list[MovementBlock] = []
