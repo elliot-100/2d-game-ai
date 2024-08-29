@@ -33,6 +33,7 @@ view = View(
     name="the_view",
     world=the_world,
     scale_factor=2,
+    margin=20,
 )
 
 while view.running:

@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 import pygame
+from pygame import Rect
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities import Bot
@@ -13,7 +14,7 @@ from two_d_game_ai.entities.observer_pattern import _Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
 from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
-from two_d_game_ai.render.primitives import draw_scaled_line
+from two_d_game_ai.render.primitives import draw_scaled_line, draw_scaled_rect
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -48,22 +49,26 @@ class View(_Observer):
     CAPTION = "2dGameAI"
     FONT_SIZE = 24
 
-    def __init__(self, world: World, name: str, scale_factor: float = 1) -> None:
+    def __init__(
+        self,
+        world: World,
+        name: str,
+        scale_factor: float = 1,
+        margin: int = 0,
+    ) -> None:
         super().__init__(name)
         self._entity_renderers = []
         self.world = world
         self.scale_factor = scale_factor
+        self.margin = margin
 
         self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
         self.running = True
 
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
-        _window_size = self.world.size * self.scale_factor
+        _window_size = self.world.size * self.scale_factor + 2 * self.margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
-        self._display_offset = (
-            Vector2(self.world.size / 2, self.world.size / 2) * self.scale_factor
-        )
         pygame.display.set_caption(self.CAPTION)
         self._clock = pygame.Clock()
         self._entity_renderers = [
@@ -76,6 +81,14 @@ class View(_Observer):
         for bot in world.bots:
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
+
+        self._display_offset = Vector2(
+            self.world.size / 2,
+            self.world.size / 2,
+        ) * self.scale_factor + Vector2(
+            self.margin,
+            self.margin,
+        )
 
     def handle_inputs(self) -> None:
         """Handle user inputs."""
@@ -128,7 +141,7 @@ class View(_Observer):
         # Limit update rate to save CPU
         self._clock.tick(self._max_render_fps)
 
-        self.window.fill(colors.BACKGROUND)
+        self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
 
         for renderer in self._entity_renderers:
@@ -141,32 +154,29 @@ class View(_Observer):
     def _draw_world_limits(self) -> None:
         """Draw the World limits."""
         # Border
-        pygame.draw.rect(
-            self.window,
-            colors.MIDGROUND,
-            (
-                (0, 0),
-                (
-                    self.world.size * self.scale_factor,
-                    self.world.size * self.scale_factor,
-                ),
+        draw_scaled_rect(
+            self,
+            colors.WORLD_FILL,
+            Rect(
+                (-self.world.size / 2, -self.world.size / 2),
+                (self.world.size, self.world.size),
             ),
-            width=1,
+            width=0,
         )
-        # Origin
+        # Axes
         draw_scaled_line(
             self,
-            colors.MIDGROUND,
+            colors.WORLD_AXES_LINE,
             Vector2(0, -self.world.size / 2),
             Vector2(0, +self.world.size / 2),
-            width=1,
+            width=3,
         )
         draw_scaled_line(
             self,
-            colors.MIDGROUND,
+            colors.WORLD_AXES_LINE,
             Vector2(-self.world.size / 2, 0),
             Vector2(+self.world.size / 2, 0),
-            width=1,
+            width=3,
         )
 
     def _draw_step_counter(self) -> None:
