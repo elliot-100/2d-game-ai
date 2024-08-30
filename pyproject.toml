@@ -6,21 +6,22 @@ authors = ["elliot-100 <3186037+elliot-100@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-pygame-ce = "^2.4.0"
+python = ">=3.11, <4"
+# pydoclint dep docstring-parser-fork requires python < 4
+pygame-ce = ">=2.4.0"
 
 [tool.poetry.group.dev.dependencies]
-invoke = "^2.2.0"
-mypy = "^1.8.0"
-pdoc = "^14.6.1"
-pre-commit = "^3.6.0"
-pydoclint = "^0.4.1"
-pydoctest = "^0.1.22"
-ruff = "^0.4.1"
+invoke = ">=2.2.0"
+mypy = ">=1.8.0"
+pdoc = ">=14.6.1"
+pre-commit = ">=3.6.0"
+pydoclint = ">=0.4.1"
+pydoctest = ">=0.1.22"
+ruff = ">=0.4.1"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.0.2"
-mypy = "^1.8.0"
+pytest = ">=8.0.2"
+mypy = ">=1.8.0"
 
 [tool.mypy]
 ## Config file:

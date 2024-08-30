@@ -22,7 +22,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
--
+- Simplify dependencies by using `=>` instead of `^`
 
 ### Removed
 
