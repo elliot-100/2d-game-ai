@@ -9,6 +9,25 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## [UNRELEASED] - TBC
+
+### Added
+
+- MovementBlock entity: circular, Bots stop when they are about to collide with it.
+
+### Fixed
+
+-
+
+### Changed
+
+-
+
+### Removed
+
+-
+
+
 ## [0.4.0] - 2024-05-14
 
 ### Added
