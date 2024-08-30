@@ -1,4 +1,4 @@
-"""World class."""
+"""Package containing the `World` class."""
 
 from __future__ import annotations
 
@@ -9,19 +9,7 @@ if TYPE_CHECKING:
 
 
 class World:
-    """Simulated rectangular domain.
-
-    Attributes
-    ----------
-    x_dimension: float
-    y_dimension: float
-    bots: list[Bot]
-        All bots in the World.
-    step_counter: int
-        Number of update steps taken.
-    is_paused: bool
-        Whether the World is paused.
-    """
+    """Simulated rectangular domain."""
 
     def __init__(self, x_dimension: float, y_dimension: float) -> None:
         self.x_dimension = x_dimension
@@ -29,7 +17,9 @@ class World:
         self.bots: list[Bot] = []
         self.movement_blocks: list[MovementBlock] = []
         self.step_counter = 0
+        """Number of update steps taken."""
         self.is_paused: bool = True
+        """Whether the World is paused."""
 
     def update(self) -> None:
         """Change all Bot positions over 1 simulation step."""

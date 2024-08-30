@@ -1,1 +1,1 @@
-"""Test suite for the render package."""
+"""Package containing test suite for `render` package."""

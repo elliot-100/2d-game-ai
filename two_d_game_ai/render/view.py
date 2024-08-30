@@ -1,4 +1,4 @@
-"""View class: renders a World using Pygame."""
+"""Module containg `View` class."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from two_d_game_ai.entities.observer_pattern import _Observer
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
 from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
-from two_d_game_ai.render.primitives import _scaled_line
+from two_d_game_ai.render.primitives import draw_scaled_line
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -29,19 +29,19 @@ class View(_Observer):
 
     Attributes
     ----------
-    name: str
-    world: World
+    name
+    world
         The World to be viewed
-    scale_factor: float
+    scale_factor
         Rendering scale factor
-    window: Window
+    window
         Top level Pygame Surface.
 
     Non-public attributes (incomplete)
     ----------------------------------
-    _entity_renderers: list[MovementBlockRenderer | BotRenderer]
+    _entity_renderers
         All entity render instances
-    _selected: None | MovementBlockRenderer | BotRenderer
+    _selected
         The selected entity
     """
 
@@ -159,14 +159,14 @@ class View(_Observer):
             width=1,
         )
         # Origin
-        _scaled_line(
+        draw_scaled_line(
             self,
             colors.MIDGROUND,
             Vector2(0, -self.world.y_dimension / 2),
             Vector2(0, +self.world.y_dimension / 2),
             width=1,
         )
-        _scaled_line(
+        draw_scaled_line(
             self,
             colors.MIDGROUND,
             Vector2(-self.world.x_dimension / 2, 0),

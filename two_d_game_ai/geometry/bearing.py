@@ -1,12 +1,11 @@
-"""Bearing class."""
+"""Module containing `Bearing` class."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
 from two_d_game_ai import Vector2
-
-_CIRCLE_DEGREES = 360
+from two_d_game_ai.geometry import CIRCLE_DEGREES
 
 
 @dataclass
@@ -17,17 +16,17 @@ class Bearing:
 
     Attributes
     ----------
-    degrees: float
-        The bearing in positive degrees clockwise from zero at North
-        0 <= degrees < 360
-    degrees_normalised: float
-        The bearing in degrees from zero at North
-        -180 <= degrees < 180
-        Negative value is to left/port/counter-clockwise
-        Positive value is to right/starboard/clockwise
+    degrees
+        The bearing in positive degrees clockwise from zero at North.
+        0 <= degrees < 360.
+    degrees_normalised
+        The bearing in degrees from zero at North.
+        -180 <= degrees < 180.
+        Negative value is to left/port/counter-clockwise.
+        Positive value is to right/starboard/clockwise.
 
-    vector: Vector2
-        The bearing as a standard (positive, right-handed, y-axis up) coordinate vector
+    vector
+        The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.
     """
 
     vector: Vector2 = field(default_factory=Vector2, init=False)
@@ -36,7 +35,7 @@ class Bearing:
     def __post_init__(self) -> None:
         """Construct vector from bearing angle."""
         v = Vector2()
-        v.from_polar((1, self._degrees - _CIRCLE_DEGREES / 4))
+        v.from_polar((1, self._degrees - CIRCLE_DEGREES / 4))
         self.vector = _flip_vector_y(v)
 
     @property
@@ -46,10 +45,10 @@ class Bearing:
         Intended for absolute bearings, where North is 0, East is 90, etc.
 
         """
-        angle = -self.vector.as_polar()[1] + _CIRCLE_DEGREES / 4
+        angle = -self.vector.as_polar()[1] + CIRCLE_DEGREES / 4
         if angle < 0:
-            angle += _CIRCLE_DEGREES
-        if angle == _CIRCLE_DEGREES:
+            angle += CIRCLE_DEGREES
+        if angle == CIRCLE_DEGREES:
             angle = 0
         return angle
 
@@ -63,8 +62,8 @@ class Bearing:
         Note: Due south is -180.
 
         """
-        if self.degrees >= _CIRCLE_DEGREES / 2:
-            return self.degrees - _CIRCLE_DEGREES
+        if self.degrees >= CIRCLE_DEGREES / 2:
+            return self.degrees - CIRCLE_DEGREES
         return self.degrees
 
     def relative(self, other_vector: Vector2) -> Bearing:

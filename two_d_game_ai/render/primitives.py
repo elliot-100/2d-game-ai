@@ -1,4 +1,4 @@
-"""Low level rendering primitives."""
+"""Module containing rendering primitives, wrapping `Pygame.draw` functions."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Rect
 
-from two_d_game_ai.render import _to_display_radians
+from two_d_game_ai.render import to_display_radians
 
 if TYPE_CHECKING:
     from pygame import Color, Surface
@@ -16,7 +16,13 @@ if TYPE_CHECKING:
     from two_d_game_ai.render.view import View
 
 
-def _circle(view: View, color: Color, center: Vector2, radius: float) -> None:
+def draw_circle(
+    view: View,
+    color: Color,
+    center: Vector2,
+    radius: float,
+) -> None:
+    """Draw a circle on the `View`."""
     pygame.draw.circle(
         surface=view.window,
         color=color,
@@ -25,7 +31,15 @@ def _circle(view: View, color: Color, center: Vector2, radius: float) -> None:
     )
 
 
-def _scaled_circle(view: View, color: Color, center: Vector2, radius: float) -> None:
+def draw_scaled_circle(
+    view: View,
+    color: Color,
+    center: Vector2,
+    radius: float,
+) -> None:
+    """Draw a circle on the `View`, in `World` units,
+    which are scaled/translated for display.
+    """
     pygame.draw.circle(
         surface=view.window,
         color=color,
@@ -34,7 +48,7 @@ def _scaled_circle(view: View, color: Color, center: Vector2, radius: float) -> 
     )
 
 
-def _scaled_circular_arc(
+def draw_scaled_circular_arc(
     view: View,
     color: Color,
     center: Vector2,
@@ -43,7 +57,11 @@ def _scaled_circular_arc(
     stop_angle: float,
     width: int = 1,
 ) -> None:
-    """Draw a circular arc, scaled to display coordinates."""
+    """Draw a circular arc on the `View`, in `World` units,
+    which are scaled/translated for display.
+
+    `width`: unscaled display units.
+    """
     enclosing_rect_dimension = int(2 * radius * view.scale_factor)
     enclosing_rect = Rect(0, 0, enclosing_rect_dimension, enclosing_rect_dimension)
     display_center = view.to_display(center)
@@ -54,19 +72,24 @@ def _scaled_circular_arc(
         surface=view.window,
         color=color,
         rect=enclosing_rect,
-        start_angle=_to_display_radians(stop_angle),
-        stop_angle=_to_display_radians(start_angle),
+        start_angle=to_display_radians(stop_angle),
+        stop_angle=to_display_radians(start_angle),
         width=width,
     )
 
 
-def _scaled_line(
+def draw_scaled_line(
     view: View,
     color: Color,
     start_pos: Vector2,
     end_pos: Vector2,
     width: int = 1,
 ) -> None:
+    """Draw a line on the `View`, in `World` units,
+    which are scaled/translated for display.
+
+    `width`: unscaled display units.
+    """
     pygame.draw.line(
         surface=view.window,
         color=color,
@@ -76,12 +99,18 @@ def _scaled_line(
     )
 
 
-def _scaled_blit(
+def draw_scaled_blit(
     view: View,
     source: Surface,
     dest: Vector2,
     display_offset: tuple[int, int],
 ) -> None:
+    """Blit to the `View`.
+
+    `dest`: `World` units, which are scaled/translated for display.
+
+    `display_offset`: unscaled display units.
+    """
     view.window.blit(
         source=source,
         dest=view.to_display(dest) + display_offset,

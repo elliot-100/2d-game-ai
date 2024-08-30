@@ -1,4 +1,4 @@
-"""GenericEntityRenderer class."""
+"""Module containing `_GenericEntityRenderer` class."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from two_d_game_ai.render import colors
-from two_d_game_ai.render.primitives import _scaled_blit
+from two_d_game_ai.render.primitives import draw_scaled_blit
 
 if TYPE_CHECKING:
     from pygame import Font
@@ -21,25 +21,26 @@ class _GenericEntityRenderer(ABC):
 
     Attributes
     ----------
-    clickable_radius: float | None
+    clickable_radius
         Radius in which to register mouse click (display coordinates)
-    entity: _GenericEntity
+    entity
         The entity to render
-    font: Font
+    font
         # TODO
-    is_selected: bool
+    is_selected
         Whether the rendered entity is selected
-    view:
+    view
         The View context
 
     Non-public attributes/properties
     ----------
-    _pos_v: Vector2
+    _pos_v
         Position (display coordinates)
 
     """
 
-    LABEL_OFFSET = (10, 10)  # in pixels
+    LABEL_OFFSET = (10, 10)
+    """Display units."""
 
     def __init__(self, view: View, entity: _GenericEntity, font: Font) -> None:
         self.view = view
@@ -65,7 +66,7 @@ class _GenericEntityRenderer(ABC):
             antialias=True,
             color=colors.LABEL,
         )
-        _scaled_blit(
+        draw_scaled_blit(
             self.view,
             source=label,
             dest=self.entity.pos_v,
