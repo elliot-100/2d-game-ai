@@ -1,1 +1,1 @@
-"""Package for geometric classes and functions."""
+"""Package containing test suite for `geometry` package."""

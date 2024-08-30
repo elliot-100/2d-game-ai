@@ -1,4 +1,4 @@
-"""Tests for Bearing class."""
+"""Tests for `Bearing` class."""
 
 import pytest
 

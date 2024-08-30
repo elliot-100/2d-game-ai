@@ -1,4 +1,4 @@
-"""GenericEntityRenderer class."""
+"""Module containing `_GenericEntityRenderer` class."""
 
 from __future__ import annotations
 
@@ -21,25 +21,26 @@ class _GenericEntityRenderer(ABC):
 
     Attributes
     ----------
-    clickable_radius: float | None
+    clickable_radius
         Radius in which to register mouse click (display coordinates)
-    entity: _GenericEntity
+    entity
         The entity to render
-    font: Font
+    font
         # TODO
-    is_selected: bool
+    is_selected
         Whether the rendered entity is selected
-    view:
+    view
         The View context
 
     Non-public attributes/properties
     ----------
-    _pos_v: Vector2
+    _pos_v
         Position (display coordinates)
 
     """
 
-    LABEL_OFFSET = (10, 10)  # in pixels
+    LABEL_OFFSET = (10, 10)
+    """Display units."""
 
     def __init__(self, view: View, entity: _GenericEntity, font: Font) -> None:
         self.view = view

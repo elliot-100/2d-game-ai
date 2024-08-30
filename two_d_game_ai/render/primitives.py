@@ -1,4 +1,4 @@
-"""Low level rendering primitives."""
+"""Module containing rendering primitives."""
 
 from __future__ import annotations
 

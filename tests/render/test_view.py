@@ -1,4 +1,4 @@
-"""Tests for the View class."""
+"""Tests for `View` class."""
 
 from two_d_game_ai import Vector2
 from two_d_game_ai.render.view import View

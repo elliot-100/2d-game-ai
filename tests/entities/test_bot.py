@@ -1,4 +1,4 @@
-"""Tests for the Bot class in isolation."""
+"""Tests for `Bot` class."""
 
 from tests import NE, NW, SE, SW, E, N, S, W
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2

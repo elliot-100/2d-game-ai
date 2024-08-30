@@ -1,1 +1,1 @@
-"""Package for geometric classes and functions."""
+"""Package containing geometric classes and functions."""

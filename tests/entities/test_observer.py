@@ -1,4 +1,4 @@
-"""Test the Observer pattern."""
+"""Tests for `observer_pattern` module."""
 
 import logging
 

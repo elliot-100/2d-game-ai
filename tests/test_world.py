@@ -1,4 +1,4 @@
-"""Tests for the World class."""
+"""Tests for `World` class."""
 
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.world import World

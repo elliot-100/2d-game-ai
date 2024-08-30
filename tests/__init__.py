@@ -1,4 +1,4 @@
-"""Test suite."""
+"""Package containing the test suite."""
 
 from two_d_game_ai import Vector2
 

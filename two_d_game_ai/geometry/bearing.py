@@ -1,4 +1,4 @@
-"""Bearing class."""
+"""Module containing `Bearing` class."""
 
 from __future__ import annotations
 
@@ -17,17 +17,17 @@ class Bearing:
 
     Attributes
     ----------
-    degrees: float
-        The bearing in positive degrees clockwise from zero at North
-        0 <= degrees < 360
-    degrees_normalised: float
-        The bearing in degrees from zero at North
-        -180 <= degrees < 180
-        Negative value is to left/port/counter-clockwise
-        Positive value is to right/starboard/clockwise
+    degrees
+        The bearing in positive degrees clockwise from zero at North.
+        0 <= degrees < 360.
+    degrees_normalised
+        The bearing in degrees from zero at North.
+        -180 <= degrees < 180.
+        Negative value is to left/port/counter-clockwise.
+        Positive value is to right/starboard/clockwise.
 
-    vector: Vector2
-        The bearing as a standard (positive, right-handed, y-axis up) coordinate vector
+    vector
+        The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.
     """
 
     vector: Vector2 = field(default_factory=Vector2, init=False)

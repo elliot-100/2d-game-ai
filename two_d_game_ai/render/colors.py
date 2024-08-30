@@ -1,4 +1,4 @@
-"""Define colors."""
+"""Module containing colour definitions."""
 
 from pygame import Color
 

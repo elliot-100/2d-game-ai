@@ -1,4 +1,4 @@
-"""View class: renders a World using Pygame."""
+"""Module containg `View` class."""
 
 from __future__ import annotations
 
@@ -29,19 +29,19 @@ class View(_Observer):
 
     Attributes
     ----------
-    name: str
-    world: World
+    name
+    world
         The World to be viewed
-    scale_factor: float
+    scale_factor
         Rendering scale factor
-    window: Window
+    window
         Top level Pygame Surface.
 
     Non-public attributes (incomplete)
     ----------------------------------
-    _entity_renderers: list[MovementBlockRenderer | BotRenderer]
+    _entity_renderers
         All entity render instances
-    _selected: None | MovementBlockRenderer | BotRenderer
+    _selected
         The selected entity
     """
 

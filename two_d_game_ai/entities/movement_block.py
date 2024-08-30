@@ -1,4 +1,4 @@
-"""MovementBlock class."""
+"""Package containing `MovementBlock` class."""
 
 from __future__ import annotations
 
@@ -18,14 +18,14 @@ class MovementBlock(_GenericEntity):
 
     Attributes
     ----------
-    name: str
-    collision_radius: float
+    name
+    collision_radius
         Radius for collision detection
-    pos: tuple[float, float]
+    pos
         Position (World coordinates)
-    pos_v: Vector2
+    pos_v
         Position (World coordinates)
-    world: World
+    world
 
     """
 

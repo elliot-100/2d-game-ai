@@ -1,4 +1,4 @@
-"""Bot class."""
+"""Package containing `Bot` class."""
 
 from __future__ import annotations
 
@@ -21,39 +21,24 @@ class Bot(_GenericEntity):
 
     Assumed circular.
 
-    Attributes
-    ----------
-    destination: tuple[float, float] | None
-        Destination point (World coordinates)
-    destination_v: Vector2 | None
-        Destination point (World coordinates)
-    heading: Bearing
-        Heading
-    known_bots: set[Bot]
-        The Bot's known but not visible peers
-    name: str
-    pos: tuple[float, float]
-        Position (World coordinates)
-    pos_v: Vector2
-        Position (World coordinates)
-    visible_bots: set[Bot]
-        The Bot's visible peers.
-    world: World
-
     Non-public attributes/properties
     --------------------------------
-    _speed: float
+    _speed
         Speed as a scalar (World units / s)
         Read-only.
-    _velocity_v: Vector2
+    _velocity_v
         Velocity (World coordinates / s)
     """
 
-    MAX_SPEED = 60  # World units / s
-    MAX_ROTATION_RATE = 90  # degrees / s
-    INITIAL_HEADING_DEGREES = 0  # degrees
-    VISION_CONE_ANGLE = 90  # degrees
-    DESTINATION_ARRIVAL_TOLERANCE = 1  # World units
+    MAX_SPEED = 60
+    """World units / second."""
+    MAX_ROTATION_RATE = 90
+    """Degrees / second."""
+    INITIAL_HEADING_DEGREES = 0
+    VISION_CONE_ANGLE = 90
+    """Degrees."""
+    DESTINATION_ARRIVAL_TOLERANCE = 1
+    """World units."""
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(world, name, pos)
@@ -62,13 +47,15 @@ class Bot(_GenericEntity):
         self._destination_v: Vector2 | None = None
         self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
+        """Peers which are known about, but aren't currently in sight."""
         self.visible_bots: set[Bot] = set()
+        """Peers which are currently in sight."""
         self.world.bots.append(self)
         logging.info("Bot `%s` created.", self.name)
 
     @property
     def destination(self) -> tuple[float, float] | None:
-        """Return destination."""
+        """Destination point in World coordinates."""
         if self._destination_v is not None:
             return self._destination_v.x, self._destination_v.y
         return None
@@ -80,7 +67,7 @@ class Bot(_GenericEntity):
 
     @property
     def destination_v(self) -> Vector2 | None:
-        """Return destination vector."""
+        """Destination point in World coordinates, as `Vector2`."""
         return self._destination_v
 
     @destination_v.setter

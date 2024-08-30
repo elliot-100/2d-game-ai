@@ -1,4 +1,4 @@
-"""Package for rendering the model using Pygame."""
+"""Package implementing Pygame renderer."""
 
 from __future__ import annotations
 

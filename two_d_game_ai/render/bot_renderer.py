@@ -1,4 +1,4 @@
-"""BotRenderer class: responsible for rendering a Bot and decorations."""
+"""Module containing `BotRenderer` class."""
 
 from __future__ import annotations
 
@@ -22,13 +22,13 @@ class BotRenderer(_GenericEntityRenderer):
 
     Attributes
     ----------
-    entity: Bot
+    entity
         The entity to render
-    font: Font
+    font
         # TODO
-    is_selected: bool
+    is_selected
         Whether the rendered bot is selected
-    view:
+    view
         The View context
 
     Non-public attributes/properties
@@ -37,7 +37,8 @@ class BotRenderer(_GenericEntityRenderer):
         Position (display coordinates)
     """
 
-    ICON_RADIUS = 10  # in pixels
+    ICON_RADIUS = 10
+    """Display units."""
 
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""

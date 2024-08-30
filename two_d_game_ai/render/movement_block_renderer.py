@@ -1,4 +1,4 @@
-"""MovementBlockRenderer class."""
+"""Module containing `MovementBlockRenderer` class."""
 
 from __future__ import annotations
 
@@ -22,20 +22,20 @@ class MovementBlockRenderer(_GenericEntityRenderer):
 
     Attributes
     ----------
-    clickable_radius: int | float
+    clickable_radius
         Radius in which to register mouse click (display coordinates)
-    view:
+    view
         The View context
-    entity: MovementBlock
+    entity
         The entity to render
-    font: Font
+    font
         # TODO
-    is_selected: bool
+    is_selected
         Whether the rendered entity is selected
 
     Non-public attributes/properties
     ----------
-    _pos_v: Vector2
+    _pos_v
         Position (display coordinates)
     """
 

@@ -1,4 +1,4 @@
-"""Generic entity class."""
+"""Package containing `_GenericEntity` class."""
 
 from __future__ import annotations
 
@@ -13,22 +13,15 @@ if TYPE_CHECKING:
 
 
 class _GenericEntity(_Subject, ABC):
-    """Simulated entity.
+    """Generic simulated entity.
 
     Assumed circular.
-
-    Attributes
-    ----------
-    name: str
-    pos: tuple[float, float] | None
-        Position (World coordinates)
-    pos_v: Vector2
-        Position (World coordinates)
-    world: World
     """
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(name)
         self.world = world
         self.pos = pos
+        """Position in `World` coordinates."""
         self.pos_v = Vector2(pos)
+        """Position in `World` coordinates, as `Vector2`."""
