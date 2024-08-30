@@ -22,7 +22,8 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
-- Namespace simplifications, made more memberas public
+- World: square
+- Namespace simplifications, made more members public
 - Docs: docstrings: revised package/module level, constants, remove redundant type annotations
 - Simplify dependencies by using `=>` instead of `^`
 

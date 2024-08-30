@@ -55,19 +55,14 @@ class View(_Observer):
         self.scale_factor = scale_factor
 
         self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
-
         self.running = True
 
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
-        self.window = pygame.display.set_mode(
-            (
-                self.world.x_dimension * self.scale_factor,
-                self.world.y_dimension * self.scale_factor,
-            ),
-        )
-        self._display_offset = self.scale_factor * Vector2(
-            self.world.x_dimension / 2, self.world.y_dimension / 2
+        _window_size = self.world.size * self.scale_factor
+        self.window = pygame.display.set_mode((_window_size, _window_size))
+        self._display_offset = (
+            Vector2(self.world.size / 2, self.world.size / 2) * self.scale_factor
         )
         pygame.display.set_caption(self.CAPTION)
         self._clock = pygame.Clock()
@@ -152,8 +147,8 @@ class View(_Observer):
             (
                 (0, 0),
                 (
-                    self.world.x_dimension * self.scale_factor,
-                    self.world.y_dimension * self.scale_factor,
+                    self.world.size * self.scale_factor,
+                    self.world.size * self.scale_factor,
                 ),
             ),
             width=1,
@@ -162,15 +157,15 @@ class View(_Observer):
         draw_scaled_line(
             self,
             colors.MIDGROUND,
-            Vector2(0, -self.world.y_dimension / 2),
-            Vector2(0, +self.world.y_dimension / 2),
+            Vector2(0, -self.world.size / 2),
+            Vector2(0, +self.world.size / 2),
             width=1,
         )
         draw_scaled_line(
             self,
             colors.MIDGROUND,
-            Vector2(-self.world.x_dimension / 2, 0),
-            Vector2(+self.world.x_dimension / 2, 0),
+            Vector2(-self.world.size / 2, 0),
+            Vector2(+self.world.size / 2, 0),
             width=1,
         )
 
