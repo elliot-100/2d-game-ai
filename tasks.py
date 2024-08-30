@@ -1,4 +1,4 @@
-"""Command line task runners.
+"""Command line task runners using Invoke.
 
 `inv {task}` to run a task.
 `inv -l` to list tasks.

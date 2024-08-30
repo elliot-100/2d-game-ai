@@ -13,7 +13,8 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
-- MovementBlock entity: circular, Bots stop when they are about to collide with it.
+- MovementBlock entity: circular, Bots stop when they are about to collide with it
+- Dev dependency pdoc
 
 ### Fixed
 

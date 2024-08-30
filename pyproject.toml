@@ -12,6 +12,7 @@ pygame-ce = "^2.4.0"
 [tool.poetry.group.dev.dependencies]
 invoke = "^2.2.0"
 mypy = "^1.8.0"
+pdoc = "^14.6.1"
 pre-commit = "^3.6.0"
 pydoclint = "^0.4.1"
 pydoctest = "^0.1.22"
