@@ -14,6 +14,7 @@ class Grid:
     ) -> None:
         self.size = size
         self.offset = GridRef(-size // 2, -size // 2)
+        self.untraversable_cells: set[GridRef] = set()
 
     @property
     def cells(self) -> set[GridRef]:
