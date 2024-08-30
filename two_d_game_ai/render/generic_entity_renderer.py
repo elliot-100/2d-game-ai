@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from two_d_game_ai.render import colors
-from two_d_game_ai.render.primitives import _scaled_blit
+from two_d_game_ai.render.primitives import draw_scaled_blit
 
 if TYPE_CHECKING:
     from pygame import Font
@@ -66,7 +66,7 @@ class _GenericEntityRenderer(ABC):
             antialias=True,
             color=colors.LABEL,
         )
-        _scaled_blit(
+        draw_scaled_blit(
             self.view,
             source=label,
             dest=self.entity.pos_v,

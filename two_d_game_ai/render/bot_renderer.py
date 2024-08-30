@@ -9,7 +9,11 @@ from two_d_game_ai.entities import Bot
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
-from two_d_game_ai.render.primitives import _circle, _scaled_circular_arc, _scaled_line
+from two_d_game_ai.render.primitives import (
+    draw_circle,
+    draw_scaled_circular_arc,
+    draw_scaled_line,
+)
 
 if TYPE_CHECKING:
     from pygame import Color
@@ -77,13 +81,13 @@ class BotRenderer(_GenericEntityRenderer):
 
         # Destination marker (X)
         offset = self.ICON_RADIUS / self.view.scale_factor
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.destination_v + Vector2(-offset, -offset),
             end_pos=self.entity.destination_v + Vector2(offset, offset),
         )
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.destination_v + Vector2(offset, -offset),
@@ -91,7 +95,7 @@ class BotRenderer(_GenericEntityRenderer):
         )
 
         # Line from Bot centre to destination
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.FOREGROUND,
             start_pos=self.entity.pos_v,
@@ -118,19 +122,19 @@ class BotRenderer(_GenericEntityRenderer):
             -vision_end_angle
         )
 
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.VISION,
             start_pos=self.entity.pos_v,
             end_pos=start_wedge_point,
         )
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.VISION,
             start_pos=self.entity.pos_v,
             end_pos=end_wedge_point,
         )
-        _scaled_circular_arc(
+        draw_scaled_circular_arc(
             self.view,
             color=colors.VISION,
             center=self.entity.pos_v,
@@ -142,7 +146,7 @@ class BotRenderer(_GenericEntityRenderer):
     def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:
         """Draw lines from Bot to other bots based on visibility or knowledge."""
         for bot in bots:
-            _scaled_line(
+            draw_scaled_line(
                 self.view,
                 color=color,
                 start_pos=self.entity.pos_v,
@@ -155,17 +159,14 @@ class BotRenderer(_GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
         fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
-        _circle(
-            self.view,
-            color=fill_color,
-            center=self._pos_v,
-            radius=self.ICON_RADIUS,
+        draw_circle(
+            self.view, color=fill_color, center=self._pos_v, radius=self.ICON_RADIUS
         )
 
         # Heading indicator (line from centre to 'nose')
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
-        _scaled_line(
+        draw_scaled_line(
             self.view,
             color=colors.BACKGROUND,
             start_pos=self.entity.pos_v,

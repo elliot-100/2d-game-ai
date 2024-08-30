@@ -8,7 +8,7 @@ from two_d_game_ai.entities import MovementBlock
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
-from two_d_game_ai.render.primitives import _scaled_circle
+from two_d_game_ai.render.primitives import draw_scaled_circle
 
 if TYPE_CHECKING:
     from pygame import Font
@@ -57,7 +57,7 @@ class MovementBlockRenderer(_GenericEntityRenderer):
             raise TypeError
 
         fill_color = colors.SELECTED if self.is_selected else colors.VOID
-        _scaled_circle(
+        draw_scaled_circle(
             self.view,
             color=fill_color,
             center=self.entity.pos_v,

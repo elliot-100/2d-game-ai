@@ -7,10 +7,10 @@ from math import radians
 from two_d_game_ai.geometry import CIRCLE_DEGREES
 
 
-def _to_display_radians(bearing_deg: float) -> float:
+def to_display_radians(bearing_deg: float) -> float:
     """Convert bearing (degrees) to Pygame-compatible angle (radians).
 
-    For use in e.g. calls to `pygame.draw.arc`
+    For use in e.g. calls to `pygame.draw.arc`.
 
     Parameters
     ----------
