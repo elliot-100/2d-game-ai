@@ -17,7 +17,7 @@ pdoc = ">=14.6.1"
 pre-commit = ">=3.6.0"
 pydoclint = ">=0.4.1"
 pydoctest = ">=0.1.22"
-ruff = ">=0.4.1"
+ruff = ">=0.6.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = ">=8.0.2"
