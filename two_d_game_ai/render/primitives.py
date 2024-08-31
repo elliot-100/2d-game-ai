@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Rect
 
+from two_d_game_ai import Vector2
 from two_d_game_ai.render import to_display_radians
 
 if TYPE_CHECKING:
     from pygame import Color, Surface
 
-    from two_d_game_ai import Vector2
     from two_d_game_ai.render.view import View
 
 
@@ -95,6 +95,33 @@ def draw_scaled_line(
         color=color,
         start_pos=view.to_display(start_pos),
         end_pos=view.to_display(end_pos),
+        width=width,
+    )
+
+
+def draw_scaled_rect(
+    view: View,
+    color: Color,
+    rect: Rect,
+    width: int,
+) -> None:
+    """Draw a rectangle on the `View`, in `World` units,
+    which are scaled/translated for display.
+
+    `width`: unscaled display units.
+    """
+    scaled_pos = view.to_display(Vector2(rect.left, rect.top))
+    scaled_width = rect.width * view.scale_factor
+    scaled_height = rect.height * view.scale_factor
+    pygame.draw.rect(
+        surface=view.window,
+        color=color,
+        rect=(
+            scaled_pos.x,
+            scaled_pos.y - scaled_height,
+            scaled_width,
+            scaled_height,
+        ),
         width=width,
     )
 

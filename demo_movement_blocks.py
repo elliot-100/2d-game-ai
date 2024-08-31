@@ -9,7 +9,7 @@ from two_d_game_ai.world import World
 logging.basicConfig(level=logging.INFO)
 
 # Create a World
-the_world = World(300, 300)
+the_world = World(300)
 
 # Add a Bot to the World...
 bot = Bot(
@@ -31,6 +31,7 @@ view = View(
     name="the_view",
     world=the_world,
     scale_factor=1,
+    margin=40,
 )
 
 while view.running:

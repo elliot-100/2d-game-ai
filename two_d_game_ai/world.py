@@ -11,9 +11,8 @@ if TYPE_CHECKING:
 class World:
     """Simulated rectangular domain."""
 
-    def __init__(self, x_dimension: float, y_dimension: float) -> None:
-        self.x_dimension = x_dimension
-        self.y_dimension = y_dimension
+    def __init__(self, size: int) -> None:
+        self.size = size
         self.bots: list[Bot] = []
         self.movement_blocks: list[MovementBlock] = []
         self.step_counter = 0

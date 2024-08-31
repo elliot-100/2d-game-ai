@@ -13,6 +13,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
+- View: margin around rendered World
 - MovementBlock entity: circular, Bots stop when they are about to collide with it
 - Dev dependency pdoc
 
@@ -22,7 +23,9 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed
 
-- Namespace simplifications, made more memberas public
+- World: now square
+- Colour palette
+- Namespace simplifications, made more members public
 - Docs: docstrings: revised package/module level, constants, remove redundant type annotations
 - Simplify dependencies by using `=>` instead of `^`
 
