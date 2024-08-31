@@ -185,7 +185,7 @@ class View(_Observer):
         text = self._font.render(
             text=text_content,
             antialias=True,
-            color=colors.LABEL,
+            color=colors.WINDOW_TEXT,
         )
         self.window.blit(text, (0, 0))
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.primitives import draw_scaled_blit
 
@@ -17,27 +18,7 @@ if TYPE_CHECKING:
 
 
 class _GenericEntityRenderer(ABC):
-    """Renders an entity to a Surface.
-
-    Attributes
-    ----------
-    clickable_radius
-        Radius in which to register mouse click (display coordinates)
-    entity
-        The entity to render
-    font
-        # TODO
-    is_selected
-        Whether the rendered entity is selected
-    view
-        The View context
-
-    Non-public attributes/properties
-    ----------
-    _pos_v
-        Position (display coordinates)
-
-    """
+    """Renders an entity to a Surface."""
 
     LABEL_OFFSET = (10, 10)
     """Display units."""
@@ -64,7 +45,7 @@ class _GenericEntityRenderer(ABC):
         label = self.font.render(
             text=str(self.entity.name),
             antialias=True,
-            color=colors.LABEL,
+            color=colors.WINDOW_TEXT,
         )
         draw_scaled_blit(
             self.view,
@@ -72,3 +53,18 @@ class _GenericEntityRenderer(ABC):
             dest=self.entity.pos_v,
             display_offset=self.LABEL_OFFSET,
         )
+
+    def is_clicked(self, click_pos: Vector2) -> bool:
+        """Determine if the entity is clicked.
+
+        Parameters
+        ----------
+        click_pos
+            The position of the click in window coordinates.
+
+        Returns
+        -------
+        bool
+            True if the click position is within or on the clickable radius.
+        """
+        return point_in_or_on_circle(click_pos, self._pos_v, self.clickable_radius)

@@ -2,16 +2,19 @@
 
 from pygame import Color
 
-VOID = Color("black")
-BACKGROUND = Color("grey20")
-FOREGROUND = Color("white")
-
 WINDOW_FILL = Color("grey10")
+WINDOW_TEXT = Color("grey80")
 
 WORLD_FILL = Color("grey15")
 WORLD_AXES_LINE = Color("grey25")
 
-LABEL = Color("grey80")
-VISION = Color("green2")
-KNOWS = Color("dodgerblue")
-SELECTED = Color("yellow")
+MOVEMENT_BLOCK_FILL = WINDOW_FILL
+
+BOT_FILL = Color("white")
+BOT_HEADING_INDICATOR_LINE = WINDOW_FILL
+BOT_DESTINATION_LINE = Color("white")
+BOT_CAN_SEE_LINE = Color("green2")
+BOT_KNOWS_LINE = Color("dodgerblue")
+
+SELECTED_FILL = Color("yellow")
+
