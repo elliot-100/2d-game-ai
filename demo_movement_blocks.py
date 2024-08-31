@@ -22,9 +22,7 @@ bot = Bot(
 bot.destination = (100, -0)
 
 # Add a MovementBlock between Bot and destination
-movement_block = MovementBlock(
-    world=the_world, name="mb0", pos=(0, 0), collision_radius=50
-)
+movement_block = MovementBlock(world=the_world, name="mb0", pos=(0, 0), radius=50)
 
 # Create a View of the World
 view = View(

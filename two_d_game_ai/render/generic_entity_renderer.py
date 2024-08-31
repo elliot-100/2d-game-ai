@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from pygame import Font
 
     from two_d_game_ai import Vector2
-    from two_d_game_ai.entities.generic_entity import _GenericEntity
+    from two_d_game_ai.entities.generic_entity import GenericEntity
     from two_d_game_ai.render.view import View
 
 
@@ -42,7 +42,7 @@ class _GenericEntityRenderer(ABC):
     LABEL_OFFSET = (10, 10)
     """Display units."""
 
-    def __init__(self, view: View, entity: _GenericEntity, font: Font) -> None:
+    def __init__(self, view: View, entity: GenericEntity, font: Font) -> None:
         self.view = view
         self.entity = entity
         self.font = font

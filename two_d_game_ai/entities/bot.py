@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
-from two_d_game_ai.entities.generic_entity import _GenericEntity
+from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.geometry.bearing import Bearing
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class Bot(_GenericEntity):
+class Bot(GenericEntity):
     """Simulated entity.
 
     Assumed circular.
@@ -30,14 +30,14 @@ class Bot(_GenericEntity):
         Velocity (World coordinates / s)
     """
 
-    MAX_SPEED = 60
+    MAX_SPEED: ClassVar[float] = 60
     """World units / second."""
-    MAX_ROTATION_RATE = 90
+    MAX_ROTATION_RATE: ClassVar[float] = 90
     """Degrees / second."""
-    INITIAL_HEADING_DEGREES = 0
-    VISION_CONE_ANGLE = 90
+    INITIAL_HEADING_DEGREES: ClassVar[float] = 0
+    VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
-    DESTINATION_ARRIVAL_TOLERANCE = 1
+    _DESTINATION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """World units."""
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
@@ -45,7 +45,7 @@ class Bot(_GenericEntity):
         self._velocity_v = Vector2(0, 0)
         self._destination = tuple[float, float] | None
         self._destination_v: Vector2 | None = None
-        self.heading = Bearing(Bot.INITIAL_HEADING_DEGREES)
+        self.heading: Bearing = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()
         """Peers which are known about, but aren't currently in sight."""
         self.visible_bots: set[Bot] = set()
@@ -76,18 +76,13 @@ class Bot(_GenericEntity):
         self._destination_v = value
 
     @property
-    def _speed(self) -> float:
-        """Get speed, in World units / s."""
-        return self._velocity_v.magnitude()
-
-    @property
     def is_at_destination(self) -> bool:
         """Get whether Bot is at destination (True) or not (False)."""
         if self.destination_v:
             return point_in_or_on_circle(
                 self.pos_v,
                 self.destination_v,
-                self.DESTINATION_ARRIVAL_TOLERANCE,
+                self._DESTINATION_ARRIVAL_TOLERANCE,
             )
         return False
 
@@ -189,6 +184,5 @@ class Bot(_GenericEntity):
 def _in_collision(future_pos: Vector2, blocks: list[MovementBlock]) -> bool:
     """Check if future pos would be in collision with a MovementBlock."""
     return any(
-        point_in_or_on_circle(future_pos, block.pos_v, block.collision_radius)
-        for block in blocks
+        point_in_or_on_circle(future_pos, block.pos_v, block.radius) for block in blocks
     )

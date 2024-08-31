@@ -23,7 +23,6 @@ def test_create() -> None:
 
     # Bot is initially stationary.
     assert b._velocity_v == Vector2(0, 0)
-    assert b._speed == 0
     # Defaults
     assert b.heading.vector == Vector2(0, 1)
 

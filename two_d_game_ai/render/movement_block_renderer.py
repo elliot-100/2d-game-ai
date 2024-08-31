@@ -47,7 +47,7 @@ class MovementBlockRenderer(_GenericEntityRenderer):
     ) -> None:
         super().__init__(view, entity, font)
         if isinstance(self.entity, MovementBlock):
-            self.clickable_radius = self.entity.collision_radius
+            self.clickable_radius = self.entity.radius
 
     def draw(self) -> None:
         """Draws the MovementBlock to the surface."""
@@ -61,7 +61,7 @@ class MovementBlockRenderer(_GenericEntityRenderer):
             self.view,
             color=fill_color,
             center=self.entity.pos_v,
-            radius=self.entity.collision_radius,
+            radius=self.entity.radius,
         )
 
     def is_clicked(self, click_pos: Vector2) -> bool:
