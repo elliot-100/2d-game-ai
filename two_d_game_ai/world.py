@@ -9,19 +9,24 @@ if TYPE_CHECKING:
 
 
 class World:
-    """Simulated rectangular domain."""
+    """Simulated domain.
+
+    Square.
+    """
 
     def __init__(self, size: int) -> None:
         self.size = size
         self.bots: list[Bot] = []
+        """All `Bot`s."""
         self.movement_blocks: list[MovementBlock] = []
-        self.step_counter = 0
+        """All `MovementBlock`s."""
+        self.step_counter: int = 0
         """Number of update steps taken."""
         self.is_paused: bool = True
-        """Whether the World is paused."""
+        """Whether the `World` is paused."""
 
     def update(self) -> None:
-        """Change all Bot positions over 1 simulation step."""
+        """Change all `Bot` positions over 1 simulation step."""
         for bot in self.bots:
             other_bots = [b for b in self.bots if b is not bot]
             bot.update(other_bots)
