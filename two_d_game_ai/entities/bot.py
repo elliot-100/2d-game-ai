@@ -43,7 +43,6 @@ class Bot(GenericEntity):
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(world, name, pos)
         self._velocity_v = Vector2(0, 0)
-        self._destination = tuple[float, float] | None
         self._destination_v: Vector2 | None = None
         self.heading: Bearing = Bearing(Bot.INITIAL_HEADING_DEGREES)
         self.known_bots: set[Bot] = set()

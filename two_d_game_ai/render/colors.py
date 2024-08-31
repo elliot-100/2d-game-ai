@@ -17,4 +17,3 @@ BOT_CAN_SEE_LINE = Color("green2")
 BOT_KNOWS_LINE = Color("dodgerblue")
 
 SELECTED_FILL = Color("yellow")
-
