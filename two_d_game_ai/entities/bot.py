@@ -10,6 +10,8 @@ from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.geometry.bearing import Bearing
+from two_d_game_ai.pathfinding.grid_ref import GridRef
+from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -43,7 +45,10 @@ class Bot(GenericEntity):
         super().__init__(world, name, pos)
         self._velocity_v = Vector2(0, 0)
         self._destination_v: Vector2 | None = None
+        self.route: list[Vector2] = []
+        """Waypoints to be visited."""
         self.heading: Bearing = Bearing(Bot.INITIAL_HEADING_DEGREES)
+        """Direction the `Bot` is facing."""
         self.known_bots: set[Bot] = set()
         """Peers which are known about, but aren't currently in sight."""
         self.visible_bots: set[Bot] = set()
@@ -73,6 +78,11 @@ class Bot(GenericEntity):
         if value is None or self.world.point_is_inside_world_bounds(value):
             self.stop()
             self._destination_v = value
+        log_msg = f"Bot {self.name} destination set: {self._destination_v}."
+        logging.info(log_msg)
+        self.route = self.route_to(self.destination_v)
+        log_msg = f"Bot {self.name} route calculated with {len(self.route)} waypoints."
+        logging.info(log_msg)
 
     @property
     def is_at_destination(self) -> bool:

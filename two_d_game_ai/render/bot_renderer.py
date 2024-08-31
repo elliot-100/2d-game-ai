@@ -10,6 +10,7 @@ from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
 from two_d_game_ai.render.primitives import (
     draw_circle,
+    draw_scaled_circle,
     draw_scaled_circular_arc,
     draw_scaled_line,
 )
@@ -31,6 +32,7 @@ class BotRenderer(_GenericEntityRenderer):
             raise TypeError
         if self.entity.destination_v is not None:
             self._draw_destination()
+            self._draw_route()
         self._draw_vision_cone()
         self._draw_lines_to_others(self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 4)
         self._draw_lines_to_others(self.entity.known_bots, colors.BOT_KNOWS_LINE, 1)
@@ -66,6 +68,17 @@ class BotRenderer(_GenericEntityRenderer):
             start_pos=self.entity.pos_v,
             end_pos=self.entity.destination_v,
         )
+
+    def _draw_route(self) -> None:
+        if not isinstance(self.entity, Bot):
+            raise TypeError
+        for i in range(len(self.entity.route)):
+            draw_scaled_circle(
+                self.view,
+                color=colors.BOT_ROUTE_LINE,
+                center=self.entity.route[i],
+                radius=self.ICON_RADIUS / 3,
+            )
 
     def _draw_vision_cone(self) -> None:
         """Draw Bot vision cone to surface."""
