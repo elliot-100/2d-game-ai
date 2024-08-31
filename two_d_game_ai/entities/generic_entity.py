@@ -1,4 +1,4 @@
-"""Package containing `_GenericEntity` class."""
+"""Package containing `GenericEntity` class."""
 
 from __future__ import annotations
 
@@ -12,11 +12,8 @@ if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class _GenericEntity(_Subject, ABC):
-    """Generic simulated entity.
-
-    Assumed circular.
-    """
+class GenericEntity(_Subject, ABC):
+    """Generic circular entity."""
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
         super().__init__(name)

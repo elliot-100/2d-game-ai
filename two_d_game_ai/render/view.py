@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import pygame
 from pygame import Rect
@@ -26,28 +26,14 @@ _SECONDARY_MOUSE_BUTTON = 3
 class View(_Observer):
     """Renders window, World and decorations.
 
-    NB: Unlike Pygame default, origin at centre, positive y upwards
-
-    Attributes
-    ----------
-    name
-    world
-        The World to be viewed
-    scale_factor
-        Rendering scale factor
-    window
-        Top level Pygame Surface.
-
-    Non-public attributes (incomplete)
-    ----------------------------------
-    _entity_renderers
-        All entity render instances
-    _selected
-        The selected entity
+    NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
 
-    CAPTION = "2dGameAI"
-    FONT_SIZE = 24
+    FONT_SIZE: ClassVar[int] = 24
+    """Base font size for all text."""
+
+    _CAPTION: ClassVar[str] = "2dGameAI"
+    _MAX_RENDER_FPS: ClassVar[float] = 1 / SIMULATION_STEP_INTERVAL_S
 
     def __init__(
         self,
@@ -56,21 +42,26 @@ class View(_Observer):
         scale_factor: float = 1,
         margin: int = 0,
     ) -> None:
-        super().__init__(name)
-        self._entity_renderers = []
         self.world = world
+        """The `World` to be rendered."""
+        super().__init__(name)
         self.scale_factor = scale_factor
+        """Scale factor applied to the `World`."""
         self.margin = margin
-
-        self._max_render_fps = 1 / SIMULATION_STEP_INTERVAL_S
-        self.running = True
+        """Margin in display units applied to all sides of the `World`."""
 
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
+
         _window_size = self.world.size * self.scale_factor + 2 * self.margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
-        pygame.display.set_caption(self.CAPTION)
+        """Top level Pygame `Surface`."""
+
+        pygame.display.set_caption(self._CAPTION)
         self._clock = pygame.Clock()
+        self.running: bool = True
+        """Flag to control e.g. input handling."""
+
         self._entity_renderers = [
             BotRenderer(view=self, entity=bot, font=self._font) for bot in world.bots
         ] + [
@@ -82,7 +73,7 @@ class View(_Observer):
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
 
-        self._display_offset = Vector2(
+        self._DISPLAY_OFFSET = Vector2(
             self.world.size / 2,
             self.world.size / 2,
         ) * self.scale_factor + Vector2(
@@ -134,13 +125,11 @@ class View(_Observer):
             self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:
-        """Render the World to the Pygame window.
+        """Render the World to the Pygame window."""
+        # Limit update rate to save CPU:
+        self._clock.tick(self._MAX_RENDER_FPS)
 
-        Drawn in order, bottom layer to top.
-        """
-        # Limit update rate to save CPU
-        self._clock.tick(self._max_render_fps)
-
+        # Drawn in order, bottom layer to top:
         self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
 
@@ -153,13 +142,17 @@ class View(_Observer):
 
     def _draw_world_limits(self) -> None:
         """Draw the World limits."""
+        world_min = -self.world.size / 2
+        world_max = self.world.size / 2
+        world_size = self.world.size
+
         # Border
         draw_scaled_rect(
             self,
             colors.WORLD_FILL,
             Rect(
-                (-self.world.size / 2, -self.world.size / 2),
-                (self.world.size, self.world.size),
+                (world_min, world_min),
+                (world_size, world_size),
             ),
             width=0,
         )
@@ -167,15 +160,15 @@ class View(_Observer):
         draw_scaled_line(
             self,
             colors.WORLD_AXES_LINE,
-            Vector2(0, -self.world.size / 2),
-            Vector2(0, +self.world.size / 2),
+            Vector2(0, world_min),
+            Vector2(0, world_max),
             width=3,
         )
         draw_scaled_line(
             self,
             colors.WORLD_AXES_LINE,
-            Vector2(-self.world.size / 2, 0),
-            Vector2(+self.world.size / 2, 0),
+            Vector2(world_min, 0),
+            Vector2(world_max, 0),
             width=3,
         )
 
@@ -192,7 +185,7 @@ class View(_Observer):
         text = self._font.render(
             text=text_content,
             antialias=True,
-            color=colors.LABEL,
+            color=colors.WINDOW_TEXT,
         )
         self.window.blit(text, (0, 0))
 
@@ -213,7 +206,7 @@ class View(_Observer):
         pos = world_pos.copy()
         pos.y = -pos.y
         pos *= self.scale_factor
-        return pos + self._display_offset
+        return pos + self._DISPLAY_OFFSET
 
     def from_display(self, display_pos: Vector2) -> Vector2:
         """Convert Pygame window coordinates to world coordinates.
@@ -230,7 +223,7 @@ class View(_Observer):
         Vector2
             World coordinates.
         """
-        pos = display_pos - self._display_offset
+        pos = display_pos - self._DISPLAY_OFFSET
         pos /= self.scale_factor
         pos.y = -pos.y
         return pos

@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from two_d_game_ai import Vector2
 from two_d_game_ai.entities import Bot
-from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
 from two_d_game_ai.render.primitives import (
@@ -20,28 +19,9 @@ if TYPE_CHECKING:
 
 
 class BotRenderer(_GenericEntityRenderer):
-    """Renders a Bot to a Surface.
+    """Renders a Bot to a Surface."""
 
-    Provides methods to draw Bot icon and related elements.
-
-    Attributes
-    ----------
-    entity
-        The entity to render
-    font
-        # TODO
-    is_selected
-        Whether the rendered bot is selected
-    view
-        The View context
-
-    Non-public attributes/properties
-    ----------
-    _pos_v: Vector2
-        Position (display coordinates)
-    """
-
-    ICON_RADIUS = 10
+    ICON_RADIUS: ClassVar[int] = 10
     """Display units."""
 
     def draw(self) -> None:
@@ -52,25 +32,10 @@ class BotRenderer(_GenericEntityRenderer):
         if self.entity.destination_v is not None:
             self._draw_destination()
         self._draw_vision_cone()
-        self._draw_lines_to_others(self.entity.visible_bots, colors.VISION, 4)
-        self._draw_lines_to_others(self.entity.known_bots, colors.KNOWS, 1)
+        self._draw_lines_to_others(self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 4)
+        self._draw_lines_to_others(self.entity.known_bots, colors.BOT_KNOWS_LINE, 1)
         self._draw_icon()
         self.clickable_radius = self.ICON_RADIUS
-
-    def is_clicked(self, click_pos: Vector2) -> bool:
-        """Determine if the clicked location is on the entity icon.
-
-        Parameters
-        ----------
-        click_pos
-            The position of the click in window coordinates.
-
-        Returns
-        -------
-        bool
-            True if the click position is within or on the icon radius.
-        """
-        return point_in_or_on_circle(click_pos, self._pos_v, self.ICON_RADIUS)
 
     def _draw_destination(self) -> None:
         """Draw Bot destination icon, and line to it."""
@@ -83,13 +48,13 @@ class BotRenderer(_GenericEntityRenderer):
         offset = self.ICON_RADIUS / self.view.scale_factor
         draw_scaled_line(
             self.view,
-            color=colors.FOREGROUND,
+            color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.destination_v + Vector2(-offset, -offset),
             end_pos=self.entity.destination_v + Vector2(offset, offset),
         )
         draw_scaled_line(
             self.view,
-            color=colors.FOREGROUND,
+            color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.destination_v + Vector2(offset, -offset),
             end_pos=self.entity.destination_v + Vector2(-offset, offset),
         )
@@ -97,7 +62,7 @@ class BotRenderer(_GenericEntityRenderer):
         # Line from Bot centre to destination
         draw_scaled_line(
             self.view,
-            color=colors.FOREGROUND,
+            color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.pos_v,
             end_pos=self.entity.destination_v,
         )
@@ -124,19 +89,19 @@ class BotRenderer(_GenericEntityRenderer):
 
         draw_scaled_line(
             self.view,
-            color=colors.VISION,
+            color=colors.BOT_CAN_SEE_LINE,
             start_pos=self.entity.pos_v,
             end_pos=start_wedge_point,
         )
         draw_scaled_line(
             self.view,
-            color=colors.VISION,
+            color=colors.BOT_CAN_SEE_LINE,
             start_pos=self.entity.pos_v,
             end_pos=end_wedge_point,
         )
         draw_scaled_circular_arc(
             self.view,
-            color=colors.VISION,
+            color=colors.BOT_CAN_SEE_LINE,
             center=self.entity.pos_v,
             radius=10,
             start_angle=vision_start_angle,
@@ -158,7 +123,7 @@ class BotRenderer(_GenericEntityRenderer):
         """Draw unscaled icon to surface."""
         if not isinstance(self.entity, Bot):
             raise TypeError
-        fill_color = colors.SELECTED if self.is_selected else colors.FOREGROUND
+        fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
         draw_circle(
             self.view, color=fill_color, center=self._pos_v, radius=self.ICON_RADIUS
         )
@@ -168,7 +133,7 @@ class BotRenderer(_GenericEntityRenderer):
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
         draw_scaled_line(
             self.view,
-            color=colors.BACKGROUND,
+            color=colors.BOT_HEADING_INDICATOR_LINE,
             start_pos=self.entity.pos_v,
             end_pos=self.entity.pos_v + nose_offset / self.view.scale_factor,
             width=3,
