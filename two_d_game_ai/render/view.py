@@ -134,7 +134,11 @@ class View(_Observer):
         self._draw_world_limits()
         self._draw_grid()
         for renderer in self._entity_renderers:
-            renderer.draw()
+            if isinstance(renderer, MovementBlockRenderer):
+                renderer.draw()
+        for renderer in self._entity_renderers:
+            if isinstance(renderer, BotRenderer):
+                renderer.draw()
         self._draw_step_counter()
         # update entire display
         pygame.display.flip()
