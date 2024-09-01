@@ -38,7 +38,7 @@ class Bot(GenericEntity):
     INITIAL_HEADING_DEGREES: ClassVar[float] = 0
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
-    _DESTINATION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
+    _POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """World units."""
 
     def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
@@ -85,17 +85,6 @@ class Bot(GenericEntity):
         logging.info(log_msg)
 
     @property
-    def is_at_destination(self) -> bool:
-        """Get whether Bot is at destination (True) or not (False)."""
-        if self.destination_v:
-            return point_in_or_on_circle(
-                self.pos_v,
-                self.destination_v,
-                self._DESTINATION_ARRIVAL_TOLERANCE,
-            )
-        return False
-
-    @property
     def max_rotation_step(self) -> float:
         """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE * SIMULATION_STEP_INTERVAL_S
@@ -104,33 +93,46 @@ class Bot(GenericEntity):
         """Update Bot, including move over 1 simulation step."""
         self._handle_sensing(other_bots)
 
-        if self.is_at_destination:
-            self.notify_observers("I've reached destination")
+        if self.route and self.is_at(self.route[0]):
+            self.notify_observers("I've reached next waypoint.")
+            del self.route[0]
+            self.stop()
+
+        if self.destination_v and self.is_at(self.destination_v):
+            self.notify_observers("I've reached destination.")
             self.destination_v = None
             self.stop()
             return
 
-        if self.destination_v:
-            destination_relative_bearing = self.heading.relative(
-                self.destination_v - self.pos_v
+        if self.route:
+            waypoint_relative_bearing = self.heading.relative(
+                self.route[0] - self.pos_v
             ).degrees_normalised
 
-            #  if Bot can complete rotation to face destination this step...
-            if abs(destination_relative_bearing) <= self.max_rotation_step:
-                # face destination precisely
-                self.rotate(-destination_relative_bearing)
-                # initiate move towards destination
+            #  if Bot can complete rotation to face wp this step...
+            if abs(waypoint_relative_bearing) <= self.max_rotation_step:
+                # face wp precisely
+                self.rotate(-waypoint_relative_bearing)
+                # initiate move towards wp
                 self._velocity_v = self.heading.vector * Bot.MAX_SPEED
 
             else:
-                # turn towards destination
+                # turn towards wp
                 self.rotate(
                     math.copysign(
                         self.max_rotation_step,
-                        destination_relative_bearing,
+                        waypoint_relative_bearing,
                     ),
                 )
         self._move()
+
+    def is_at(self, location: Vector2) -> bool:
+        """Get whether Bot is at location (True) or not (False)."""
+        return point_in_or_on_circle(
+            self.pos_v,
+            location,
+            self._POSITION_ARRIVAL_TOLERANCE,
+        )
 
     def rotate(self, rotation_delta: float) -> None:
         """Change Bot rotation over 1 simulation step.
