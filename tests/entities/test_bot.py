@@ -96,9 +96,11 @@ def test_move_negative() -> None:
 
 
 def test_give_destination() -> None:
-    """Test that Bot can be given destination and this also sets destination_v."""
+    """Test that Bot can be given destination inside World limits and this also sets
+    destination_v.
+    """
     # arrange
-    w = World(10)
+    w = World(100)
     b = Bot(
         world=w,
         name="b0",
@@ -112,11 +114,11 @@ def test_give_destination() -> None:
 
 
 def test_give_destination_v() -> None:
-    """Test that Bot can be given destination vector (used in UI) and this also sets
-    destination_v.
+    """Test that Bot can be given destination vector (used in UI) inside World limits,
+    and this also sets destination_v.
     """
     # arrange
-    w = World(10)
+    w = World(40)
     b = Bot(
         world=w,
         name="b0",

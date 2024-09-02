@@ -118,10 +118,10 @@ class View(_Observer):
         return None
 
     def _handle_mouse_set_destination(self, click_pos: Vector2) -> None:
-        """Set destination, if applicable to current selection."""
-        if isinstance(
-            self._selected, MovementBlockRenderer | BotRenderer
-        ) and isinstance(self._selected.entity, Bot):
+        """Attempt to set destination, if applicable to current selection."""
+        if isinstance(self._selected, BotRenderer) and isinstance(
+            self._selected.entity, Bot
+        ):
             self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:

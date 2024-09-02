@@ -62,7 +62,7 @@ class Bot(GenericEntity):
     @destination.setter
     def destination(self, value: tuple[float, float]) -> None:
         self.stop()
-        self._destination_v = Vector2(value)
+        self.destination_v = Vector2(value)
 
     @property
     def destination_v(self) -> Vector2 | None:
@@ -71,8 +71,9 @@ class Bot(GenericEntity):
 
     @destination_v.setter
     def destination_v(self, value: Vector2) -> None:
-        self.stop()
-        self._destination_v = value
+        if value is not None and self.world.point_is_inside_world_bounds(value):
+            self.stop()
+            self._destination_v = value
 
     @property
     def is_at_destination(self) -> bool:
