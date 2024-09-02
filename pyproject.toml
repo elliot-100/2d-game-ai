@@ -64,22 +64,25 @@ arg-type-hints-in-docstring = false
 [tool.ruff.lint]
 select = ["ALL"]
 
+ignore = [
 # Ignore rules that conflict with Ruff formatter:
 #   COM812 Trailing comma missing
 #   ISC001 Implicitly concatenated string literals on one line
+"COM812", "ISC001",
 
 # Ignore other rules:
 #   ANN101 Missing type annotation for `self` in method
 #   ANN102 Missing type annotation for `cls` in classmethod
 #   ANN401 any-type [in function args]
 #     Appropriate to use for *args, **kwargs
+#   D105 Missing docstring in magic method
 #   D205 1 blank line required between summary line and description
 #   ERA001 Found commented-out code
 #   FIX002 Line contains TODO, consider resolving the issue
 #   TD002 Missing author in TODO
 #   TD003 Missing issue link on the line following this TODO
-ignore = ["COM812", "ISC001", "ANN101", "ANN102", "ANN401", "D205", "ERA001", "FIX002",
-    "TD002", "TD003"]
+"ANN101", "ANN102", "ANN401", "D105", "D205", "ERA001", "FIX002", "TD002", "TD003"
+]
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
 #    TCH001 Move import into a type-checking block

@@ -13,8 +13,10 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
-- View: margin around rendered World
-- MovementBlock entity: circular, Bots stop when they are about to collide with it
+- World grid, variable size
+- MovementBlocks
+- Bots: plan all routes on the World grid and route around MovementBlocks
+- View: margin around rendered World; render Grid, MovementBlock, Bot route points
 - Dev dependency pdoc
 
 ### Fixed

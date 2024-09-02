@@ -132,11 +132,14 @@ class View(_Observer):
         # Drawn in order, bottom layer to top:
         self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
-
+        self._draw_grid()
         for renderer in self._entity_renderers:
-            renderer.draw()
+            if isinstance(renderer, MovementBlockRenderer):
+                renderer.draw()
+        for renderer in self._entity_renderers:
+            if isinstance(renderer, BotRenderer):
+                renderer.draw()
         self._draw_step_counter()
-
         # update entire display
         pygame.display.flip()
 
@@ -171,6 +174,31 @@ class View(_Observer):
             Vector2(world_max, 0),
             width=3,
         )
+
+    def _draw_grid(self) -> None:
+        """Draw the Grid."""
+        world_min = -self.world.size / 2
+        world_max = self.world.size / 2
+        grid_size = self.world.grid.size
+        cell_size = self.world.size / grid_size
+
+        for cell_index in range(-grid_size // 2, grid_size // 2 + 1):
+            # horizontal grid line
+            draw_scaled_line(
+                self,
+                colors.WORLD_GRID_LINE,
+                Vector2(world_min, cell_index * cell_size),
+                Vector2(world_max, cell_index * cell_size),
+                width=1,
+            )
+            # vertical grid line
+            draw_scaled_line(
+                self,
+                colors.WORLD_GRID_LINE,
+                Vector2(cell_index * cell_size, world_min),
+                Vector2(cell_index * cell_size, world_max),
+                width=1,
+            )
 
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""

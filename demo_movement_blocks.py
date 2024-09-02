@@ -9,7 +9,10 @@ from two_d_game_ai.world import World
 logging.basicConfig(level=logging.INFO)
 
 # Create a World
-the_world = World(300)
+the_world = World(
+    size=300,
+    grid_size=16,
+)
 
 # Add a Bot to the World...
 bot = Bot(
