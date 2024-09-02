@@ -22,7 +22,10 @@ from two_d_game_ai.world import World
 # WORLD
 
 # Create a World
-the_world = World(100, 100)
+the_world = World(
+    size=300,
+    grid_size=16,  # used for route planning
+)
 
 # ENTITIES
 
@@ -57,7 +60,13 @@ while view.running:
 
 ### World
 
-- Rectangular
+- Square
+- Divided into a square Grid
+
+
+### MovementBlock
+
+- Circular entity that blocks Bot movement
 
 
 ### Bot
@@ -66,7 +75,7 @@ while view.running:
 - Initially stationary
 - While stationary, can rotate at a constant rate
 - Can move at a constant rate in the direction it is facing
-- Can be given a single destination; will move to it
+- Can be given a destination; will plan and follow a route to it.
 - Can see Bots it's facing
 - Keeps track of visible and known (previously visible) other Bots
 
@@ -82,8 +91,9 @@ while view.running:
 
 #### Displays Bots:
 
-- As icons
+- As icons with:
   - Direction indicator
+  - Destination point and waypoints on calculated route to it
   - Vision cone
   - Can-see and knows-about relationships as lines
 - Primary mouse click to select a Bot; secondary mouse click to set a destination
