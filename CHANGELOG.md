@@ -24,6 +24,7 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed
 
 - World: now square
+- Bot: destination can't be set outside World limits
 - Colour palette
 - Namespace simplifications, made more members public
 - Docs: docstrings: revised package/module level, constants, remove redundant type annotations

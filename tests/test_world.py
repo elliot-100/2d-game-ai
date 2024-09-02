@@ -1,5 +1,6 @@
 """Tests for `World` class."""
 
+from two_d_game_ai import Vector2
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.world import World
 
@@ -19,3 +20,10 @@ def test_add_bot() -> None:
         pos=(0, 0),
     )
     assert w.bots == [b]
+
+
+def test_point_is_inside_world_bounds() -> None:
+    """Test that points are inside/outside World."""
+    w = World(10)
+    assert w.point_is_inside_world_bounds(Vector2(0, 0))
+    assert not w.point_is_inside_world_bounds(Vector2(-8, 8))
