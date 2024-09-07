@@ -27,6 +27,7 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed:
 
 - Dependency: require pygame-ce >=2.5.2
+- Build: Use uv instead of poetry; include lockfile
 
 
 ## [0.8.0] - 2025-05-13
