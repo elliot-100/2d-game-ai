@@ -11,20 +11,17 @@ dependencies = [
     "loguru >=0.7.3",
     "pygame-ce>=2.5.3",
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.11, <4"
-# loguru, pydoclint dep docstring-parser-fork requires python < 4
-
-[tool.poetry.group.dev.dependencies]
-invoke = "^2.2.0"
-mypy = "^1.16.0"
-pdoc = "^15.0.4"
-pre-commit = "^4.2.0"
-pydoclint = "^0.6.6"
-pydoctest = "^0.2.1"
-pytest = "^8.4.0"
-ruff = "^0.11.12"
+[dependency-groups]
+dev = [
+    "invoke >=2.2.0",
+    "mypy >= 1.17.1",
+    "pdoc >= 15.0.4",
+    "pre-commit >= 4.2.0",
+    "pydoclint >= 0.6.6",
+    "pydoctest >= 0.2.1",
+    "pytest >=8.4.1",
+    "ruff >= 0.12.8",
+]
 
 [tool.mypy]
 strict = true
@@ -94,7 +91,3 @@ max-args = 7
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
