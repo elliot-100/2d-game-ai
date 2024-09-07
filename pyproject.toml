@@ -3,42 +3,40 @@ name = "two-d-game-ai"
 version = "0.8.0"
 description = ""
 authors = [
-    {name="elliot-100", email="<3186037+elliot-100@users.noreply.github.com>"}
+    { name = "elliot-100", email="<3186037+elliot-100@users.noreply.github.com>" }
 ]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "loguru (>=0.7.3,<0.8.0)",
-    "pygame-ce>=2.5.0",
+    "loguru>=0.7.3",
+    "pygame-ce>=2.5.3",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.11, <4"
-# pydoclint dep docstring-parser-fork requires python < 4
-
-[tool.poetry.group.dev.dependencies]
-invoke = "^2.2.0"
-mypy = "^1.15.0"
-pdoc = "^15.0.3"
-pre-commit = "^4.2.0"
-pydoclint = "^0.6.6"
-pydoctest = "^0.2.1"
-pytest = "^8.3.5"
-ruff = "^0.11.9"
+[tool.uv]
+dev-dependencies = [
+    "invoke >=2.2.0",
+    "mypy >= 1.15.0",
+    "pdoc >= 15.0.3",
+    "pre-commit >= 4.2.0",
+    "pydoclint >= 0.6.6",
+    "pydoctest >= 0.2.1",
+    "pytest >=8.3.5",
+    "ruff >= 0.11.9",
+]
 
 [tool.mypy]
 strict = true
-## Disallow dynamic typing:
-##   Disallow the use of the dynamic 'Any' type under certain conditions.
+# Disallow dynamic typing:
+# -  Disallow the use of the dynamic 'Any' type under certain conditions.
 disallow_any_unimported = true  # additional to 'strict' config
-## None and Optional handling:
-##   Adjust how values of type 'None' are handled.
+# None and Optional handling:
+# -  Adjust how values of type 'None' are handled.
 no_implicit_optional = true  # additional to 'strict' config
-## Configuring warnings:
-##   Detect code that is sound but redundant or problematic.
+# Configuring warnings:
+# - Detect code that is sound but redundant or problematic.
 warn_unreachable = true  # additional to 'strict' config
-## Configuring error messages:
-##   Adjust the amount of detail shown in error messages.
+# Configuring error messages:
+# - Adjust the amount of detail shown in error messages.
 show_error_codes = true  # additional to 'strict' config
 pretty = true  # additional to 'strict' config
 
@@ -94,7 +92,3 @@ max-args = 7
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
