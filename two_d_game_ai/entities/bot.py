@@ -190,7 +190,7 @@ class Bot(GenericEntity):
 
         Returns
         -------
-        list[GridRef]
+        list[Vector2]
             Locations on the path to `goal`.
             Empty if no path found.
         """

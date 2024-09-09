@@ -1,10 +1,12 @@
 """PriorityQueue class."""
+from __future__ import annotations
 
 import heapq
 from dataclasses import dataclass
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
-from two_d_game_ai.pathfinding.grid_ref import GridRef
+if TYPE_CHECKING:
+    from two_d_game_ai.pathfinding.grid_ref import GridRef
 
 
 class PriorityQueue:
