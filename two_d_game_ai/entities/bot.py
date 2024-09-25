@@ -21,13 +21,6 @@ class Bot(GenericEntity):
 
     Assumed circular.
 
-    Non-public attributes/properties
-    --------------------------------
-    _speed
-        Speed as a scalar (World units / s)
-        Read-only.
-    _velocity_v
-        Velocity (World coordinates / s)
     """
 
     MAX_SPEED: ClassVar[float] = 60

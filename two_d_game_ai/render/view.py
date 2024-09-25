@@ -1,4 +1,4 @@
-"""Module containg `View` class."""
+"""Module containing `View` class."""
 
 from __future__ import annotations
 
