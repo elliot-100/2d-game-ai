@@ -5,7 +5,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from two_d_game_ai import Vector2
+from pygame import Vector2
+
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 
@@ -35,6 +36,3 @@ class MovementBlock(GenericEntity):
         self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
         logging.info(log_msg)
-
-    def update(self) -> None:
-        """No update needed."""

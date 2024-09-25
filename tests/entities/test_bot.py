@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import pytest
+from pygame import Vector2
 
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
+from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.world import World
 

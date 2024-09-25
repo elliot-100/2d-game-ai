@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from two_d_game_ai import Vector2
-from two_d_game_ai.geometry import CIRCLE_DEGREES
+from pygame import Vector2
+
+CIRCLE_DEGREES = 360
 
 
 @dataclass
