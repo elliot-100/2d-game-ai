@@ -1,0 +1,4 @@
+# Project-level invoke config.
+
+run:
+    echo: true
