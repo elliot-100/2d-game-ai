@@ -90,7 +90,7 @@ class BotRenderer(_GenericEntityRenderer):
         vision_end_angle = (
             self.entity.heading.degrees + self.entity.VISION_CONE_ANGLE / 2
         )
-        vision_limit_offset = Vector2(0, 10)
+        vision_limit_offset = Vector2(0, self.ICON_RADIUS * 2)
 
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         start_wedge_point = self.entity.pos_v + vision_limit_offset.rotate(
@@ -116,7 +116,7 @@ class BotRenderer(_GenericEntityRenderer):
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
             center=self.entity.pos_v,
-            radius=10,
+            radius=self.ICON_RADIUS * 2,
             start_angle=vision_start_angle,
             stop_angle=vision_end_angle,
         )
