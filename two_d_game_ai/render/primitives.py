@@ -8,7 +8,7 @@ import pygame
 from pygame import Rect
 
 from two_d_game_ai import Vector2
-from two_d_game_ai.render import to_display_radians
+from two_d_game_ai.geometry import to_display_radians
 
 if TYPE_CHECKING:
     from pygame import Color, Surface
