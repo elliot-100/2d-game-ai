@@ -35,6 +35,3 @@ class MovementBlock(GenericEntity):
         self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
         logging.info(log_msg)
-
-    def update(self) -> None:
-        """No update needed."""
