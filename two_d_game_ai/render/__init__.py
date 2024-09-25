@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from math import radians
 
-from two_d_game_ai.geometry import CIRCLE_DEGREES
-
+_CIRCLE_DEGREES = 360
 
 def to_display_radians(bearing_deg: float) -> float:
     """Convert bearing (degrees) to Pygame-compatible angle (radians).
@@ -23,4 +22,4 @@ def to_display_radians(bearing_deg: float) -> float:
         Pygame-compatible angle in radians CW from East
 
     """
-    return radians(-bearing_deg + CIRCLE_DEGREES / 4)
+    return radians(-bearing_deg + _CIRCLE_DEGREES / 4)

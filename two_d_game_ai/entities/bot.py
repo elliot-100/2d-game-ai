@@ -8,8 +8,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S, Vector2
 from two_d_game_ai.entities.generic_entity import GenericEntity
-from two_d_game_ai.geometry import point_in_or_on_circle
-from two_d_game_ai.geometry.bearing import Bearing
+from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
 from two_d_game_ai.pathfinding.grid_ref import GridRef
 from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 

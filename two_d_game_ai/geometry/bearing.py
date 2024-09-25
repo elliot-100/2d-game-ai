@@ -5,7 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from two_d_game_ai import Vector2
-from two_d_game_ai.geometry import CIRCLE_DEGREES
+
+_CIRCLE_DEGREES = 360
+
 
 
 @dataclass
@@ -35,7 +37,7 @@ class Bearing:
     def __post_init__(self) -> None:
         """Construct vector from bearing angle."""
         v = Vector2()
-        v.from_polar((1, self._degrees - CIRCLE_DEGREES / 4))
+        v.from_polar((1, self._degrees - _CIRCLE_DEGREES / 4))
         self.vector = _flip_vector_y(v)
 
     @property
@@ -45,10 +47,10 @@ class Bearing:
         Intended for absolute bearings, where North is 0, East is 90, etc.
 
         """
-        angle = -self.vector.as_polar()[1] + CIRCLE_DEGREES / 4
+        angle = -self.vector.as_polar()[1] + _CIRCLE_DEGREES / 4
         if angle < 0:
-            angle += CIRCLE_DEGREES
-        if angle == CIRCLE_DEGREES:
+            angle += _CIRCLE_DEGREES
+        if angle == _CIRCLE_DEGREES:
             angle = 0
         return angle
 
@@ -62,8 +64,8 @@ class Bearing:
         Note: Due south is -180.
 
         """
-        if self.degrees >= CIRCLE_DEGREES / 2:
-            return self.degrees - CIRCLE_DEGREES
+        if self.degrees >= _CIRCLE_DEGREES / 2:
+            return self.degrees - _CIRCLE_DEGREES
         return self.degrees
 
     def relative(self, other_vector: Vector2) -> Bearing:

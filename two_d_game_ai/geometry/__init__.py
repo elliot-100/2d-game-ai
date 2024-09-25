@@ -2,7 +2,10 @@
 
 from two_d_game_ai import Vector2
 
-CIRCLE_DEGREES = 360
+from .bearing import Bearing
+
+__all__ = ("Bearing",)
+
 
 
 def point_in_or_on_circle(
