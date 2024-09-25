@@ -10,9 +10,8 @@ from two_d_game_ai.render import colors
 from two_d_game_ai.render.primitives import draw_scaled_blit
 
 if TYPE_CHECKING:
-    from pygame import Font
+    from pygame import Font, Vector2
 
-    from two_d_game_ai import Vector2
     from two_d_game_ai.entities.generic_entity import GenericEntity
     from two_d_game_ai.render.view import View
 

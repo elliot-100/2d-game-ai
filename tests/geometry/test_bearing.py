@@ -1,8 +1,8 @@
 """Tests for `Bearing` class."""
 
 import pytest
+from pygame import Vector2
 
-from two_d_game_ai import Vector2
 from two_d_game_ai.geometry import Bearing
 
 VECTOR_NORTH = Vector2(0, 1)

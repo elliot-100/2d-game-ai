@@ -2,7 +2,7 @@
 
 from math import radians
 
-from two_d_game_ai import Vector2
+from pygame import Vector2
 
 from .bearing import CIRCLE_DEGREES, Bearing
 

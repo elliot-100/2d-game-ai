@@ -5,9 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pygame
-from pygame import Rect
+from pygame import Rect, Vector2
 
-from two_d_game_ai import Vector2
 from two_d_game_ai.geometry import to_display_radians
 
 if TYPE_CHECKING:
