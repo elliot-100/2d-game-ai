@@ -10,6 +10,8 @@ from two_d_game_ai.geometry import lerp
 from two_d_game_ai.pathfinding.grid_ref import GridRef
 from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 
+_MIN_PATH_NODES: int = 3
+
 
 class Grid:
     """Grid class.
@@ -193,35 +195,28 @@ class Grid:
         """Simplify a path by removing redundant points."""
         log_msg = f"Calculated path: {len(path)} points."
         logging.info(log_msg)
-        path = self._cull_path(path)
-        return self._cull_path(path, reverse=True)
+        return self._remove_collinear_nodes(path)
 
-    def _cull_path(
-        self, path: list[GridRef], *, reverse: bool = False
-    ) -> list[GridRef]:
-        """Remove leading points with line-of-sight from first point (or trailing
-        points with line-of-sight to last point if `reverse=True`).
-
-        Preserves first and last points.
-
-        """
-        min_path_length = 3
-        if not path or len(path) <= min_path_length:
+    @staticmethod
+    def _remove_collinear_nodes(path: list[GridRef]) -> list[GridRef]:
+        if not path or len(path) <= _MIN_PATH_NODES:
             return path
 
-        if reverse:
-            index = -2
-            while self._is_line_of_sight(path[-1], path[index]) and index > -len(path):
-                index -= 1
-            culled_path = path[: index + 2] + [path[-1]]
-            # should be `path[:index]` but extra point avoids collision issues.
-            log_msg = f"- Culled trailing points -> {len(culled_path)} points."
-        else:
-            index = 1
-            while self._is_line_of_sight(path[0], path[index]) and index < len(path):
-                index += 1
-            culled_path = [path[0]] + path[index - 1 :]
-            # should be `path[index:]` but extra point avoids collision issues.
-            log_msg = f"- Culled leading points -> {len(culled_path)} points."
+        culled_path = path[:2]
+        for i in range(2, len(path)):
+            node = path[i]
+            if not Grid._grid_refs_are_collinear(
+                culled_path[-2], culled_path[-1], node
+            ):
+                culled_path.append(path[i])
+        log_msg = f"- collinear points cull -> {len(culled_path)} points."
         logging.info(log_msg)
         return culled_path
+
+    @staticmethod
+    def _grid_refs_are_collinear(gr0: GridRef, gr1: GridRef, gr2: GridRef) -> bool:
+        dx1 = gr1.x - gr0.x
+        dy1 = gr1.y - gr0.y
+        dx2 = gr2.x - gr1.x
+        dy2 = gr2.y - gr1.y
+        return dx1 * dy2 == dy1 * dx2
