@@ -10,7 +10,6 @@ from two_d_game_ai.entities import Bot
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
 from two_d_game_ai.render.primitives import (
-    draw_circle,
     draw_scaled_circle,
     draw_scaled_circular_arc,
     draw_scaled_line,
@@ -78,7 +77,8 @@ class BotRenderer(_GenericEntityRenderer):
                 self.view,
                 color=colors.BOT_ROUTE_LINE,
                 center=self.entity.route[i],
-                radius=self.ICON_RADIUS / 3,
+                radius=self.ICON_RADIUS / 4,
+                scale_radius=False,
             )
 
     def _draw_vision_cone(self) -> None:
@@ -117,7 +117,7 @@ class BotRenderer(_GenericEntityRenderer):
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
             center=self.entity.pos_v,
-            radius=self.ICON_RADIUS * 2,
+            radius=2 * self.ICON_RADIUS,
             start_angle=vision_start_angle,
             stop_angle=vision_end_angle,
         )
@@ -138,8 +138,12 @@ class BotRenderer(_GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
         fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
-        draw_circle(
-            self.view, color=fill_color, center=self._pos_v, radius=self.ICON_RADIUS
+        draw_scaled_circle(
+            self.view,
+            color=fill_color,
+            center=self.entity.pos_v,
+            radius=self.ICON_RADIUS,
+            scale_radius=False,
         )
 
         # Heading indicator (line from centre to 'nose')
