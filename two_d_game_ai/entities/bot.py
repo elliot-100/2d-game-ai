@@ -190,8 +190,8 @@ class Bot(GenericEntity):
 
         Returns
         -------
-        list[GridRef]
-            Locations on the path to `goal`.
+        list[Vector2]
+            Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
         # Early return case:
@@ -206,9 +206,10 @@ class Bot(GenericEntity):
         if (
             goal_cell in grid.untraversable_cells
             or start_cell in grid.untraversable_cells
-            or goal_cell == start_cell
         ):
             return []
+        if goal_cell == start_cell:
+            return [goal]
 
         came_from: dict[GridRef, GridRef | None] = {start_cell: None}
         cost_so_far: dict[GridRef, float] = {start_cell: 0}
@@ -246,6 +247,6 @@ class Bot(GenericEntity):
             path_from_goal.append(current_location.cell_centre_to_pos(self.world))
 
         del path_from_goal[-1]  # don't include start cell
-        path_from_goal[0] = goal  # use precise destination for last waypoint
+        path_from_goal[0] = goal  # use actual goal (not cell centre) for last waypoint
 
         return list(reversed(path_from_goal))
