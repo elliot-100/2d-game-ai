@@ -9,32 +9,25 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
-## [UNRELEASED] - TBC
+## [0.5.0] - 2024-09-26
 
 ### Added
 
-- World grid, variable size
-- MovementBlocks
-- Bots: plan all routes on the World grid and route around MovementBlocks
-- View: margin around rendered World; render Grid, MovementBlock, Bot route points
+- Bot pathfinding:
+  - World grid of variable resolution
+  - MovementBlocks
+  - Bots plan all routes on the World grid and route around MovementBlocks
+- View: margin around rendered World; render Grid, MovementBlock, Bot waypoints
 - Dev dependency pdoc
-
-### Fixed
-
--
 
 ### Changed
 
-- World: now square
+- World is now square
 - Bot: destination can't be set outside World limits
 - Colour palette
-- Namespace simplifications, made more members public
+- API namespace simplifications, made more members public
 - Docs: docstrings: revised package/module level, constants, remove redundant type annotations
 - Simplify dependencies by using `=>` instead of `^`
-
-### Removed
-
--
 
 
 ## [0.4.0] - 2024-05-14
