@@ -35,15 +35,20 @@ def draw_scaled_circle(
     color: Color,
     center: Vector2,
     radius: float,
+    *,
+    scale_radius: bool = True,
 ) -> None:
-    """Draw a circle on the `View`, in `World` units,
-    which are scaled/translated for display.
+    """Draw a circle on the `View`, in `World` units, which are scaled/translated for
+    display. Optionally supress radius scaling e.g. for icons whose size is independent
+    of view scaling.
     """
-    pygame.draw.circle(
-        surface=view.window,
+    if scale_radius:
+        radius *= view.scale_factor
+    draw_circle(
+        view=view,
         color=color,
         center=view.to_display(center),
-        radius=radius * view.scale_factor,
+        radius=radius,
     )
 
 
