@@ -3,9 +3,15 @@
 from __future__ import annotations
 
 import math
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
+from pygame import Vector2
+
+from two_d_game_ai.geometry import lerp
 from two_d_game_ai.pathfinding.grid_ref import GridRef
+
+if TYPE_CHECKING:
+    from two_d_game_ai.world import World
 
 
 class Grid:
@@ -76,3 +82,30 @@ class Grid:
         x_dist = abs(from_cell.x - to_cell.x)
         y_dist = abs(from_cell.y - to_cell.y)
         return math.sqrt(x_dist**2 + y_dist**2)
+
+    def is_line_of_sight(self, world: World, cell_0: GridRef, cell_1: GridRef) -> bool:
+        """Determine whether there is line-of-sight between two cells."""
+        cells = Grid._cells_on_line(world, cell_0, cell_1)
+        return any(cell not in self.untraversable_cells for cell in cells)
+
+    @staticmethod
+    def _cells_on_line(world: World, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
+        diagonal_distance = Grid._diagonal_distance(cell_0, cell_1)
+        cells = set()
+        for step in range(diagonal_distance):
+            t = step / diagonal_distance
+            point = Grid._lerp_grid_ref(cell_0, cell_1, t)
+            point_v = Vector2(point[0], point[1])
+            cells.add(GridRef.cell_from_pos(world, point_v))
+        return cells
+
+    @staticmethod
+    def _diagonal_distance(cell_0: GridRef, cell_1: GridRef) -> int:
+        delta = cell_1 - cell_0
+        return max(abs(delta.x), abs(delta.y))
+
+    @staticmethod
+    def _lerp_grid_ref(
+        cell_0: GridRef, cell_1: GridRef, t: float
+    ) -> tuple[float, float]:
+        return lerp(cell_0.x, cell_1.x, t), lerp(cell_0.y, cell_1.y, t)

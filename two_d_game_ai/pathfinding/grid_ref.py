@@ -25,6 +25,11 @@ class GridRef(NamedTuple):
             return NotImplemented
         return GridRef(self.x + other.x, self.y + other.y)
 
+    def __sub__(self, other: object) -> GridRef:
+        if not isinstance(other, GridRef):
+            return NotImplemented
+        return GridRef(self.x - other.x, self.y - other.y)
+
     @property
     def as_tuple(self) -> tuple[int, int]:
         """Get simple tuple representation for output."""
