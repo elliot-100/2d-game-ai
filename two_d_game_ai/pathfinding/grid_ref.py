@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 from pygame import Vector2
 
@@ -11,14 +10,19 @@ if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-@dataclass(frozen=True)  # therefore hashable
-class GridRef:
-    """Grid reference class."""
+class GridRef(NamedTuple):
+    """Grid reference class.
+
+    NB: Not a `Grid` cell class.
+
+    """
 
     x: int
     y: int
 
-    def __add__(self, other: GridRef) -> GridRef:
+    def __add__(self, other: object) -> GridRef:
+        if not isinstance(other, GridRef):
+            return NotImplemented
         return GridRef(self.x + other.x, self.y + other.y)
 
     @property
