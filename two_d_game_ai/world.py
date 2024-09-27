@@ -57,7 +57,7 @@ class World:
         """Return route.
 
         Uses uniform cost search, a variation of Dijkstra's algorithm.
-        Delegates to `Grid._route`.
+        Delegates to `Grid.route`.
         Intermediate points are cell centres.
 
         Returns

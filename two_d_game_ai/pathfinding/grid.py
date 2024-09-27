@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from typing import ClassVar
 
+from two_d_game_ai.geometry import lerp
 from two_d_game_ai.pathfinding.grid_ref import GridRef
 from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 
@@ -82,7 +83,9 @@ class Grid:
         if from_cell in self.untraversable_cells or to_cell in self.untraversable_cells:
             return []
         if from_cell == to_cell:
-            return [from_cell]
+            return [to_cell]
+        if self.is_line_of_sight(from_cell, to_cell):
+            return [from_cell, to_cell]
 
         came_from: dict[GridRef, GridRef | None] = {from_cell: None}
         cost_so_far: dict[GridRef, float] = {from_cell: 0}
@@ -133,3 +136,37 @@ class Grid:
         x_dist = abs(from_cell.x - to_cell.x)
         y_dist = abs(from_cell.y - to_cell.y)
         return math.sqrt(x_dist**2 + y_dist**2)
+
+    def is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
+        """Determine whether there is line-of-sight between two cells."""
+        cells = self._cells_on_line(cell_0, cell_1)
+        return all(cell not in self.untraversable_cells for cell in cells)
+
+    def _cells_on_line(self, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
+        """Return cells on the line between two cells, including both end cells."""
+        if not self.in_bounds(cell_0):
+            err_msg = f"Cell {cell_0} is out of bounds."
+            raise IndexError(err_msg)
+        if not self.in_bounds(cell_1):
+            err_msg = f"Cell {cell_1} is out of bounds."
+            raise IndexError(err_msg)
+
+        diagonal_distance = Grid._diagonal_distance(cell_0, cell_1)
+
+        cells = set()
+        for step in range(diagonal_distance + 1):
+            t = step / diagonal_distance
+            point = Grid._lerp_grid_ref(cell_0, cell_1, t)
+            cells.add(GridRef(int(point[0]), int(point[1])))
+        return cells
+
+    @staticmethod
+    def _diagonal_distance(cell_0: GridRef, cell_1: GridRef) -> int:
+        delta = cell_1 - cell_0
+        return int(max(abs(delta.x), abs(delta.y)))
+
+    @staticmethod
+    def _lerp_grid_ref(
+        cell_0: GridRef, cell_1: GridRef, t: float
+    ) -> tuple[float, float]:
+        return lerp(cell_0.x, cell_1.x, t), lerp(cell_0.y, cell_1.y, t)
