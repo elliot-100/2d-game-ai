@@ -13,10 +13,9 @@ Implemented as a library. User interface uses [pygame-ce](https://pyga.me/).
 
 ## Example
 
-```
-# Namespace may change...
+```python
 from two_d_game_ai.entities import Bot
-from two_d_game_ai.render.view import View
+from two_d_game_ai.render import View
 from two_d_game_ai.world import World
 
 # WORLD
@@ -24,7 +23,7 @@ from two_d_game_ai.world import World
 # Create a World
 the_world = World(
     size=300,
-    grid_size=16,  # used for route planning
+    grid_size=16,
 )
 
 # ENTITIES
@@ -75,7 +74,7 @@ while view.running:
 - Initially stationary
 - While stationary, can rotate at a constant rate
 - Can move at a constant rate in the direction it is facing
-- Can be given a destination; will plan and follow a route to it.
+- Can be given a destination; will plan and follow a route to it
 - Can see Bots it's facing
 - Keeps track of visible and known (previously visible) other Bots
 
@@ -86,8 +85,8 @@ while view.running:
 
 - Centered on origin (0, 0); conventional (positive, right-handed, y-axis up) coordinate system
 - By default, 1 World unit : 1 display pixel; can be scaled at initialisation
-- Updates initially paused, P key toggles pause
-- Renders every update at up to 60 updates/second; is allowed to lag, i.e. may run slower than real-time.
+- Initially paused, P key toggles pause
+- Renders every update at up to 60 updates/second; is permitted to lag, i.e. may run slower than real-time.
 
 #### Displays Bots:
 
