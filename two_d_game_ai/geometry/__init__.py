@@ -35,3 +35,8 @@ def to_display_radians(bearing_deg: float) -> float:
 
     """
     return radians(-bearing_deg + CIRCLE_DEGREES / 4)
+
+
+def lerp(start: int, end: int, t: float) -> float:
+    """Linear interpolation between two values."""
+    return start * (1.0 - t) + t * end

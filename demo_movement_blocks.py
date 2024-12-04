@@ -31,7 +31,7 @@ movement_block = MovementBlock(world=the_world, name="mb0", pos=(0, 0), radius=5
 view = View(
     name="the_view",
     world=the_world,
-    scale_factor=1,
+    scale_factor=2,
     margin=40,
 )
 

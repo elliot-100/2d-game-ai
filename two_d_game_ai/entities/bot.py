@@ -11,8 +11,6 @@ from pygame import Vector2
 from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
-from two_d_game_ai.pathfinding.grid_ref import GridRef
-from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 
 if TYPE_CHECKING:
     from two_d_game_ai.world import World
@@ -184,9 +182,7 @@ class Bot(GenericEntity):
         self,
         goal: Vector2 | None,
     ) -> list[Vector2]:
-        """Perform uniform cost search for `goal`.
-
-        Variation of Dijkstra's algorithm.
+        """Determine route to `goal`.
 
         Returns
         -------
@@ -194,59 +190,4 @@ class Bot(GenericEntity):
             Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
-        # Early return case:
-        if goal is None:
-            return []
-
-        grid = self.world.grid
-        goal_cell = GridRef.cell_from_pos(self.world, goal)
-        start_cell = GridRef.cell_from_pos(self.world, self.pos_v)
-
-        # More early return cases:
-        if (
-            goal_cell in grid.untraversable_cells
-            or start_cell in grid.untraversable_cells
-        ):
-            return []
-        if goal_cell == start_cell:
-            return [goal]
-
-        came_from: dict[GridRef, GridRef | None] = {start_cell: None}
-        cost_so_far: dict[GridRef, float] = {start_cell: 0}
-        frontier: PriorityQueue = PriorityQueue()
-        frontier.put(0, start_cell)
-
-        while not frontier.is_empty:
-            current_location = frontier.get()
-
-            if current_location == goal_cell:  # early exit
-                break
-
-            for new_location in grid.reachable_neighbours(current_location):
-                new_cost = cost_so_far[current_location] + grid.cost(
-                    current_location, new_location
-                )
-                if (
-                    new_location not in came_from
-                    or new_cost < cost_so_far[new_location]
-                    # add new_location to frontier if cheaper
-                ):
-                    cost_so_far[new_location] = new_cost
-                    frontier.put(priority=new_cost, location=new_location)
-                    came_from[new_location] = current_location
-
-        # Construct path starting at goal and retracing to agent location...
-        path_from_goal = [goal_cell.cell_centre_to_pos(self.world)]
-        current_location = goal_cell
-
-        while current_location is not start_cell:
-            came_from_location = came_from.get(current_location)
-            if came_from_location is None:
-                return []
-            current_location = came_from_location
-            path_from_goal.append(current_location.cell_centre_to_pos(self.world))
-
-        del path_from_goal[-1]  # don't include start cell
-        path_from_goal[0] = goal  # use actual goal (not cell centre) for last waypoint
-
-        return list(reversed(path_from_goal))
+        return [] if goal is None else self.world.route(self.pos_v, goal)
