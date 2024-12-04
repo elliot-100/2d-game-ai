@@ -31,3 +31,9 @@ def fl(c: Any) -> None:
     """Format; lint and autofix; typecheck project."""
     fmt(c)
     lint(c)
+
+
+@task
+def doc(c: Any) -> None:
+    """Open pdoc server at http://localhost:8080."""
+    c.run("pdoc two_d_game_ai -d numpy")
