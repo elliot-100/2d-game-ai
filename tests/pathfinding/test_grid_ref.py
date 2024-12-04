@@ -2,7 +2,7 @@
 
 from pygame import Vector2
 
-from two_d_game_ai.pathfinding.grid_ref import GridRef
+from two_d_game_ai.pathfinding import GridRef
 from two_d_game_ai.world import World
 
 

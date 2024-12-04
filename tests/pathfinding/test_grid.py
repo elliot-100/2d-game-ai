@@ -1,7 +1,6 @@
 """Tests for `Grid` class."""
 
-from two_d_game_ai.pathfinding.grid import Grid
-from two_d_game_ai.pathfinding.grid_ref import GridRef
+from two_d_game_ai.pathfinding import Grid, GridRef
 
 
 def test_cells() -> None:
