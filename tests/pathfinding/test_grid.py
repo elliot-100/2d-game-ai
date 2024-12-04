@@ -16,3 +16,35 @@ def test_cells() -> None:
         GridRef(x=-1, y=-1),
         GridRef(x=0, y=0),
     }
+
+
+def test_cells_on_line() -> None:
+    """Test that all cells between + including cell endpoints are returned."""
+    # arrange
+    g = Grid(size=4)
+    c0 = GridRef(x=-1, y=-2)
+    c1 = GridRef(x=1, y=1)
+    # act
+    cs = g._cells_on_line(c0, c1)
+    # assert
+    assert cs == {
+        GridRef(x=-1, y=-2),
+        GridRef(x=0, y=-1),
+        GridRef(x=0, y=0),
+        GridRef(x=1, y=1),
+    }
+
+
+def test_route__direct() -> None:
+    """Test that only cell endpoints are returned when route is direct."""
+    # arrange
+    g = Grid(size=2)
+    c0 = GridRef(x=-1, y=0)
+    c1 = GridRef(x=1, y=1)
+    # act
+    cs = g.route(c0, c1)
+    # assert
+    assert cs == [
+        GridRef(x=-1, y=-0),
+        GridRef(x=1, y=1),
+    ]

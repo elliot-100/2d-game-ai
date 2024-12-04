@@ -6,6 +6,7 @@ import math
 from typing import ClassVar
 
 from two_d_game_ai.pathfinding.grid_ref import GridRef
+from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 
 
 class Grid:
@@ -64,8 +65,64 @@ class Grid:
         """Determine whether a cell is traversable."""
         return cell not in self.untraversable_cells
 
+    def route(
+        self,
+        from_cell: GridRef,
+        to_cell: GridRef,
+    ) -> list[GridRef]:
+        """Return cell-based route.
+
+        Returns
+        -------
+        list[GridRef]
+            Cells on the path to `to_cell`, including `to_cell` itself.
+            Empty if no path found.
+        """
+        # Early return cases:
+        if from_cell in self.untraversable_cells or to_cell in self.untraversable_cells:
+            return []
+        if from_cell == to_cell:
+            return [from_cell]
+
+        came_from: dict[GridRef, GridRef | None] = {from_cell: None}
+        cost_so_far: dict[GridRef, float] = {from_cell: 0}
+        frontier: PriorityQueue = PriorityQueue()
+        frontier.put(0, from_cell)
+
+        while not frontier.is_empty:
+            current_cell = frontier.get()
+
+            if current_cell == to_cell:  # early exit
+                break
+
+            for new_cell in self.reachable_neighbours(current_cell):
+                new_cost = cost_so_far[current_cell] + self._cost(
+                    current_cell, new_cell
+                )
+                if (
+                    new_cell not in came_from
+                    or new_cost < cost_so_far[new_cell]
+                    # add new_cell to frontier if cheaper
+                ):
+                    cost_so_far[new_cell] = new_cost
+                    frontier.put(priority=new_cost, location=new_cell)
+                    came_from[new_cell] = current_cell
+
+        # Construct cell path starting at goal and retracing to agent location...
+        path_from_goal = [to_cell]
+        current_cell = to_cell
+
+        while current_cell is not from_cell:
+            came_from_location = came_from.get(current_cell)
+            if came_from_location is None:
+                return []
+            current_cell = came_from_location
+            path_from_goal.append(current_cell)
+
+        return list(reversed(path_from_goal))
+
     @staticmethod
-    def cost(from_cell: GridRef, to_cell: GridRef) -> float:
+    def _cost(from_cell: GridRef, to_cell: GridRef) -> float:
         """Calculate the cost as Euclidean distance from one cell to another.
 
         NB: when calculating next step in a search, locations will be adjacent, so a
