@@ -24,7 +24,7 @@ _SECONDARY_MOUSE_BUTTON = 3
 
 
 class View(_Observer):
-    """Renders window, World and decorations.
+    """Renders a `two_d_game_ai.world.World` to a window.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
@@ -125,7 +125,7 @@ class View(_Observer):
             self._selected.entity.destination_v = self.from_display(click_pos)
 
     def render(self) -> None:
-        """Render the World to the Pygame window."""
+        """Render the `World` to the Pygame window."""
         # Limit update rate to save CPU:
         self._clock.tick(self._MAX_RENDER_FPS)
 
@@ -144,7 +144,7 @@ class View(_Observer):
         pygame.display.flip()
 
     def _draw_world_limits(self) -> None:
-        """Draw the World limits."""
+        """Draw the `World` limits."""
         world_min = -self.world.size / 2
         world_max = self.world.size / 2
         world_size = self.world.size
@@ -176,7 +176,7 @@ class View(_Observer):
         )
 
     def _draw_grid(self) -> None:
-        """Draw the Grid."""
+        """Draw the `Grid`."""
         world_min = -self.world.size / 2
         world_max = self.world.size / 2
         grid_size = self.world.grid.size
@@ -218,12 +218,12 @@ class View(_Observer):
         self.window.blit(text, (0, 0))
 
     def to_display(self, world_pos: Vector2) -> Vector2:
-        """Convert world coordinates to Pygame display window coordinates.
+        """Convert `World` coordinates to window coordinates.
 
         Parameters
         ----------
         world_pos
-            World coordinates
+            `World` coordinates
 
         Returns
         -------
@@ -237,8 +237,7 @@ class View(_Observer):
         return pos + self._DISPLAY_OFFSET
 
     def from_display(self, display_pos: Vector2) -> Vector2:
-        """Convert Pygame window coordinates to world coordinates.
-        coordinates.
+        """Convert window coordinates to `World` coordinates.
 
         Parameters
         ----------
@@ -249,7 +248,7 @@ class View(_Observer):
         Returns
         -------
         Vector2
-            World coordinates.
+            `World` coordinates.
         """
         pos = display_pos - self._DISPLAY_OFFSET
         pos /= self.scale_factor
