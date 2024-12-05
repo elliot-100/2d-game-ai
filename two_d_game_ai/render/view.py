@@ -42,18 +42,18 @@ class View(_Observer):
         scale_factor: float = 1,
         margin: int = 0,
     ) -> None:
-        self.world = world
+        self._world = world
         """The `World` to be rendered."""
         super().__init__(name)
         self.scale_factor = scale_factor
         """Scale factor applied to the `World`."""
-        self.margin = margin
+        self._margin = margin
         """Margin in display units applied to all sides of the `World`."""
 
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
 
-        _window_size = self.world.size * self.scale_factor + 2 * self.margin
+        _window_size = self._world.size * self.scale_factor + 2 * self._margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
         """Top level Pygame `Surface`."""
 
@@ -73,12 +73,15 @@ class View(_Observer):
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
 
-        self._DISPLAY_OFFSET = Vector2(
-            self.world.size / 2,
-            self.world.size / 2,
+        self._world_max = self._world.size / 2
+        self._world_min = -self._world_max
+
+        self._display_offset = Vector2(
+            self._world_max,
+            self._world_max,
         ) * self.scale_factor + Vector2(
-            self.margin,
-            self.margin,
+            self._margin,
+            self._margin,
         )
 
     def handle_inputs(self) -> None:
@@ -99,7 +102,7 @@ class View(_Observer):
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # toggle [P]ause
-                        self.world.is_paused = not self.world.is_paused
+                        self._world.is_paused = not self._world.is_paused
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)
@@ -122,7 +125,7 @@ class View(_Observer):
         if isinstance(self._selected, BotRenderer) and isinstance(
             self._selected.entity, Bot
         ):
-            self._selected.entity.destination = self.from_display(click_pos)
+            self._selected.entity.destination = self._from_display(click_pos)
 
     def render(self) -> None:
         """Render the `World` to the Pygame window."""
@@ -145,70 +148,64 @@ class View(_Observer):
 
     def _draw_world_limits(self) -> None:
         """Draw the `World` limits."""
-        world_min = -self.world.size / 2
-        world_max = self.world.size / 2
-        world_size = self.world.size
-
         # Border
         draw_scaled_rect(
             self,
             colors.WORLD_FILL,
             Rect(
-                (world_min, world_min),
-                (world_size, world_size),
+                (self._world_min, self._world_min),
+                (self._world.size, self._world.size),
             ),
             width=0,
         )
         # Axes
-        draw_scaled_line(
+        draw_scaled_line(  # Y
             self,
             colors.WORLD_AXES_LINE,
-            Vector2(0, world_min),
-            Vector2(0, world_max),
+            Vector2(0, self._world_min),
+            Vector2(0, self._world_max),
             width=3,
         )
-        draw_scaled_line(
+        draw_scaled_line(  # X
             self,
             colors.WORLD_AXES_LINE,
-            Vector2(world_min, 0),
-            Vector2(world_max, 0),
+            Vector2(self._world_min, 0),
+            Vector2(self._world_max, 0),
             width=3,
         )
 
     def _draw_grid(self) -> None:
         """Draw the `Grid`."""
-        world_min = -self.world.size / 2
-        world_max = self.world.size / 2
-        grid_size = self.world.grid.size
-        cell_size = self.world.size / grid_size
+        grid_size = self._world.grid.size
+        cell_size = self._world.size / grid_size
 
         for cell_index in range(-grid_size // 2, grid_size // 2 + 1):
             # horizontal grid line
             draw_scaled_line(
                 self,
                 colors.WORLD_GRID_LINE,
-                Vector2(world_min, cell_index * cell_size),
-                Vector2(world_max, cell_index * cell_size),
+                Vector2(self._world_min, cell_index * cell_size),
+                Vector2(self._world_max, cell_index * cell_size),
                 width=1,
             )
             # vertical grid line
             draw_scaled_line(
                 self,
                 colors.WORLD_GRID_LINE,
-                Vector2(cell_index * cell_size, world_min),
-                Vector2(cell_index * cell_size, world_max),
+                Vector2(cell_index * cell_size, self._world_min),
+                Vector2(cell_index * cell_size, self._world_max),
                 width=1,
             )
 
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
-        elapsed_time = self.world.step_counter * SIMULATION_STEP_INTERVAL_S
+        elapsed_time = self._world.step_counter * SIMULATION_STEP_INTERVAL_S
 
         text_content = (
             f"sim elapsed: {elapsed_time:.1f} s\n"
-            f"sim step: {self.world.step_counter}\n"
+            f"sim step: {self._world.step_counter}\n"
         )
-        if self.world.is_paused:
+        if self._world.is_paused:
             text_content += "paused"
         text = self._font.render(
             text=text_content,
@@ -234,9 +231,9 @@ class View(_Observer):
         pos = world_pos.copy()
         pos.y = -pos.y
         pos *= self.scale_factor
-        return pos + self._DISPLAY_OFFSET
+        return pos + self._display_offset
 
-    def from_display(self, display_pos: Vector2) -> Vector2:
+    def _from_display(self, display_pos: Vector2) -> Vector2:
         """Convert window coordinates to `World` coordinates.
 
         Parameters
@@ -250,7 +247,7 @@ class View(_Observer):
         Vector2
             `World` coordinates.
         """
-        pos = display_pos - self._DISPLAY_OFFSET
+        pos = display_pos - self._display_offset
         pos /= self.scale_factor
         pos.y = -pos.y
         return pos

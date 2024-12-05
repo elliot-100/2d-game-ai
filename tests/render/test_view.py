@@ -32,8 +32,8 @@ def test_from_display() -> None:
     v = View(world=w, name="the_view")
     window_origin = Vector2(0, 0)
     window_point = Vector2(200, 200)
-    assert v.from_display(window_origin) == Vector2(-100, 100)
-    assert v.from_display(window_point) == Vector2(100, -100)
+    assert v._from_display(window_origin) == Vector2(-100, 100)
+    assert v._from_display(window_point) == Vector2(100, -100)
 
 
 def test_from_display_with_scale_factor() -> None:
@@ -42,5 +42,5 @@ def test_from_display_with_scale_factor() -> None:
     v = View(world=w, name="the_view", scale_factor=2)
     window_origin = Vector2(0, 0)
     window_point = Vector2(400, 400)
-    assert v.from_display(window_origin) == Vector2(-100, 100)
-    assert v.from_display(window_point) == Vector2(100, -100)
+    assert v._from_display(window_origin) == Vector2(-100, 100)
+    assert v._from_display(window_point) == Vector2(100, -100)
