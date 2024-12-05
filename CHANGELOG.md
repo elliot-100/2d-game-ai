@@ -9,6 +9,15 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## UNRELEASED - TBC
+
+### Changed:
+
+- Bot pathfinding:
+  -  Direct route if there's a line-of-sight to destination
+  -  Cull redundant waypoints at start and end of route 
+
+
 ## [0.5.0] - 2024-09-26
 
 ### Added

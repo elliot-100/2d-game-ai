@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import math
 from typing import ClassVar
 
@@ -105,7 +106,9 @@ class Grid:
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
-        return list(reversed(path_from_goal))
+        path = list(reversed(path_from_goal))
+
+        return self._simplify_path(path)
 
     def _uniform_cost_search(
         self,
@@ -155,13 +158,15 @@ class Grid:
         return all(cell not in self.untraversable_cells for cell in cells)
 
     def _cells_on_line(self, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
-        """Return cells on the line between two cells, including both end cells."""
+        """Return cells on the line between two cells, including end cells."""
         if not self._cell_is_in_bounds(cell_0):
             err_msg = f"Cell {cell_0} is out of bounds."
             raise IndexError(err_msg)
         if not self._cell_is_in_bounds(cell_1):
             err_msg = f"Cell {cell_1} is out of bounds."
             raise IndexError(err_msg)
+        if cell_0 == cell_1:
+            return {cell_0}
 
         diagonal_distance = Grid._diagonal_distance(cell_0, cell_1)
 
@@ -174,6 +179,7 @@ class Grid:
 
     @staticmethod
     def _diagonal_distance(cell_0: GridRef, cell_1: GridRef) -> int:
+        """Return the diagonal distance between two cells."""
         delta = cell_1 - cell_0
         return int(max(abs(delta.x), abs(delta.y)))
 
@@ -182,3 +188,40 @@ class Grid:
         cell_0: GridRef, cell_1: GridRef, t: float
     ) -> tuple[float, float]:
         return lerp(cell_0.x, cell_1.x, t), lerp(cell_0.y, cell_1.y, t)
+
+    def _simplify_path(self, path: list[GridRef]) -> list[GridRef]:
+        """Simplify a path by removing redundant points."""
+        log_msg = f"Calculated path: {len(path)} points."
+        logging.info(log_msg)
+        path = self._cull_path(path)
+        return self._cull_path(path, reverse=True)
+
+    def _cull_path(
+        self, path: list[GridRef], *, reverse: bool = False
+    ) -> list[GridRef]:
+        """Remove leading points with line-of-sight from first point (or trailing
+        points with line-of-sight to last point if `reverse=True`).
+
+        Preserves first and last points.
+
+        """
+        min_path_length = 3
+        if not path or len(path) <= min_path_length:
+            return path
+
+        if reverse:
+            index = -2
+            while self._is_line_of_sight(path[-1], path[index]) and index > -len(path):
+                index -= 1
+            culled_path = path[: index + 2] + [path[-1]]
+            # should be `path[:index]` but extra point avoids collision issues.
+            log_msg = f"- Culled trailing points -> {len(culled_path)} points."
+        else:
+            index = 1
+            while self._is_line_of_sight(path[0], path[index]) and index < len(path):
+                index += 1
+            culled_path = [path[0]] + path[index - 1 :]
+            # should be `path[index:]` but extra point avoids collision issues.
+            log_msg = f"- Culled leading points -> {len(culled_path)} points."
+        logging.info(log_msg)
+        return culled_path
