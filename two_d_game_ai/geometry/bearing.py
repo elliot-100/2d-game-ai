@@ -14,23 +14,11 @@ class Bearing:
     """Represents a conventional bearing (aka azimuthal angle).
 
     Stored as a unit vector, based on Pygame's Vector2 class.
-
-    Attributes
-    ----------
-    degrees
-        The bearing in positive degrees clockwise from zero at North.
-        0 <= degrees < 360.
-    degrees_normalised
-        The bearing in degrees from zero at North.
-        -180 <= degrees < 180.
-        Negative value is to left/port/counter-clockwise.
-        Positive value is to right/starboard/clockwise.
-
-    vector
-        The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.
     """
 
     vector: Vector2 = field(default_factory=Vector2, init=False)
+    """The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.
+    """
     _degrees: float
 
     def __post_init__(self) -> None:
@@ -41,10 +29,11 @@ class Bearing:
 
     @property
     def degrees(self) -> float:
-        """Get bearing: 0 <= degrees < 360, clockwise.
+        """Get bearing in degrees, positive clockwise from zero at North.
+
+        0 <= degrees < 360.
 
         Intended for absolute bearings, where North is 0, East is 90, etc.
-
         """
         angle = -self.vector.as_polar()[1] + CIRCLE_DEGREES / 4
         if angle < 0:
@@ -55,20 +44,19 @@ class Bearing:
 
     @property
     def degrees_normalised(self) -> float:
-        """Get bearing: -180 <= degrees < 180, positive clockwise.
+        """Get bearing in degrees, positive clockwise from zero at North.
+
+        -180 <= degrees < 180, so due south is -180.
 
         Intended for relative bearings, where negative value is to left/port; positive
         is to right/starboard.
-
-        Note: Due south is -180.
-
         """
         if self.degrees >= CIRCLE_DEGREES / 2:
             return self.degrees - CIRCLE_DEGREES
         return self.degrees
 
     def relative(self, other_vector: Vector2) -> Bearing:
-        """Return new Bearing representing relative bearing to vector."""
+        """Return new `Bearing` representing relative bearing to vector."""
         angle = -self.vector.angle_to(other_vector)
         return Bearing(angle)
 

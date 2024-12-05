@@ -16,10 +16,13 @@ if TYPE_CHECKING:
 class GenericEntity(_Subject, ABC):
     """Generic circular entity."""
 
-    def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
+    def __init__(
+        self, world: World, name: str, position: tuple[float, float], radius: float = 0
+    ) -> None:
         super().__init__(name)
         self.world = world
-        self.pos = pos
-        """Position in `World` coordinates."""
-        self.pos_v = Vector2(pos)
+        """Reference to `World` object."""
+        self.pos = Vector2(position)
         """Position in `World` coordinates, as `Vector2`."""
+        self.radius = radius
+        """Radius in `World` units. Default is 0."""

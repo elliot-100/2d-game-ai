@@ -33,14 +33,15 @@ def test_create() -> None:
     b = Bot(
         world=w,
         name="b1",
-        pos=(0.7, 100.35),
+        position=(0.7, 100.35),
     )
     assert b.name == "b1"
-    assert b.pos_v == Vector2(0.7, 100.35)
+    assert b.pos == Vector2(0.7, 100.35)
     # Bot is initially stationary:
-    assert b._velocity_v == Vector2(0, 0)
+    assert b.velocity == Vector2(0, 0)
     # Defaults:
     assert b.heading.vector == Vector2(0, 1)
+    assert b.radius == 0
 
 
 def test_can_see_point__in_range(
@@ -58,7 +59,7 @@ def test_can_see_point__in_range(
     b = Bot(
         world=w,
         name="b0",
-        pos=(0, 0),
+        position=(0, 0),
     )
     # assert
     assert all(b.can_see_point(p) for p in visible_points)
@@ -72,13 +73,13 @@ def test_move() -> None:
     b = Bot(
         world=w,
         name="b0",
-        pos=(0, 0),
+        position=(0, 0),
     )
-    b._velocity_v = Vector2(1, 0)
+    b.velocity = Vector2(1, 0)
     # act
     b._move()
     # assert
-    assert b.pos_v == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
+    assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
 
 
 def test_move_negative() -> None:
@@ -88,45 +89,39 @@ def test_move_negative() -> None:
     b = Bot(
         world=w,
         name="b0",
-        pos=(0, 0),
+        position=(0, 0),
     )
     # act
     b._move()
     # assert
-    assert b.pos_v == Vector2(0, 0)
+    assert b.pos == Vector2(0, 0)
 
 
-def test_give_destination() -> None:
-    """Test that Bot can be given destination inside World limits and this also sets
-    destination_v.
-    """
-    # arrange
-    w = World(100)
-    b = Bot(
-        world=w,
-        name="b0",
-        pos=(0, 0),
-    )
-    # act
-    b.destination = (25, -50)
-    # assert
-    assert b.destination == (25, -50)
-    assert b.destination_v == Vector2(25, -50)
-
-
-def test_give_destination_v() -> None:
-    """Test that Bot can be given destination vector (used in UI) inside World limits,
-    and this also sets destination_v.
-    """
+def test_destination() -> None:
+    """Test that Bot can be given destination inside World limits."""
     # arrange
     w = World(40)
     b = Bot(
         world=w,
         name="b0",
-        pos=(0, 0),
+        position=(0, 0),
     )
     # act
-    b.destination_v = Vector2(-17, -12)
+    b.destination = Vector2(-17, -12)
     # assert
-    assert b.destination_v == Vector2(-17, -12)
-    assert b.destination == (-17, -12)
+    assert b.destination == Vector2(-17, -12)
+
+
+def test_set_destination_tuple() -> None:
+    """Test that Bot can be given destination as tuple inside World limits."""
+    # arrange
+    w = World(100)
+    b = Bot(
+        world=w,
+        name="b0",
+        position=(0, 0),
+    )
+    # act
+    b.set_destination(25, -50)
+    # assert
+    assert b.destination == Vector2(25, -50)

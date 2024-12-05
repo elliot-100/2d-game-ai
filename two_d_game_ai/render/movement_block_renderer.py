@@ -39,6 +39,6 @@ class MovementBlockRenderer(_GenericEntityRenderer):
         draw_scaled_circle(
             self.view,
             color=fill_color,
-            center=self.entity.pos_v,
+            center=self.entity.pos,
             radius=self.entity.radius,
         )

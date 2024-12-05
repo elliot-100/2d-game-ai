@@ -24,7 +24,7 @@ class MovementBlock(GenericEntity):
         pos: tuple[float, float],
         radius: float,
     ) -> None:
-        super().__init__(world, name, pos)
+        super().__init__(world, name, pos, radius)
 
         for cell in self.world.grid.cells:
             if point_in_or_on_circle(
@@ -32,7 +32,6 @@ class MovementBlock(GenericEntity):
             ):
                 world.grid.untraversable_cells.add(cell)
 
-        self.radius = radius
         self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
         logging.info(log_msg)

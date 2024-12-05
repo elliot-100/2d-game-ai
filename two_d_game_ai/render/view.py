@@ -122,7 +122,7 @@ class View(_Observer):
         if isinstance(self._selected, BotRenderer) and isinstance(
             self._selected.entity, Bot
         ):
-            self._selected.entity.destination_v = self.from_display(click_pos)
+            self._selected.entity.destination = self.from_display(click_pos)
 
     def render(self) -> None:
         """Render the `World` to the Pygame window."""
