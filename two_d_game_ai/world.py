@@ -17,6 +17,8 @@ class World:
     """Simulated domain.
 
     Square.
+
+    Has a `Grid`.
     """
 
     def __init__(
@@ -25,9 +27,10 @@ class World:
         grid_size: int = 2,
     ) -> None:
         self.size = size
+        """`World` units per side."""
         self.grid = Grid(size=grid_size)
         """`Grid` instance."""
-        self.grid_cell_size = self.size / grid_size
+        self.grid_resolution = self.size / grid_size
         """Size of a `Grid` cell in `World` units."""
         self.bots: list[Bot] = []
         """All `Bot`s."""
@@ -46,7 +49,10 @@ class World:
         self.step_counter += 1
 
     def point_is_inside_world_bounds(self, point: Vector2) -> bool:
-        """Return `True` if point is inside the World bounds, else `False`."""
+        """Return `True` if point is inside the World bounds, else `False`.
+
+        Not currently used.
+        """
         return abs(point.x) <= self.size / 2 and abs(point.y) <= self.size / 2
 
     def route(
