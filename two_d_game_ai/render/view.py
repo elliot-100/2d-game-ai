@@ -197,6 +197,17 @@ class View(_Observer):
                 width=1,
             )
 
+        for cell_ref in self._world.grid.untraversable_cells:
+            draw_scaled_rect(
+                self,
+                colors.MOVEMENT_BLOCK_FILL,
+                Rect(
+                    (cell_ref.x * cell_size, cell_ref.y * cell_size),
+                    (cell_size, cell_size),
+                ),
+                width=0,
+            )
+
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
         elapsed_time = self._world.step_counter * SIMULATION_STEP_INTERVAL_S

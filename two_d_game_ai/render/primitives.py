@@ -20,6 +20,7 @@ def draw_circle(
     color: Color,
     center: Vector2,
     radius: float,
+    width: int = 0,
 ) -> None:
     """Draw a circle on the `View`."""
     pygame.draw.circle(
@@ -27,6 +28,7 @@ def draw_circle(
         color=color,
         center=center,
         radius=radius,
+        width=width,
     )
 
 
@@ -35,6 +37,7 @@ def draw_scaled_circle(
     color: Color,
     center: Vector2,
     radius: float,
+    width: int = 0,
     *,
     scale_radius: bool = True,
 ) -> None:
@@ -49,6 +52,7 @@ def draw_scaled_circle(
         color=color,
         center=view.to_display(center),
         radius=radius,
+        width=width,
     )
 
 
