@@ -66,8 +66,8 @@ class World:
             Points on the path, including `to_pos` itself.
             Empty if no path found.
         """
-        from_cell = GridRef.cell_from_pos(self, from_pos)
-        to_cell = GridRef.cell_from_pos(self, to_pos)
+        from_cell = GridRef.cell_from_world_pos(self, from_pos)
+        to_cell = GridRef.cell_from_world_pos(self, to_pos)
 
         if from_cell == to_cell:  # intra-cell route is always direct
             return [to_pos]
@@ -77,7 +77,7 @@ class World:
         if not cell_route:
             return []
 
-        pos_route = [cell.cell_centre_to_pos(self) for cell in cell_route]
+        pos_route = [cell.cell_centre_to_world_pos(self) for cell in cell_route]
         pos_route[-1] = (
             to_pos  # always use actual goal (not cell centre) for last waypoint
         )
