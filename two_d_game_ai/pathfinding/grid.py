@@ -89,15 +89,38 @@ class Grid:
         if self._is_line_of_sight(from_cell, to_cell):
             return [from_cell, to_cell]
 
-        came_from: dict[GridRef, GridRef | None] = {from_cell: None}
-        cost_so_far: dict[GridRef, float] = {from_cell: 0}
+        came_from = self._uniform_cost_search(
+            from_cell,
+            to_cell,
+        )
+
+        # Construct cell path starting at `to_cell` and retracing to `start_cell`...
+        path_from_goal = [to_cell]
+        current_cell = to_cell
+
+        while current_cell is not from_cell:
+            came_from_location = came_from.get(current_cell)
+            if came_from_location is None:
+                return []
+            current_cell = came_from_location
+            path_from_goal.append(current_cell)
+
+        return list(reversed(path_from_goal))
+
+    def _uniform_cost_search(
+        self,
+        start_cell: GridRef,
+        goal_cell: GridRef,
+    ) -> dict[GridRef, GridRef | None]:
+        came_from: dict[GridRef, GridRef | None] = {start_cell: None}
+        cost_so_far: dict[GridRef, float] = {start_cell: 0}
         frontier: PriorityQueue = PriorityQueue()
-        frontier.put(0, from_cell)
+        frontier.put(0, start_cell)
 
         while not frontier.is_empty:
             current_cell = frontier.get()
 
-            if current_cell == to_cell:  # early exit
+            if current_cell == goal_cell:  # early exit
                 break
 
             for new_cell in self.reachable_neighbours(current_cell):
@@ -111,19 +134,7 @@ class Grid:
                     cost_so_far[new_cell] = new_cost
                     frontier.put(priority=new_cost, location=new_cell)
                     came_from[new_cell] = current_cell
-
-        # Construct cell path starting at goal and retracing to agent location...
-        path_from_goal = [to_cell]
-        current_cell = to_cell
-
-        while current_cell is not from_cell:
-            came_from_location = came_from.get(current_cell)
-            if came_from_location is None:
-                return []
-            current_cell = came_from_location
-            path_from_goal.append(current_cell)
-
-        return list(reversed(path_from_goal))
+        return came_from
 
     @staticmethod
     def _cost(from_cell: GridRef, to_cell: GridRef) -> float:
