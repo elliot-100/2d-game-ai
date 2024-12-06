@@ -63,11 +63,11 @@ class Grid:
 
         for dir_ in self._DIRECTIONS:
             neighbour = GridRef(cell.x + dir_[0], cell.y + dir_[1])
-            if self._cell_is_in_bounds(neighbour) and self._is_traversable(neighbour):
+            if self._cell_is_in_bounds(neighbour) and self.is_traversable(neighbour):
                 reachable_neighbours.add(neighbour)
         return reachable_neighbours
 
-    def _is_traversable(self, cell: GridRef) -> bool:
+    def is_traversable(self, cell: GridRef) -> bool:
         """Determine whether a cell is traversable."""
         return cell not in self.untraversable_cells
 

@@ -14,8 +14,9 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed:
 
 - Bot pathfinding:
-  -  Direct route if there's a line-of-sight to destination
-  -  Simplify route by removing collinear points
+  - Ignore destination setting if an untraversable cell
+  - Direct route if there's a line-of-sight to destination
+  - Simplify route by removing collinear points
 
 
 ## [0.5.0] - 2024-09-26

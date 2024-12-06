@@ -11,6 +11,7 @@ from pygame import Rect, Vector2
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer_pattern import _Observer
+from two_d_game_ai.pathfinding import GridRef
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
 from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
@@ -125,10 +126,17 @@ class View(_Observer):
 
     def _handle_mouse_set_destination(self, click_pos: Vector2) -> None:
         """Attempt to set destination, if applicable to current selection."""
-        if isinstance(self._selected, BotRenderer) and isinstance(
-            self._selected.entity, Bot
+        clicked_grid_ref = self._clicked_grid_ref(click_pos)
+        if (
+            isinstance(self._selected, BotRenderer)
+            and isinstance(self._selected.entity, Bot)
+            and self.world.grid.is_traversable(clicked_grid_ref)
         ):
-            self._selected.entity.destination = self._from_display(click_pos)
+            self._selected.entity.destination = self._to_world(click_pos)
+
+    def _clicked_grid_ref(self, click_pos: Vector2) -> GridRef:
+        """Return the GridRef at click position, or None."""
+        return GridRef.cell_from_world_pos(self.world, self._to_world(click_pos))
 
     def render(self) -> None:
         """Render the `World` to the Pygame window."""
@@ -242,7 +250,7 @@ class View(_Observer):
             world_pos.reflect(Vector2(0, 1)) * self.scale_factor + self._display_offset
         )
 
-    def _from_display(self, display_pos: Vector2) -> Vector2:
+    def _to_world(self, display_pos: Vector2) -> Vector2:
         """Convert window coordinates to `World` coordinates.
 
         Parameters
