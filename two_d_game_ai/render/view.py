@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, ClassVar
 import pygame
 from pygame import Rect, Vector2
 
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer_pattern import _Observer
 from two_d_game_ai.render import colors
@@ -33,7 +33,7 @@ class View(_Observer):
     """Base font size for all text."""
 
     _CAPTION: ClassVar[str] = "2dGameAI"
-    _MAX_RENDER_FPS: ClassVar[float] = 1 / SIMULATION_STEP_INTERVAL_S
+    _MAX_RENDER_FPS: ClassVar = SIMULATION_FPS
 
     def __init__(
         self,
@@ -210,7 +210,7 @@ class View(_Observer):
 
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
-        elapsed_time = self._world.step_counter * SIMULATION_STEP_INTERVAL_S
+        elapsed_time = self._world.step_counter / SIMULATION_FPS
 
         text_content = (
             f"sim elapsed: {elapsed_time:.1f} s\n"
