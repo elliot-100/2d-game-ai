@@ -35,10 +35,11 @@ class MovementBlockRenderer(_GenericEntityRenderer):
         if not isinstance(self.entity, MovementBlock):
             raise TypeError
 
-        fill_color = colors.SELECTED_FILL if self.is_selected else colors.WINDOW_FILL
+        color = colors.DEBUG if self.is_selected else colors.MOVEMENT_BLOCK_LINE
         draw_scaled_circle(
             self.view,
-            color=fill_color,
-            center=self.entity.pos_v,
+            color=color,
+            center=self.entity.pos,
             radius=self.entity.radius,
+            width=2,
         )

@@ -18,11 +18,11 @@ the_world = World(
 bot = Bot(
     world=the_world,
     name="bt0",
-    pos=(-100, 0),
+    position=(-100, 0),
 )
 
 # ... with a destination
-bot.destination = (100, -0)
+bot.set_destination(100, -0)
 
 # Add a MovementBlock between Bot and destination
 movement_block = MovementBlock(world=the_world, name="mb0", pos=(0, 0), radius=50)

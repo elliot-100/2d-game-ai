@@ -14,11 +14,12 @@ class GridRef(NamedTuple):
     """Grid reference class.
 
     NB: Not a `Grid` cell class.
-
     """
 
     x: int
+    """x coordinate."""
     y: int
+    """y coordinate."""
 
     def __add__(self, other: object) -> GridRef:
         if not isinstance(other, GridRef):
@@ -30,25 +31,22 @@ class GridRef(NamedTuple):
             return NotImplemented
         return GridRef(self.x - other.x, self.y - other.y)
 
-    @property
-    def as_tuple(self) -> tuple[int, int]:
-        """Get simple tuple representation for output."""
-        return self.x, self.y
+    def cell_centre_to_world_pos(self, world: World) -> Vector2:
+        """Return the `World` position of the centre of the cell."""
+        return self._cell_to_world_pos(world) + Vector2(world.grid_resolution / 2)
 
-    def cell_to_pos(self, world: World) -> Vector2:
-        """Return the world pos of the referenced cell, i.e. its min x, y corner."""
+    def _cell_to_world_pos(self, world: World) -> Vector2:
+        """Return the `World` reference position of the cell, i.e. its min X, Y
+        corner.
+        """
         return Vector2(
-            self.x * world.grid_cell_size,
-            self.y * world.grid_cell_size,
+            self.x * world.grid_resolution,
+            self.y * world.grid_resolution,
         )
 
-    def cell_centre_to_pos(self, world: World) -> Vector2:
-        """Return the world pos of the centre of the referenced cell."""
-        return self.cell_to_pos(world) + Vector2(world.grid_cell_size / 2)
-
     @staticmethod
-    def cell_from_pos(world: World, pos: Vector2) -> GridRef:
-        """Return the `GridRef` of the cell containing `pos`."""
+    def cell_from_world_pos(world: World, pos: Vector2) -> GridRef:
+        """Return the `GridRef` of the cell containing `World` position."""
         return GridRef(
-            int(pos.x // world.grid_cell_size), int(pos.y // world.grid_cell_size)
+            int(pos.x // world.grid_resolution), int(pos.y // world.grid_resolution)
         )

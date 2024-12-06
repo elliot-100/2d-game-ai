@@ -15,18 +15,18 @@ the_world = World(200)
 b0 = Bot(
     world=the_world,
     name="b0",
-    pos=(20, 20),
+    position=(20, 20),
 )
 
 # Add another Bot to the World...
 b1 = Bot(
     world=the_world,
     name="b1",
-    pos=(0, 0),
+    position=(0, 0),
 )
 
 # ... with a destination
-b1.destination = (25, -50)
+b1.set_destination(25, -50)
 
 # Create a View of the World
 view = View(

@@ -32,7 +32,7 @@ class _GenericEntityRenderer(ABC):
     @property
     def _pos_v(self) -> Vector2:
         """Get position in window coordinates."""
-        return self.view.to_display(self.entity.pos_v)
+        return self.view.to_display(self.entity.pos)
 
     @abstractmethod
     def draw(self) -> None:
@@ -49,7 +49,7 @@ class _GenericEntityRenderer(ABC):
         draw_scaled_blit(
             self.view,
             source=label,
-            dest=self.entity.pos_v,
+            dest=self.entity.pos,
             display_offset=self.LABEL_OFFSET,
         )
 

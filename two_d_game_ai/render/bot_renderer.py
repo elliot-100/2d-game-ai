@@ -30,7 +30,7 @@ class BotRenderer(_GenericEntityRenderer):
         super().draw()
         if not isinstance(self.entity, Bot):
             raise TypeError
-        if self.entity.destination_v is not None:
+        if self.entity.destination is not None:
             self._draw_destination()
             self._draw_route()
         self._draw_vision_cone()
@@ -43,7 +43,7 @@ class BotRenderer(_GenericEntityRenderer):
         """Draw Bot destination icon, and line to it."""
         if not isinstance(self.entity, Bot):
             raise TypeError
-        if not self.entity.destination_v:
+        if not self.entity.destination:
             return  # Guard clause
 
         # Destination marker (X)
@@ -51,22 +51,22 @@ class BotRenderer(_GenericEntityRenderer):
         draw_scaled_line(
             self.view,
             color=colors.BOT_DESTINATION_LINE,
-            start_pos=self.entity.destination_v + Vector2(-offset, -offset),
-            end_pos=self.entity.destination_v + Vector2(offset, offset),
+            start_pos=self.entity.destination + Vector2(-offset, -offset),
+            end_pos=self.entity.destination + Vector2(offset, offset),
         )
         draw_scaled_line(
             self.view,
             color=colors.BOT_DESTINATION_LINE,
-            start_pos=self.entity.destination_v + Vector2(offset, -offset),
-            end_pos=self.entity.destination_v + Vector2(-offset, offset),
+            start_pos=self.entity.destination + Vector2(offset, -offset),
+            end_pos=self.entity.destination + Vector2(-offset, offset),
         )
 
         # Line from Bot centre to destination
         draw_scaled_line(
             self.view,
             color=colors.BOT_DESTINATION_LINE,
-            start_pos=self.entity.pos_v,
-            end_pos=self.entity.destination_v,
+            start_pos=self.entity.pos,
+            end_pos=self.entity.destination,
         )
 
     def _draw_route(self) -> None:
@@ -94,29 +94,29 @@ class BotRenderer(_GenericEntityRenderer):
         vision_limit_offset = Vector2(0, self.ICON_RADIUS * 2)
 
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
-        start_wedge_point = self.entity.pos_v + vision_limit_offset.rotate(
+        start_wedge_point = self.entity.pos + vision_limit_offset.rotate(
             -vision_start_angle
         )
-        end_wedge_point = self.entity.pos_v + vision_limit_offset.rotate(
+        end_wedge_point = self.entity.pos + vision_limit_offset.rotate(
             -vision_end_angle
         )
 
         draw_scaled_line(
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
-            start_pos=self.entity.pos_v,
+            start_pos=self.entity.pos,
             end_pos=start_wedge_point,
         )
         draw_scaled_line(
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
-            start_pos=self.entity.pos_v,
+            start_pos=self.entity.pos,
             end_pos=end_wedge_point,
         )
         draw_scaled_circular_arc(
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
-            center=self.entity.pos_v,
+            center=self.entity.pos,
             radius=2 * self.ICON_RADIUS,
             start_angle=vision_start_angle,
             stop_angle=vision_end_angle,
@@ -128,8 +128,8 @@ class BotRenderer(_GenericEntityRenderer):
             draw_scaled_line(
                 self.view,
                 color=color,
-                start_pos=self.entity.pos_v,
-                end_pos=bot.pos_v,
+                start_pos=self.entity.pos,
+                end_pos=bot.pos,
                 width=width,
             )
 
@@ -141,7 +141,7 @@ class BotRenderer(_GenericEntityRenderer):
         draw_scaled_circle(
             self.view,
             color=fill_color,
-            center=self.entity.pos_v,
+            center=self.entity.pos,
             radius=self.ICON_RADIUS,
             scale_radius=False,
         )
@@ -152,7 +152,7 @@ class BotRenderer(_GenericEntityRenderer):
         draw_scaled_line(
             self.view,
             color=colors.BOT_HEADING_INDICATOR_LINE,
-            start_pos=self.entity.pos_v,
-            end_pos=self.entity.pos_v + nose_offset / self.view.scale_factor,
+            start_pos=self.entity.pos,
+            end_pos=self.entity.pos + nose_offset / self.view.scale_factor,
             width=3,
         )

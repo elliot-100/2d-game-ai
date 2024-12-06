@@ -18,7 +18,7 @@ def test_add_bot() -> None:
     b = Bot(
         world=w,
         name="b0",
-        pos=(0, 0),
+        position=(0, 0),
     )
     assert w.bots == [b]
 

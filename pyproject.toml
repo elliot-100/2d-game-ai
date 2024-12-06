@@ -86,6 +86,7 @@ ignore = [
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
 extend-safe-fixes = [
 "TCH001",  # Move import into a type-checking block
+"TCH003",  # Move standard library import into a type-checking block
 "TCH004",  # Move import out of type-checking block
 ]
 

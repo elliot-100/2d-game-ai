@@ -13,7 +13,7 @@ from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
 class Grid:
     """Grid class.
 
-    NB: there is no `Grid` cell class.
+    NB: there is no 'Grid cell' class.
 
     """
 
@@ -33,20 +33,22 @@ class Grid:
         size: int,
     ) -> None:
         self.size = size
-        self.offset = GridRef(-size // 2, -size // 2)
+        """`Grid` units per side."""
         self.untraversable_cells: set[GridRef] = set()
+        """Untraversable cells."""
+        self._offset = GridRef(-size // 2, -size // 2)
 
     @property
     def cells(self) -> set[GridRef]:
         """Return `GridRef`s of all cells in the `Grid`."""
         return {
-            GridRef(x, y) + self.offset
+            GridRef(x, y) + self._offset
             for x in range(self.size)
             for y in range(self.size)
         }
 
-    def in_bounds(self, cell: GridRef) -> bool:
-        """Determine whether a cell is within the grid."""
+    def _cell_is_in_bounds(self, cell: GridRef) -> bool:
+        """Determine whether a cell is within the `Grid`."""
         return abs(cell.x) <= self.size and abs(cell.y) <= self.size
 
     def reachable_neighbours(self, cell: GridRef) -> set[GridRef]:
@@ -58,7 +60,7 @@ class Grid:
 
         for dir_ in self._DIRECTIONS:
             neighbour = GridRef(cell.x + dir_[0], cell.y + dir_[1])
-            if self.in_bounds(neighbour) and self._is_traversable(neighbour):
+            if self._cell_is_in_bounds(neighbour) and self._is_traversable(neighbour):
                 reachable_neighbours.add(neighbour)
         return reachable_neighbours
 
@@ -71,7 +73,7 @@ class Grid:
         from_cell: GridRef,
         to_cell: GridRef,
     ) -> list[GridRef]:
-        """Return cell-based route.
+        """Determine a cell-based route between two cells.
 
         Returns
         -------
@@ -84,7 +86,7 @@ class Grid:
             return []
         if from_cell == to_cell:
             return [to_cell]
-        if self.is_line_of_sight(from_cell, to_cell):
+        if self._is_line_of_sight(from_cell, to_cell):
             return [from_cell, to_cell]
 
         came_from: dict[GridRef, GridRef | None] = {from_cell: None}
@@ -103,8 +105,7 @@ class Grid:
                     current_cell, new_cell
                 )
                 if (
-                    new_cell not in came_from
-                    or new_cost < cost_so_far[new_cell]
+                    new_cell not in came_from or new_cost < cost_so_far[new_cell]
                     # add new_cell to frontier if cheaper
                 ):
                     cost_so_far[new_cell] = new_cost
@@ -137,17 +138,17 @@ class Grid:
         y_dist = abs(from_cell.y - to_cell.y)
         return math.sqrt(x_dist**2 + y_dist**2)
 
-    def is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
+    def _is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
         """Determine whether there is line-of-sight between two cells."""
         cells = self._cells_on_line(cell_0, cell_1)
         return all(cell not in self.untraversable_cells for cell in cells)
 
     def _cells_on_line(self, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
         """Return cells on the line between two cells, including both end cells."""
-        if not self.in_bounds(cell_0):
+        if not self._cell_is_in_bounds(cell_0):
             err_msg = f"Cell {cell_0} is out of bounds."
             raise IndexError(err_msg)
-        if not self.in_bounds(cell_1):
+        if not self._cell_is_in_bounds(cell_1):
             err_msg = f"Cell {cell_1} is out of bounds."
             raise IndexError(err_msg)
 

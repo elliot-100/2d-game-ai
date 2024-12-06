@@ -17,11 +17,7 @@ if TYPE_CHECKING:
 
 
 class Bot(GenericEntity):
-    """Simulated entity.
-
-    Assumed circular.
-
-    """
+    """Simulated agent/vehicle."""
 
     MAX_SPEED: ClassVar[float] = 60
     """World units / second."""
@@ -33,10 +29,10 @@ class Bot(GenericEntity):
     _POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """World units."""
 
-    def __init__(self, world: World, name: str, pos: tuple[float, float]) -> None:
-        super().__init__(world, name, pos)
-        self._velocity_v = Vector2(0, 0)
-        self._destination_v: Vector2 | None = None
+    def __init__(self, world: World, name: str, position: tuple[float, float]) -> None:
+        super().__init__(world, name, position)
+        self.velocity: Vector2 = Vector2(0, 0)
+        self._destination: Vector2 | None = None
         self.route: list[Vector2] = []
         """Waypoints to be visited."""
         self.heading: Bearing = Bearing(Bot.INITIAL_HEADING_DEGREES)
@@ -49,32 +45,28 @@ class Bot(GenericEntity):
         logging.info("Bot `%s` created.", self.name)
 
     @property
-    def destination(self) -> tuple[float, float] | None:
+    def destination(self) -> Vector2 | None:
         """Destination point in World coordinates."""
-        if self._destination_v is not None:
-            return self._destination_v.x, self._destination_v.y
-        return None
+        return self._destination
 
     @destination.setter
-    def destination(self, value: tuple[float, float]) -> None:
-        self.stop()
-        self.destination_v = Vector2(value)
-
-    @property
-    def destination_v(self) -> Vector2 | None:
-        """Destination point in World coordinates, as `Vector2`."""
-        return self._destination_v
-
-    @destination_v.setter
-    def destination_v(self, value: Vector2) -> None:
+    def destination(self, value: Vector2) -> None:
+        """Set destination point."""
         if value is None or self.world.point_is_inside_world_bounds(value):
             self.stop()
-            self._destination_v = value
-        log_msg = f"Bot {self.name} destination set: {self._destination_v}."
+            self._destination = value
+        log_msg = f"Bot {self.name} destination set: {self._destination}."
         logging.info(log_msg)
-        self.route = self.route_to(self.destination_v)
+        self.route = self.route_to(self._destination)
         log_msg = f"Bot {self.name} route calculated with {len(self.route)} waypoints."
         logging.info(log_msg)
+
+    def set_destination(self, *args: float) -> None:
+        """Set destination point as pair of floats, avoiding `Vector2`.
+
+        For use in example scripts.
+        """
+        self.destination = Vector2(args[0], args[1])
 
     @property
     def max_rotation_step(self) -> float:
@@ -90,15 +82,15 @@ class Bot(GenericEntity):
             del self.route[0]
             self.stop()
 
-        if self.destination_v and self.is_at(self.destination_v):
+        if self.destination and self.is_at(self.destination):
             self.notify_observers("I've reached destination.")
-            self.destination_v = None
+            self.destination = None
             self.stop()
             return
 
         if self.route:
             waypoint_relative_bearing = self.heading.relative(
-                self.route[0] - self.pos_v
+                self.route[0] - self.pos
             ).degrees_normalised
 
             #  if Bot can complete rotation to face wp this step...
@@ -106,7 +98,7 @@ class Bot(GenericEntity):
                 # face wp precisely
                 self.rotate(-waypoint_relative_bearing)
                 # initiate move towards wp
-                self._velocity_v = self.heading.vector * Bot.MAX_SPEED
+                self.velocity = self.heading.vector * Bot.MAX_SPEED
 
             else:
                 # turn towards wp
@@ -121,7 +113,7 @@ class Bot(GenericEntity):
     def is_at(self, location: Vector2) -> bool:
         """Get whether Bot is at location (True) or not (False)."""
         return point_in_or_on_circle(
-            self.pos_v,
+            self.pos,
             location,
             self._POSITION_ARRIVAL_TOLERANCE,
         )
@@ -140,11 +132,11 @@ class Bot(GenericEntity):
 
     def stop(self) -> None:
         """Stop."""
-        self._velocity_v = Vector2(0)
+        self.velocity = Vector2(0)
 
     def _move(self) -> None:
         """Change position over 1 simulation step."""
-        self.pos_v += self._velocity_v * SIMULATION_STEP_INTERVAL_S
+        self.pos += self.velocity * SIMULATION_STEP_INTERVAL_S
 
     def _handle_sensing(self, other_bots: list[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
@@ -165,7 +157,7 @@ class Bot(GenericEntity):
 
         Considers only the Bot vision cone angle.
         """
-        return self.can_see_point(other_bot.pos_v)
+        return self.can_see_point(other_bot.pos)
 
     def can_see_point(self, point: Vector2) -> bool:
         """Determine whether the Bot can see a point.
@@ -173,7 +165,7 @@ class Bot(GenericEntity):
         Considers only the Bot vision cone angle.
         """
         relative_bearing_to_point = self.heading.relative(
-            point - self.pos_v
+            point - self.pos
         ).degrees_normalised
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
@@ -190,4 +182,4 @@ class Bot(GenericEntity):
             Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
-        return [] if goal is None else self.world.route(self.pos_v, goal)
+        return [] if goal is None else self.world.route(self.pos, goal)
