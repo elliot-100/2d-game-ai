@@ -92,16 +92,13 @@ class Grid:
         if self._is_line_of_sight(from_cell, to_cell):
             return [from_cell, to_cell]
 
-        came_from = self._uniform_cost_search(
-            from_cell,
-            to_cell,
-        )
+        came_from = self._uniform_cost_search(from_cell, to_cell)
 
         # Construct cell path starting at `to_cell` and retracing to `start_cell`...
         path_from_goal = [to_cell]
         current_cell = to_cell
 
-        while current_cell is not from_cell:
+        while current_cell != from_cell:
             came_from_location = came_from.get(current_cell)
             if came_from_location is None:
                 return []
@@ -109,7 +106,6 @@ class Grid:
             path_from_goal.append(current_cell)
 
         path = list(reversed(path_from_goal))
-
         return self._simplify_path(path)
 
     def _uniform_cost_search(
@@ -174,8 +170,7 @@ class Grid:
 
         cells = set()
         for step in range(diagonal_distance + 1):
-            t = step / diagonal_distance
-            point = Grid._lerp_grid_ref(cell_0, cell_1, t)
+            point = Grid._lerp_grid_ref(cell_0, cell_1, step / diagonal_distance)
             cells.add(GridRef(int(point[0]), int(point[1])))
         return cells
 
@@ -203,12 +198,11 @@ class Grid:
             return path
 
         culled_path = path[:2]
-        for i in range(2, len(path)):
-            node = path[i]
+        for node in path[2:]:
             if not Grid._grid_refs_are_collinear(
                 culled_path[-2], culled_path[-1], node
             ):
-                culled_path.append(path[i])
+                culled_path.append(node)
         log_msg = f"- collinear points cull -> {len(culled_path)} points."
         logging.info(log_msg)
         return culled_path
