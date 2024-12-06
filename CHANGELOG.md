@@ -32,10 +32,8 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed
 
 - World is now square
-- Bot: destination can't be set outside World limits
+- Bot pathfinding: destination can't be set outside World limits
 - Colour palette
-- API namespace simplifications, made more members public
-- Docs: docstrings: revised package/module level, constants, remove redundant type annotations
 - Simplify dependencies by using `=>` instead of `^`
 
 
@@ -59,7 +57,6 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bot `.pos` and `.destination` take `tuple[float, float]` instead of `Vector2`
 - World is rectangular
-- Extensive refactors
 - CI: use ruff format instead of black + isort
 - Upgrade dev/test dependencies: pytest, ruff
 - Remove `poetry.lock` from repo for now
@@ -78,7 +75,6 @@ Historic and pre-release versions aren't necessarily included.
 - View scaling
 - Introduced Observer pattern for Bot and View
 - Trivial logging
-- CHANGELOG.md (this document)
 
 ### Fixed
 
@@ -89,9 +85,7 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bots are now created in their own right, with reference to World, instead of World
   method: `Bot(the_world, ...)` instead of `World.add_bot(...)`
-- Refactor: extract `render` package and `render.BotRenderer` class
-- Tighten ruff config
-- Upgrade dependency: pygame-ce to 2.4.0
+- Upgrade dependency: pygame-ce to >=2.4.0
 - Upgrade dev/test dependencies: black, mypy, pytest, pre-commit, ruff
 - Upgrade CI dependencies: actions/setup-python
 
@@ -100,6 +94,7 @@ Historic and pre-release versions aren't necessarily included.
 
 Baseline release.
 
+[0.5.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/elliot-100/2d-game-ai/releases/tag/v0.2.0
