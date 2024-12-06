@@ -20,7 +20,7 @@ def test_add_bot() -> None:
         name="b0",
         position=(0, 0),
     )
-    assert w.bots == [b]
+    assert w.bots == {b}
 
 
 def test_point_is_inside_world_bounds() -> None:

@@ -41,7 +41,7 @@ class Bot(GenericEntity):
         """Peers which are known about, but aren't currently in sight."""
         self.visible_bots: set[Bot] = set()
         """Peers which are currently in sight."""
-        self.world.bots.append(self)
+        self.world.bots.add(self)
         logging.info("Bot `%s` created.", self.name)
 
     @property
@@ -73,7 +73,7 @@ class Bot(GenericEntity):
         """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE / SIMULATION_FPS
 
-    def update(self, other_bots: list[Bot]) -> None:
+    def update(self, other_bots: set[Bot]) -> None:
         """Update Bot, including move over 1 simulation step."""
         self._handle_sensing(other_bots)
 
@@ -138,7 +138,7 @@ class Bot(GenericEntity):
         """Change position over 1 simulation step."""
         self.pos += self.velocity / SIMULATION_FPS
 
-    def _handle_sensing(self, other_bots: list[Bot]) -> None:
+    def _handle_sensing(self, other_bots: set[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
         newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
