@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, NamedTuple
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from pygame import Vector2
 
@@ -10,7 +11,8 @@ if TYPE_CHECKING:
     from two_d_game_ai.world import World
 
 
-class GridRef(NamedTuple):
+@dataclass(frozen=True)
+class GridRef:
     """Grid reference class.
 
     NB: Not a `Grid` cell class.
@@ -21,14 +23,10 @@ class GridRef(NamedTuple):
     y: int
     """y coordinate."""
 
-    def __add__(self, other: object) -> GridRef:
-        if not isinstance(other, GridRef):
-            return NotImplemented
+    def __add__(self, other: GridRef) -> GridRef:
         return GridRef(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: object) -> GridRef:
-        if not isinstance(other, GridRef):
-            return NotImplemented
+    def __sub__(self, other: GridRef) -> GridRef:
         return GridRef(self.x - other.x, self.y - other.y)
 
     def cell_centre_to_world_pos(self, world: World) -> Vector2:
