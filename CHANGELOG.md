@@ -15,7 +15,7 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bot pathfinding:
   -  Direct route if there's a line-of-sight to destination
-  -  Cull redundant waypoints at start and end of route 
+  -  Simplify route by removing collinear points
 
 
 ## [0.5.0] - 2024-09-26
