@@ -5,9 +5,12 @@ name: Python application with Poetry
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ $default-branch ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ $default-branch ]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -16,10 +19,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.11
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.12"
+        cache: "pip"
     - name: Install Poetry
       uses: snok/install-poetry@v1
       with:
