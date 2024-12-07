@@ -71,9 +71,9 @@
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities</span> <span class="kn">import</span> <span class="n">MovementBlock</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities.movement_block</span> <span class="kn">import</span> <span class="n">MovementBlock</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view</span> <span class="kn">import</span> <span class="n">colors</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view.generic_entity_renderer</span> <span class="kn">import</span> <span class="n">_GenericEntityRenderer</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view.generic_entity_renderer</span> <span class="kn">import</span> <span class="n">GenericEntityRenderer</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view.primitives</span> <span class="kn">import</span> <span class="n">draw_scaled_circle</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -82,7 +82,7 @@
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="kn">from</span> <span class="nn">two_d_game_ai.view.view</span> <span class="kn">import</span> <span class="n">View</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="k">class</span> <span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">_GenericEntityRenderer</span><span class="p">):</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="k">class</span> <span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">GenericEntityRenderer</span><span class="p">):</span>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a Block to a Surface.&quot;&quot;&quot;</span>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -119,13 +119,13 @@
 <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">MovementBlockRenderer</span><wbr>(<span class="base"><a href="generic_entity_renderer.html#_GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer._GenericEntityRenderer</a></span>):
+    <span class="name">MovementBlockRenderer</span><wbr>(<span class="base"><a href="generic_entity_renderer.html#GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer.GenericEntityRenderer</a></span>):
 
                 <label class="view-source-button" for="MovementBlockRenderer-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#MovementBlockRenderer"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer-19"><a href="#MovementBlockRenderer-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">_GenericEntityRenderer</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer-19"><a href="#MovementBlockRenderer-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">GenericEntityRenderer</span><span class="p">):</span>
 </span><span id="MovementBlockRenderer-20"><a href="#MovementBlockRenderer-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a Block to a Surface.&quot;&quot;&quot;</span>
 </span><span id="MovementBlockRenderer-21"><a href="#MovementBlockRenderer-21"><span class="linenos">21</span></a>
 </span><span id="MovementBlockRenderer-22"><a href="#MovementBlockRenderer-22"><span class="linenos">22</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -164,7 +164,7 @@
                                         <input id="MovementBlockRenderer.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
-        <span class="name">MovementBlockRenderer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">view</span><span class="p">:</span> <span class="n"><a href="view.html#View">two_d_game_ai.view.view.View</a></span>,</span><span class="param">	<span class="n">entity</span><span class="p">:</span> <span class="n"><a href="../entities.html#MovementBlock">two_d_game_ai.entities.MovementBlock</a></span>,</span><span class="param">	<span class="n">font</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span></span>)</span>
+        <span class="name">MovementBlockRenderer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">view</span><span class="p">:</span> <span class="n"><a href="view.html#View">two_d_game_ai.view.view.View</a></span>,</span><span class="param">	<span class="n">entity</span><span class="p">:</span> <span class="n"><a href="../entities/movement_block.html#MovementBlock">two_d_game_ai.entities.movement_block.MovementBlock</a></span>,</span><span class="param">	<span class="n">font</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span></span>)</span>
 
                 <label class="view-source-button" for="MovementBlockRenderer.__init__-view-source"><span>View Source</span></label>
 
@@ -222,14 +222,14 @@
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
-                                    <div><dt><a href="generic_entity_renderer.html#_GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer._GenericEntityRenderer</a></dt>
-                                <dd id="MovementBlockRenderer.LABEL_OFFSET" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.LABEL_OFFSET">LABEL_OFFSET</a></dd>
-                <dd id="MovementBlockRenderer.view" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.view">view</a></dd>
-                <dd id="MovementBlockRenderer.entity" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.entity">entity</a></dd>
-                <dd id="MovementBlockRenderer.font" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.font">font</a></dd>
-                <dd id="MovementBlockRenderer.is_selected" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.is_selected">is_selected</a></dd>
-                <dd id="MovementBlockRenderer.clickable_radius" class="variable"><a href="generic_entity_renderer.html#_GenericEntityRenderer.clickable_radius">clickable_radius</a></dd>
-                <dd id="MovementBlockRenderer.is_clicked" class="function"><a href="generic_entity_renderer.html#_GenericEntityRenderer.is_clicked">is_clicked</a></dd>
+                                    <div><dt><a href="generic_entity_renderer.html#GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer.GenericEntityRenderer</a></dt>
+                                <dd id="MovementBlockRenderer.LABEL_OFFSET" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.LABEL_OFFSET">LABEL_OFFSET</a></dd>
+                <dd id="MovementBlockRenderer.view" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.view">view</a></dd>
+                <dd id="MovementBlockRenderer.entity" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.entity">entity</a></dd>
+                <dd id="MovementBlockRenderer.font" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.font">font</a></dd>
+                <dd id="MovementBlockRenderer.is_selected" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.is_selected">is_selected</a></dd>
+                <dd id="MovementBlockRenderer.clickable_radius" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.clickable_radius">clickable_radius</a></dd>
+                <dd id="MovementBlockRenderer.is_clicked" class="function"><a href="generic_entity_renderer.html#GenericEntityRenderer.is_clicked">is_clicked</a></dd>
 
             </div>
                                 </dl>

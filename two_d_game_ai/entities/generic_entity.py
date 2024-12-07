@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 
 from pygame import Vector2
 
-from two_d_game_ai.entities.observer_pattern import _Subject
+from two_d_game_ai.entities.observer_pattern import Subject
 
 if TYPE_CHECKING:
     from two_d_game_ai.world.world import World
 
 
-class GenericEntity(_Subject, ABC):
+class GenericEntity(Subject, ABC):
     """Generic circular entity."""
 
     def __init__(

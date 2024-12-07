@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from two_d_game_ai.entities import MovementBlock
+from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.view import colors
-from two_d_game_ai.view.generic_entity_renderer import _GenericEntityRenderer
+from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 from two_d_game_ai.view.primitives import draw_scaled_circle
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.view.view import View
 
 
-class MovementBlockRenderer(_GenericEntityRenderer):
+class MovementBlockRenderer(GenericEntityRenderer):
     """Renders a Block to a Surface."""
 
     def __init__(

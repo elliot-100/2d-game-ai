@@ -30,6 +30,36 @@
 
             <h2>API Documentation</h2>
                 <ul class="memberlist">
+            <li>
+                    <a class="class" href="#GenericEntityRenderer">GenericEntityRenderer</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.LABEL_OFFSET">LABEL_OFFSET</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.view">view</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.entity">entity</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.font">font</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.is_selected">is_selected</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#GenericEntityRenderer.clickable_radius">clickable_radius</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#GenericEntityRenderer.draw">draw</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#GenericEntityRenderer.is_clicked">is_clicked</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -46,14 +76,14 @@
                     <h1 class="modulename">
 <a href="./../../two_d_game_ai.html">two_d_game_ai</a><wbr>.<a href="./../view.html">view</a><wbr>.generic_entity_renderer    </h1>
 
-                        <div class="docstring"><p>Module containing <code>_GenericEntityRenderer</code> class.</p>
+                        <div class="docstring"><p>Module containing <code><a href="#GenericEntityRenderer">GenericEntityRenderer</a></code> class.</p>
 </div>
 
                         <input id="mod-generic_entity_renderer-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-generic_entity_renderer-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Module containing `_GenericEntityRenderer` class.&quot;&quot;&quot;</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Module containing `GenericEntityRenderer` class.&quot;&quot;&quot;</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
@@ -71,7 +101,7 @@
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="kn">from</span> <span class="nn">two_d_game_ai.view.view</span> <span class="kn">import</span> <span class="n">View</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">_GenericEntityRenderer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">GenericEntityRenderer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders an entity to a Surface.&quot;&quot;&quot;</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">LABEL_OFFSET</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -126,6 +156,214 @@
 
 
             </section>
+                <section id="GenericEntityRenderer">
+                            <input id="GenericEntityRenderer-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">GenericEntityRenderer</span><wbr>(<span class="base">abc.ABC</span>):
+
+                <label class="view-source-button" for="GenericEntityRenderer-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GenericEntityRenderer-20"><a href="#GenericEntityRenderer-20"><span class="linenos">20</span></a><span class="k">class</span> <span class="nc">GenericEntityRenderer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+</span><span id="GenericEntityRenderer-21"><a href="#GenericEntityRenderer-21"><span class="linenos">21</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders an entity to a Surface.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-22"><a href="#GenericEntityRenderer-22"><span class="linenos">22</span></a>
+</span><span id="GenericEntityRenderer-23"><a href="#GenericEntityRenderer-23"><span class="linenos">23</span></a>    <span class="n">LABEL_OFFSET</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span><span id="GenericEntityRenderer-24"><a href="#GenericEntityRenderer-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Display units.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-25"><a href="#GenericEntityRenderer-25"><span class="linenos">25</span></a>
+</span><span id="GenericEntityRenderer-26"><a href="#GenericEntityRenderer-26"><span class="linenos">26</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">GenericEntity</span><span class="p">,</span> <span class="n">font</span><span class="p">:</span> <span class="n">Font</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer-27"><a href="#GenericEntityRenderer-27"><span class="linenos">27</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view</span>
+</span><span id="GenericEntityRenderer-28"><a href="#GenericEntityRenderer-28"><span class="linenos">28</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="n">entity</span>
+</span><span id="GenericEntityRenderer-29"><a href="#GenericEntityRenderer-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">font</span>
+</span><span id="GenericEntityRenderer-30"><a href="#GenericEntityRenderer-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_selected</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="GenericEntityRenderer-31"><a href="#GenericEntityRenderer-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="GenericEntityRenderer-32"><a href="#GenericEntityRenderer-32"><span class="linenos">32</span></a>
+</span><span id="GenericEntityRenderer-33"><a href="#GenericEntityRenderer-33"><span class="linenos">33</span></a>    <span class="nd">@property</span>
+</span><span id="GenericEntityRenderer-34"><a href="#GenericEntityRenderer-34"><span class="linenos">34</span></a>    <span class="k">def</span> <span class="nf">_pos_v</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer-35"><a href="#GenericEntityRenderer-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get position in window coordinates.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-36"><a href="#GenericEntityRenderer-36"><span class="linenos">36</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+</span><span id="GenericEntityRenderer-37"><a href="#GenericEntityRenderer-37"><span class="linenos">37</span></a>
+</span><span id="GenericEntityRenderer-38"><a href="#GenericEntityRenderer-38"><span class="linenos">38</span></a>    <span class="nd">@abstractmethod</span>
+</span><span id="GenericEntityRenderer-39"><a href="#GenericEntityRenderer-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer-40"><a href="#GenericEntityRenderer-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the entity to the surface.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-41"><a href="#GenericEntityRenderer-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_label</span><span class="p">()</span>
+</span><span id="GenericEntityRenderer-42"><a href="#GenericEntityRenderer-42"><span class="linenos">42</span></a>
+</span><span id="GenericEntityRenderer-43"><a href="#GenericEntityRenderer-43"><span class="linenos">43</span></a>    <span class="k">def</span> <span class="nf">_draw_label</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer-44"><a href="#GenericEntityRenderer-44"><span class="linenos">44</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw entity name label to surface.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-45"><a href="#GenericEntityRenderer-45"><span class="linenos">45</span></a>        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+</span><span id="GenericEntityRenderer-46"><a href="#GenericEntityRenderer-46"><span class="linenos">46</span></a>            <span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+</span><span id="GenericEntityRenderer-47"><a href="#GenericEntityRenderer-47"><span class="linenos">47</span></a>            <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-48"><a href="#GenericEntityRenderer-48"><span class="linenos">48</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">WINDOW_TEXT</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-49"><a href="#GenericEntityRenderer-49"><span class="linenos">49</span></a>        <span class="p">)</span>
+</span><span id="GenericEntityRenderer-50"><a href="#GenericEntityRenderer-50"><span class="linenos">50</span></a>        <span class="n">draw_scaled_blit</span><span class="p">(</span>
+</span><span id="GenericEntityRenderer-51"><a href="#GenericEntityRenderer-51"><span class="linenos">51</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-52"><a href="#GenericEntityRenderer-52"><span class="linenos">52</span></a>            <span class="n">source</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-53"><a href="#GenericEntityRenderer-53"><span class="linenos">53</span></a>            <span class="n">dest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-54"><a href="#GenericEntityRenderer-54"><span class="linenos">54</span></a>            <span class="n">display_offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LABEL_OFFSET</span><span class="p">,</span>
+</span><span id="GenericEntityRenderer-55"><a href="#GenericEntityRenderer-55"><span class="linenos">55</span></a>        <span class="p">)</span>
+</span><span id="GenericEntityRenderer-56"><a href="#GenericEntityRenderer-56"><span class="linenos">56</span></a>
+</span><span id="GenericEntityRenderer-57"><a href="#GenericEntityRenderer-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">is_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">click_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer-58"><a href="#GenericEntityRenderer-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if the entity is clicked.</span>
+</span><span id="GenericEntityRenderer-59"><a href="#GenericEntityRenderer-59"><span class="linenos">59</span></a>
+</span><span id="GenericEntityRenderer-60"><a href="#GenericEntityRenderer-60"><span class="linenos">60</span></a><span class="sd">        Parameters</span>
+</span><span id="GenericEntityRenderer-61"><a href="#GenericEntityRenderer-61"><span class="linenos">61</span></a><span class="sd">        ----------</span>
+</span><span id="GenericEntityRenderer-62"><a href="#GenericEntityRenderer-62"><span class="linenos">62</span></a><span class="sd">        click_pos</span>
+</span><span id="GenericEntityRenderer-63"><a href="#GenericEntityRenderer-63"><span class="linenos">63</span></a><span class="sd">            The position of the click in window coordinates.</span>
+</span><span id="GenericEntityRenderer-64"><a href="#GenericEntityRenderer-64"><span class="linenos">64</span></a>
+</span><span id="GenericEntityRenderer-65"><a href="#GenericEntityRenderer-65"><span class="linenos">65</span></a><span class="sd">        Returns</span>
+</span><span id="GenericEntityRenderer-66"><a href="#GenericEntityRenderer-66"><span class="linenos">66</span></a><span class="sd">        -------</span>
+</span><span id="GenericEntityRenderer-67"><a href="#GenericEntityRenderer-67"><span class="linenos">67</span></a><span class="sd">        bool</span>
+</span><span id="GenericEntityRenderer-68"><a href="#GenericEntityRenderer-68"><span class="linenos">68</span></a><span class="sd">            True if the click position is within or on the clickable radius.</span>
+</span><span id="GenericEntityRenderer-69"><a href="#GenericEntityRenderer-69"><span class="linenos">69</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer-70"><a href="#GenericEntityRenderer-70"><span class="linenos">70</span></a>        <span class="k">return</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span><span class="n">click_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos_v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Renders an entity to a Surface.</p>
+</div>
+
+
+                            <div id="GenericEntityRenderer.LABEL_OFFSET" class="classattr">
+                                <div class="attr variable">
+            <span class="name">LABEL_OFFSET</span>        =
+<span class="default_value">(10, 10)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.LABEL_OFFSET"></a>
+    
+            <div class="docstring"><p>Display units.</p>
+</div>
+
+
+                            </div>
+                            <div id="GenericEntityRenderer.view" class="classattr">
+                                <div class="attr variable">
+            <span class="name">view</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.view"></a>
+    
+    
+
+                            </div>
+                            <div id="GenericEntityRenderer.entity" class="classattr">
+                                <div class="attr variable">
+            <span class="name">entity</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.entity"></a>
+    
+    
+
+                            </div>
+                            <div id="GenericEntityRenderer.font" class="classattr">
+                                <div class="attr variable">
+            <span class="name">font</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.font"></a>
+    
+    
+
+                            </div>
+                            <div id="GenericEntityRenderer.is_selected" class="classattr">
+                                <div class="attr variable">
+            <span class="name">is_selected</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.is_selected"></a>
+    
+    
+
+                            </div>
+                            <div id="GenericEntityRenderer.clickable_radius" class="classattr">
+                                <div class="attr variable">
+            <span class="name">clickable_radius</span><span class="annotation">: float</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.clickable_radius"></a>
+    
+    
+
+                            </div>
+                            <div id="GenericEntityRenderer.draw" class="classattr">
+                                        <input id="GenericEntityRenderer.draw-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator decorator-abstractmethod">@abstractmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">draw</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+                <label class="view-source-button" for="GenericEntityRenderer.draw-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.draw"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GenericEntityRenderer.draw-38"><a href="#GenericEntityRenderer.draw-38"><span class="linenos">38</span></a>    <span class="nd">@abstractmethod</span>
+</span><span id="GenericEntityRenderer.draw-39"><a href="#GenericEntityRenderer.draw-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer.draw-40"><a href="#GenericEntityRenderer.draw-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the entity to the surface.&quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer.draw-41"><a href="#GenericEntityRenderer.draw-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_label</span><span class="p">()</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Draw the entity to the surface.</p>
+</div>
+
+
+                            </div>
+                            <div id="GenericEntityRenderer.is_clicked" class="classattr">
+                                        <input id="GenericEntityRenderer.is_clicked-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">is_clicked</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">click_pos</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+                <label class="view-source-button" for="GenericEntityRenderer.is_clicked-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#GenericEntityRenderer.is_clicked"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GenericEntityRenderer.is_clicked-57"><a href="#GenericEntityRenderer.is_clicked-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">is_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">click_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="GenericEntityRenderer.is_clicked-58"><a href="#GenericEntityRenderer.is_clicked-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if the entity is clicked.</span>
+</span><span id="GenericEntityRenderer.is_clicked-59"><a href="#GenericEntityRenderer.is_clicked-59"><span class="linenos">59</span></a>
+</span><span id="GenericEntityRenderer.is_clicked-60"><a href="#GenericEntityRenderer.is_clicked-60"><span class="linenos">60</span></a><span class="sd">        Parameters</span>
+</span><span id="GenericEntityRenderer.is_clicked-61"><a href="#GenericEntityRenderer.is_clicked-61"><span class="linenos">61</span></a><span class="sd">        ----------</span>
+</span><span id="GenericEntityRenderer.is_clicked-62"><a href="#GenericEntityRenderer.is_clicked-62"><span class="linenos">62</span></a><span class="sd">        click_pos</span>
+</span><span id="GenericEntityRenderer.is_clicked-63"><a href="#GenericEntityRenderer.is_clicked-63"><span class="linenos">63</span></a><span class="sd">            The position of the click in window coordinates.</span>
+</span><span id="GenericEntityRenderer.is_clicked-64"><a href="#GenericEntityRenderer.is_clicked-64"><span class="linenos">64</span></a>
+</span><span id="GenericEntityRenderer.is_clicked-65"><a href="#GenericEntityRenderer.is_clicked-65"><span class="linenos">65</span></a><span class="sd">        Returns</span>
+</span><span id="GenericEntityRenderer.is_clicked-66"><a href="#GenericEntityRenderer.is_clicked-66"><span class="linenos">66</span></a><span class="sd">        -------</span>
+</span><span id="GenericEntityRenderer.is_clicked-67"><a href="#GenericEntityRenderer.is_clicked-67"><span class="linenos">67</span></a><span class="sd">        bool</span>
+</span><span id="GenericEntityRenderer.is_clicked-68"><a href="#GenericEntityRenderer.is_clicked-68"><span class="linenos">68</span></a><span class="sd">            True if the click position is within or on the clickable radius.</span>
+</span><span id="GenericEntityRenderer.is_clicked-69"><a href="#GenericEntityRenderer.is_clicked-69"><span class="linenos">69</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="GenericEntityRenderer.is_clicked-70"><a href="#GenericEntityRenderer.is_clicked-70"><span class="linenos">70</span></a>        <span class="k">return</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span><span class="n">click_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos_v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Determine if the entity is clicked.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>click_pos</strong>: The position of the click in window coordinates.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<ul>
+<li><strong>bool</strong>: True if the click position is within or on the clickable radius.</li>
+</ul>
+</div>
+
+
+                            </div>
+                </section>
     </main>
 <script>
     function escapeHTML(html) {

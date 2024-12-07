@@ -9,7 +9,8 @@ from two_d_game_ai.world.grid import Grid
 if TYPE_CHECKING:
     from pygame import Vector2
 
-    from two_d_game_ai.entities import Bot, MovementBlock
+    from two_d_game_ai.entities.bot import Bot
+    from two_d_game_ai.entities.movement_block import MovementBlock
 
 
 class World:

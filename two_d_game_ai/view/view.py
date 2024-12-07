@@ -9,8 +9,8 @@ import pygame
 from pygame import Rect, Vector2
 
 from two_d_game_ai import SIMULATION_FPS
-from two_d_game_ai.entities import Bot
-from two_d_game_ai.entities.observer_pattern import _Observer
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities.observer_pattern import Observer
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
@@ -25,7 +25,7 @@ _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 
 
-class View(_Observer):
+class View(Observer):
     """Renders a `two_d_game_ai.world.world.World` to a window.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards.

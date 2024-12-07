@@ -97,8 +97,8 @@
 </span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="kn">from</span> <span class="nn">pygame</span> <span class="kn">import</span> <span class="n">Rect</span><span class="p">,</span> <span class="n">Vector2</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai</span> <span class="kn">import</span> <span class="n">SIMULATION_FPS</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities</span> <span class="kn">import</span> <span class="n">Bot</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities.observer_pattern</span> <span class="kn">import</span> <span class="n">_Observer</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities.bot</span> <span class="kn">import</span> <span class="n">Bot</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.entities.observer_pattern</span> <span class="kn">import</span> <span class="n">Observer</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view</span> <span class="kn">import</span> <span class="n">colors</span>
 </span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view.bot_renderer</span> <span class="kn">import</span> <span class="n">BotRenderer</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="kn">from</span> <span class="nn">two_d_game_ai.view.movement_block_renderer</span> <span class="kn">import</span> <span class="n">MovementBlockRenderer</span>
@@ -113,7 +113,7 @@
 </span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="n">_SECONDARY_MOUSE_BUTTON</span> <span class="o">=</span> <span class="mi">3</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
 </span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">_Observer</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">Observer</span><span class="p">):</span>
 </span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a `two_d_game_ai.world.world.World` to a window.</span>
 </span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>
 </span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">    NB: Unlike Pygame default, origin at centre, positive y upwards.</span>
@@ -365,13 +365,13 @@
 <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">View</span><wbr>(<span class="base">two_d_game_ai.entities.observer_pattern._Observer</span>):
+    <span class="name">View</span><wbr>(<span class="base"><a href="../entities/observer_pattern.html#Observer">two_d_game_ai.entities.observer_pattern.Observer</a></span>):
 
                 <label class="view-source-button" for="View-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#View"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="View-29"><a href="#View-29"><span class="linenos"> 29</span></a><span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">_Observer</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="View-29"><a href="#View-29"><span class="linenos"> 29</span></a><span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">Observer</span><span class="p">):</span>
 </span><span id="View-30"><a href="#View-30"><span class="linenos"> 30</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a `two_d_game_ai.world.world.World` to a window.</span>
 </span><span id="View-31"><a href="#View-31"><span class="linenos"> 31</span></a>
 </span><span id="View-32"><a href="#View-32"><span class="linenos"> 32</span></a><span class="sd">    NB: Unlike Pygame default, origin at centre, positive y upwards.</span>
@@ -863,6 +863,16 @@ Origin is at centre, positive y upwards.</li>
 </div>
 
 
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="../entities/observer_pattern.html#Observer">two_d_game_ai.entities.observer_pattern.Observer</a></dt>
+                                <dd id="View.name" class="variable"><a href="../entities/observer_pattern.html#Observer.name">name</a></dd>
+                <dd id="View.report_event" class="function"><a href="../entities/observer_pattern.html#Observer.report_event">report_event</a></dd>
+
+            </div>
+                                </dl>
                             </div>
                 </section>
     </main>

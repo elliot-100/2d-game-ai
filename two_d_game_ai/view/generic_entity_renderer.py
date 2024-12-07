@@ -1,4 +1,4 @@
-"""Module containing `_GenericEntityRenderer` class."""
+"""Module containing `GenericEntityRenderer` class."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.view.view import View
 
 
-class _GenericEntityRenderer(ABC):
+class GenericEntityRenderer(ABC):
     """Renders an entity to a Surface."""
 
     LABEL_OFFSET = (10, 10)

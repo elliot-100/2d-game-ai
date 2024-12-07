@@ -2,7 +2,7 @@
 
 import logging
 
-from two_d_game_ai.entities import Bot
+from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
