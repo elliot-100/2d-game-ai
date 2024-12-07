@@ -62,7 +62,7 @@ arg-type-hints-in-signature = true
 arg-type-hints-in-docstring = false
 
 [tool.ruff]
-target-version = "py312"  # Not inferred from poetry-style pyproject.toml
+target-version = "py313"  # Not inferred from poetry-style pyproject.toml
 
 [tool.ruff.lint]
 select = ["ALL"]
