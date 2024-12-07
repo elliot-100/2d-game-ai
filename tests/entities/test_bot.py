@@ -6,8 +6,8 @@ import pytest
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
-from two_d_game_ai.entities import Bot
-from two_d_game_ai.world import World
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.world.world import World
 
 
 @pytest.fixture

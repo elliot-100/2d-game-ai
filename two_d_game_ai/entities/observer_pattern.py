@@ -7,7 +7,7 @@ import logging
 ObserverException = Exception
 
 
-class _Subject:
+class Subject:
     """Subject (a.k.a. Observable) class.
 
     All simulated entity classes inherit from this class.
@@ -15,17 +15,17 @@ class _Subject:
 
     def __init__(self, name: str) -> None:
         self.name = name
-        self.observers: set[_Observer] = set()
+        self.observers: set[Observer] = set()
         log_msg = f"Subject `{self.name}` initiated"
         logging.info(log_msg)
 
-    def register_observer(self, observer: _Observer) -> None:
+    def register_observer(self, observer: Observer) -> None:
         """Register an observer."""
         self.observers.add(observer)
         log_msg = f"Observer `{observer.name}` registered with Subject `{self.name}`"
         logging.info(log_msg)
 
-    def unregister_observer(self, observer: _Observer) -> None:
+    def unregister_observer(self, observer: Observer) -> None:
         """Unregister a observer."""
         self.observers.discard(observer)
         log_msg = f"Observer `{observer.name}` unregistered from Subject `{self.name}`"
@@ -43,7 +43,7 @@ class _Subject:
             raise ObserverException(error_msg)
 
 
-class _Observer:
+class Observer:
     """Observer class.
 
     Viewers (e.g. renderers) inherit from this class.
@@ -54,7 +54,7 @@ class _Observer:
         log_msg = f"Observer `{self.name}` initiated"
         logging.info(log_msg)
 
-    def report_event(self, message: str, sender: _Subject) -> None:
+    def report_event(self, message: str, sender: Subject) -> None:
         """Report the received message.
 
         Don't need to call this explicitly, it's called by Subject.dispatch().

@@ -1,4 +1,4 @@
-"""Module containing `_GenericEntityRenderer` class."""
+"""Module containing `GenericEntityRenderer` class."""
 
 from __future__ import annotations
 
@@ -6,17 +6,17 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from two_d_game_ai.geometry import point_in_or_on_circle
-from two_d_game_ai.render import colors
-from two_d_game_ai.render.primitives import draw_scaled_blit
+from two_d_game_ai.view import colors
+from two_d_game_ai.view.primitives import draw_scaled_blit
 
 if TYPE_CHECKING:
     from pygame import Font, Vector2
 
     from two_d_game_ai.entities.generic_entity import GenericEntity
-    from two_d_game_ai.render.view import View
+    from two_d_game_ai.view.view import View
 
 
-class _GenericEntityRenderer(ABC):
+class GenericEntityRenderer(ABC):
     """Renders an entity to a Surface."""
 
     LABEL_OFFSET = (10, 10)

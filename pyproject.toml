@@ -109,6 +109,11 @@ extend-safe-fixes = [
 "PLC0414",  # Import alias does not rename original package
 ]
 
+## Special cases for top-level documentation:
+"two_d_game_ai/__init__.py" = [
+"D400",  # First line should end with a period
+]
+
 [tool.ruff.lint.pylint]
 max-args = 7
 

@@ -13,7 +13,7 @@ from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world import World
+    from two_d_game_ai.world.world import World
 
 
 class Bot(GenericEntity):

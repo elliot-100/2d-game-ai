@@ -21,13 +21,17 @@
             <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
                    pattern=".+" required>
 
+            <h2>Contents</h2>
+            <ul>
+  <li><a href="#architecture">Architecture</a></li>
+</ul>
+
 
             <h2>Submodules</h2>
             <ul>
                     <li><a href="two_d_game_ai/entities.html">entities</a></li>
                     <li><a href="two_d_game_ai/geometry.html">geometry</a></li>
-                    <li><a href="two_d_game_ai/pathfinding.html">pathfinding</a></li>
-                    <li><a href="two_d_game_ai/render.html">render</a></li>
+                    <li><a href="two_d_game_ai/view.html">view</a></li>
                     <li><a href="two_d_game_ai/world.html">world</a></li>
             </ul>
 
@@ -52,18 +56,52 @@
                     <h1 class="modulename">
 two_d_game_ai    </h1>
 
-                        <div class="docstring"><p>The top-level module.</p>
+                        <div class="docstring"><h1 id="architecture">Architecture</h1>
+
+<p>The <code>World</code> (<code><a href="two_d_game_ai/world/world.html#World">two_d_game_ai.world.world.World</a></code>) is the simulated domain.</p>
+
+<ul>
+<li><code>World.grid</code> refers to a <code>Grid</code> (<code><a href="two_d_game_ai/world/grid.html#Grid">two_d_game_ai.world.grid.Grid</a></code>), used for
+pathfinding and line-of-sight.</li>
+</ul>
+
+<p><code>Bot</code>s are simulated agents/vehicles.</p>
+
+<ul>
+<li>They are aware of the <code>World</code>.</li>
+<li>They are not aware of the <code>World.grid</code>, but it does constrain their behaviour, e.g.
+when they query the <code>World</code> to find a route to a destination, intermediate waypoints
+on the path are on grid nodes (cell centres).</li>
+</ul>
+
+<p><code>View</code> (<code><a href="two_d_game_ai/view/view.html#View">two_d_game_ai.view.view.View</a></code>) provides a visual user interface.</p>
 </div>
 
                         <input id="mod-two_d_game_ai-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-two_d_game_ai-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="sd">&quot;&quot;&quot;The top-level module.&quot;&quot;&quot;</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">SIMULATION_FPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a><span class="sd">&quot;&quot;&quot;Simulation frames per second.</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos">5</span></a><span class="sd">Views could update faster or slower.&quot;&quot;&quot;</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="sd"># Architecture</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">The `World` (`two_d_game_ai.world.world.World`) is the simulated domain.</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="sd">- `World.grid` refers to a `Grid` (`two_d_game_ai.world.grid.Grid`), used for</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">  pathfinding and line-of-sight.</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">`Bot`s are simulated agents/vehicles.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">- They are aware of the `World`.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">- They are not aware of the `World.grid`, but it does constrain their behaviour, e.g.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">  when they query the `World` to find a route to a destination, intermediate waypoints</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">  on the path are on grid nodes (cell centres).</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">`View` (`two_d_game_ai.view.view.View`) provides a visual user interface.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="n">SIMULATION_FPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">&quot;&quot;&quot;Simulation frames per second.</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">Views could update faster or slower.&quot;&quot;&quot;</span>
 </span></pre></div>
 
 

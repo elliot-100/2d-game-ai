@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
+
+from pygame import Vector2
 
 from two_d_game_ai.geometry import lerp
-from two_d_game_ai.pathfinding.grid_ref import GridRef
-from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
+from two_d_game_ai.world.grid_ref import GridRef
+from two_d_game_ai.world.priority_queue import PriorityQueue
+
+if TYPE_CHECKING:
+    from two_d_game_ai.world.world import World
 
 _MIN_PATH_NODES: int = 3
 
@@ -43,7 +48,7 @@ class Grid:
 
     @property
     def cells(self) -> set[GridRef]:
-        """Return `GridRef`s of all cells in the `Grid`."""
+        """Return all cells.."""
         return {
             GridRef(x, y) + self._offset
             for x in range(self.size)
@@ -214,3 +219,27 @@ class Grid:
         dx2 = gr2.x - gr1.x
         dy2 = gr2.y - gr1.y
         return dx1 * dy2 == dy1 * dx2
+
+    @staticmethod
+    def cell_from_world_pos(world: World, pos: Vector2) -> GridRef:
+        """Return the `GridRef` of the cell containing `World` position."""
+        return GridRef(
+            int(pos.x // world.grid_resolution), int(pos.y // world.grid_resolution)
+        )
+
+    @staticmethod
+    def cell_centre_to_world_pos(grid_ref: GridRef, world: World) -> Vector2:
+        """Return the `World` position of the centre of the cell."""
+        return Grid._cell_to_world_pos(grid_ref, world) + Vector2(
+            world.grid_resolution / 2
+        )
+
+    @staticmethod
+    def _cell_to_world_pos(grid_ref: GridRef, world: World) -> Vector2:
+        """Return the `World` reference position of the cell, i.e. its min X, Y
+        corner.
+        """
+        return Vector2(
+            grid_ref.x * world.grid_resolution,
+            grid_ref.y * world.grid_resolution,
+        )

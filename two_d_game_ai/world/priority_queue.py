@@ -1,10 +1,10 @@
-"""PriorityQueue class."""
+"""Module containing `PriorityQueue` class."""
 
 import heapq
 from dataclasses import dataclass
 from typing import Self
 
-from two_d_game_ai.pathfinding.grid_ref import GridRef
+from two_d_game_ai.world.grid_ref import GridRef
 
 
 class PriorityQueue:
