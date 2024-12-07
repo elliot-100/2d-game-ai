@@ -10,7 +10,7 @@ from pygame import Vector2
 from two_d_game_ai.entities.observer_pattern import _Subject
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world import World
+    from two_d_game_ai.world.world import World
 
 
 class GenericEntity(_Subject, ABC):

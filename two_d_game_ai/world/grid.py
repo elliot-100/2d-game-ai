@@ -7,8 +7,8 @@ import math
 from typing import ClassVar
 
 from two_d_game_ai.geometry import lerp
-from two_d_game_ai.pathfinding.grid_ref import GridRef
-from two_d_game_ai.pathfinding.priority_queue import PriorityQueue
+from two_d_game_ai.world.grid_ref import GridRef
+from two_d_game_ai.world.priority_queue import PriorityQueue
 
 _MIN_PATH_NODES: int = 3
 
@@ -43,7 +43,7 @@ class Grid:
 
     @property
     def cells(self) -> set[GridRef]:
-        """Return `GridRef`s of all cells in the `Grid`."""
+        """Return all cells.."""
         return {
             GridRef(x, y) + self._offset
             for x in range(self.size)

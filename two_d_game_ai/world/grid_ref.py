@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pygame import Vector2
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world import World
+    from two_d_game_ai.world.world import World
 
 
 @dataclass(frozen=True)

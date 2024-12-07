@@ -1,11 +1,11 @@
-"""Package containing the `World` class."""
+"""Module containing `World` class."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from two_d_game_ai.pathfinding import GridRef
-from two_d_game_ai.pathfinding.grid import Grid
+from two_d_game_ai.world.grid import Grid
+from two_d_game_ai.world.grid_ref import GridRef
 
 if TYPE_CHECKING:
     from pygame import Vector2
@@ -18,7 +18,7 @@ class World:
 
     Square.
 
-    Has a `Grid`.
+    Has a `two_d_game_ai.world.grid.Grid`.
     """
 
     def __init__(

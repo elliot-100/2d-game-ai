@@ -3,7 +3,7 @@
 from pygame import Vector2
 
 from two_d_game_ai.render import View
-from two_d_game_ai.world import World
+from two_d_game_ai.world.world import World
 
 
 def test_to_display() -> None:

@@ -11,14 +11,14 @@ from pygame import Rect, Vector2
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.entities.observer_pattern import _Observer
-from two_d_game_ai.pathfinding import GridRef
 from two_d_game_ai.render import colors
 from two_d_game_ai.render.bot_renderer import BotRenderer
 from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.render.primitives import draw_scaled_line, draw_scaled_rect
+from two_d_game_ai.world.grid_ref import GridRef
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world import World
+    from two_d_game_ai.world.world import World
 
 _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
