@@ -6,8 +6,7 @@ authors = ["elliot-100 <3186037+elliot-100@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11, <4"
-# pydoclint dep docstring-parser-fork requires python < 4
+python = ">=3.11"
 pygame-ce = ">=2.5.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -15,8 +14,6 @@ invoke = "^2.0.0"
 mypy = "^1.13.0"
 pdoc = "^15.0.0"
 pre-commit = "^4.0.1"
-pydoclint = "^0.5.10"
-pydoctest = "^0.2.1"
 ruff = "^0.8.2"
 
 [tool.poetry.group.test.dependencies]
