@@ -12,7 +12,7 @@ from two_d_game_ai.geometry import to_display_radians
 if TYPE_CHECKING:
     from pygame import Color, Surface
 
-    from two_d_game_ai.render.view import View
+    from two_d_game_ai.view.view import View
 
 
 def draw_circle(

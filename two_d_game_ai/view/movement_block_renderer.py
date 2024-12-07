@@ -5,14 +5,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from two_d_game_ai.entities import MovementBlock
-from two_d_game_ai.render import colors
-from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
-from two_d_game_ai.render.primitives import draw_scaled_circle
+from two_d_game_ai.view import colors
+from two_d_game_ai.view.generic_entity_renderer import _GenericEntityRenderer
+from two_d_game_ai.view.primitives import draw_scaled_circle
 
 if TYPE_CHECKING:
     from pygame import Font
 
-    from two_d_game_ai.render.view import View
+    from two_d_game_ai.view.view import View
 
 
 class MovementBlockRenderer(_GenericEntityRenderer):

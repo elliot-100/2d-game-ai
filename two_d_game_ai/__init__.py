@@ -12,7 +12,7 @@ The `World` (`two_d_game_ai.world.world.World`) is the simulated domain.
   on the path are on grid nodes (cell centres).
 
 
-'View` provides a visual user interface.
+`View` (`two_d_game_ai.view.view.View`) provides a visual user interface.
 
 """
 
