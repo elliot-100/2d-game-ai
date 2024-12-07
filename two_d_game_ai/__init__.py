@@ -1,5 +1,5 @@
-"""Top level package."""
+"""The top-level module."""
 
-SIMULATION_STEP_INTERVAL_S = 1 / 60
-"""Abstract time interval (seconds) represented by a single simulation step.
+SIMULATION_FPS: int = 60
+"""Simulation frames per second.
 Views could update faster or slower."""

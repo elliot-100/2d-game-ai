@@ -32,7 +32,7 @@ class World:
         """`Grid` instance."""
         self.grid_resolution = self.size / grid_size
         """Size of a `Grid` cell in `World` units."""
-        self.bots: list[Bot] = []
+        self.bots: set[Bot] = set()
         """All `Bot`s."""
         self.movement_blocks: list[MovementBlock] = []
         """All `MovementBlock`s."""
@@ -44,8 +44,7 @@ class World:
     def update(self) -> None:
         """Change all `Bot` positions over 1 simulation step."""
         for bot in self.bots:
-            other_bots = [b for b in self.bots if b is not bot]
-            bot.update(other_bots)
+            bot.update({b for b in self.bots if b is not bot})
         self.step_counter += 1
 
     def point_is_inside_world_bounds(self, point: Vector2) -> bool:
@@ -84,9 +83,8 @@ class World:
             return []
 
         pos_route = [cell.cell_centre_to_world_pos(self) for cell in cell_route]
-        pos_route[-1] = (
-            to_pos  # always use actual goal (not cell centre) for last waypoint
-        )
+        pos_route[-1] = to_pos
+        # always use actual goal (not cell centre) for last waypoint
         if len(pos_route) > 1:
             del pos_route[0]
         return pos_route

@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pygame import Vector2
 
-from two_d_game_ai import SIMULATION_STEP_INTERVAL_S
+from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities import Bot
 from two_d_game_ai.world import World
 
@@ -79,7 +79,7 @@ def test_move() -> None:
     # act
     b._move()
     # assert
-    assert b.pos == Vector2(SIMULATION_STEP_INTERVAL_S, 0)
+    assert b.pos == Vector2(1 / SIMULATION_FPS, 0)
 
 
 def test_move_negative() -> None:

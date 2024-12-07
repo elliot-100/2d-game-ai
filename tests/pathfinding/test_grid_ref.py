@@ -29,7 +29,7 @@ def test_subtract() -> None:
 
 
 def test_cell_to_pos() -> None:
-    """Test that _world pos of the cell is calculated correctly."""
+    """Test that world pos of the cell is calculated correctly."""
     # arrange
     w = World(size=100, grid_size=10)
     gr = GridRef(3, -7)
