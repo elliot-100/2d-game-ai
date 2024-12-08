@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
 
-from two_d_game_ai.entities import Bot
-from two_d_game_ai.render import colors
-from two_d_game_ai.render.generic_entity_renderer import _GenericEntityRenderer
-from two_d_game_ai.render.primitives import (
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.view import colors
+from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
+from two_d_game_ai.view.primitives import (
     draw_scaled_circle,
     draw_scaled_circular_arc,
     draw_scaled_line,
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from pygame import Color
 
 
-class BotRenderer(_GenericEntityRenderer):
+class BotRenderer(GenericEntityRenderer):
     """Renders a Bot to a Surface."""
 
     ICON_RADIUS: ClassVar[int] = 10

@@ -15,24 +15,24 @@ Implemented as a library. User interface uses [pygame-ce](https://pyga.me/).
 
 ```python
 from two_d_game_ai.entities import Bot
-from two_d_game_ai.render import View
+from two_d_game_ai.view import View
 from two_d_game_ai.world import World
 
 # WORLD
 
 # Create a World
 the_world = World(
-    size=300,
-    grid_size=16,
+  size=300,
+  grid_size=16,
 )
 
 # ENTITIES
 
 # Add a Bot to the World...
 b0 = Bot(
-    name="b0",
-    world=the_world,
-    pos=(20, 20),
+  name="b0",
+  world=the_world,
+  pos=(20, 20),
 )
 
 # ... with a destination
@@ -42,18 +42,18 @@ b1.destination = (25, -50)
 # Provides user interface, but not required: e.g. Bot, World test suites don't have one.
 
 view = View(
-    name="the_view",
-    world=the_world,
-    scale_factor=2,
+  name="the_view",
+  world=the_world,
+  scale_factor=2,
 )
 
 # MAIN LOOP
 
 while view.running:
-    view.handle_inputs()
-    if not the_world.is_paused:
-        the_world.update()
-    view.render()
+  view.handle_inputs()
+  if not the_world.is_paused:
+    the_world.update()
+  view.render()
 ```
 
 

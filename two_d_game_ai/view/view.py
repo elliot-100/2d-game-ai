@@ -9,23 +9,24 @@ import pygame
 from pygame import Rect, Vector2
 
 from two_d_game_ai import SIMULATION_FPS
-from two_d_game_ai.entities import Bot
-from two_d_game_ai.entities.observer_pattern import _Observer
-from two_d_game_ai.pathfinding import GridRef
-from two_d_game_ai.render import colors
-from two_d_game_ai.render.bot_renderer import BotRenderer
-from two_d_game_ai.render.movement_block_renderer import MovementBlockRenderer
-from two_d_game_ai.render.primitives import draw_scaled_line, draw_scaled_rect
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities.observer_pattern import Observer
+from two_d_game_ai.view import colors
+from two_d_game_ai.view.bot_renderer import BotRenderer
+from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
+from two_d_game_ai.view.primitives import draw_scaled_line, draw_scaled_rect
+from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world import World
+    from two_d_game_ai.world.grid_ref import GridRef
+    from two_d_game_ai.world.world import World
 
 _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 
 
-class View(_Observer):
-    """Renders a `two_d_game_ai.world.World` to a window.
+class View(Observer):
+    """Renders a `two_d_game_ai.world.world.World` to a window.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
@@ -136,7 +137,7 @@ class View(_Observer):
 
     def _clicked_grid_ref(self, click_pos: Vector2) -> GridRef:
         """Return the GridRef at click position, or None."""
-        return GridRef.cell_from_world_pos(self.world, self._to_world(click_pos))
+        return Grid.cell_from_world_pos(self.world, self._to_world(click_pos))
 
     def render(self) -> None:
         """Render the `World` to the Pygame window."""
