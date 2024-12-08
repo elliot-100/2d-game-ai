@@ -17,6 +17,9 @@ if TYPE_CHECKING:
 class MovementBlockRenderer(GenericEntityRenderer):
     """Renders a Block to a Surface."""
 
+    LABEL_OFFSET = (0, 0)
+    """Display units."""
+
     def __init__(
         self,
         view: View,
@@ -39,5 +42,5 @@ class MovementBlockRenderer(GenericEntityRenderer):
             color=color,
             center=self.entity.pos,
             radius=self.entity.radius,
-            width=2,
+            width=1,
         )

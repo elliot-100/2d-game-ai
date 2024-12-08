@@ -77,13 +77,16 @@ class View(Observer):
         )
 
     def _initialize_renderers(self) -> None:
-        self._renderers = [
+        self._bot_renderers = {
             BotRenderer(view=self, entity=bot, font=self._font)
             for bot in self.world.bots
-        ] + [
+        }
+        self._block_renderers = {
             MovementBlockRenderer(view=self, entity=block, font=self._font)
             for block in self.world.movement_blocks
-        ]
+        }
+        self._clickables = self._bot_renderers | self._block_renderers
+
         for bot in self.world.bots:
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
@@ -110,14 +113,14 @@ class View(Observer):
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)
-        for renderer in self._renderers:
+        for renderer in self._clickables:
             renderer.is_selected = renderer == self._selected
 
     def _clicked_entity(
         self, click_pos: Vector2
     ) -> MovementBlockRenderer | BotRenderer | None:
         """Return the EntityRenderer at click position, or None."""
-        for renderer in self._renderers:
+        for renderer in self._clickables:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
                 logging.info(log_msg)
@@ -147,8 +150,11 @@ class View(Observer):
         self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
         self._draw_grid()
-        for renderer in self._renderers:
-            renderer.draw()
+        for _ in self._bot_renderers:
+            _.draw()
+        for _ in self._block_renderers:
+            _.draw()
+
         self._draw_step_counter()
         # update entire display
         pygame.display.flip()
