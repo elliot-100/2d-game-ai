@@ -187,22 +187,25 @@ class View(Observer):
         grid_size = self.world.grid.size
         cell_size = self.world.size / grid_size
 
-        for cell_index in range(-grid_size // 2, grid_size // 2 + 1):
+        for cell_index in range(grid_size + 1):
+            cell_offset = cell_size * (cell_index - grid_size / 2)
             # horizontal grid line
             draw_scaled_line(
                 self,
                 colors.WORLD_GRID_LINE,
-                Vector2(self._world_min, cell_index * cell_size),
-                Vector2(self._world_max, cell_index * cell_size),
+                Vector2(self._world_min, cell_offset),
+                Vector2(self._world_max, cell_offset),
                 width=1,
+                anti_alias=False,
             )
             # vertical grid line
             draw_scaled_line(
                 self,
                 colors.WORLD_GRID_LINE,
-                Vector2(cell_index * cell_size, self._world_min),
-                Vector2(cell_index * cell_size, self._world_max),
+                Vector2(cell_offset, self._world_min),
+                Vector2(cell_offset, self._world_max),
                 width=1,
+                anti_alias=False,
             )
 
         for cell_ref in self.world.grid.untraversable_cells:

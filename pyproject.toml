@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.11, <4"
 # pydoclint dep docstring-parser-fork requires python < 4
-pygame-ce = ">=2.4.0"
+pygame-ce = ">=2.5.0"
 
 [tool.poetry.group.dev.dependencies]
 invoke = "^2.0.0"
