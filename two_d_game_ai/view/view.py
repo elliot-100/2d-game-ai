@@ -43,7 +43,7 @@ class View(Observer):
         scale_factor: float = 1,
         margin: int = 0,
     ) -> None:
-        self.world = world
+        self._world = world
         """The `World` to be rendered."""
         super().__init__(name)
         self.scale_factor = scale_factor
@@ -54,7 +54,7 @@ class View(Observer):
         pygame.init()
         self._font = pygame.font.Font(None, self.FONT_SIZE)
 
-        _window_size = self.world.size * self.scale_factor + 2 * self._margin
+        _window_size = self._world.size * self.scale_factor + 2 * self._margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
         """Top level Pygame `Surface`."""
 
@@ -65,7 +65,7 @@ class View(Observer):
 
         self._initialize_renderers()
 
-        self._world_max = self.world.size / 2
+        self._world_max = self._world.size / 2
         self._world_min = -self._world_max
 
         self._display_offset = Vector2(
@@ -79,15 +79,15 @@ class View(Observer):
     def _initialize_renderers(self) -> None:
         self._bot_renderers = {
             BotRenderer(view=self, entity=bot, font=self._font)
-            for bot in self.world.bots
+            for bot in self._world.bots
         }
         self._block_renderers = {
             MovementBlockRenderer(view=self, entity=block, font=self._font)
-            for block in self.world.movement_blocks
+            for block in self._world.movement_blocks
         }
         self._clickables = self._bot_renderers | self._block_renderers
 
-        for bot in self.world.bots:
+        for bot in self._world.bots:
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
 
@@ -109,7 +109,7 @@ class View(Observer):
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
                     if event.key == pygame.K_p:  # toggle [P]ause
-                        self.world.is_paused = not self.world.is_paused
+                        self._world.is_paused = not self._world.is_paused
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)
@@ -133,13 +133,13 @@ class View(Observer):
         if (
             isinstance(self._selected, BotRenderer)
             and isinstance(self._selected.entity, Bot)
-            and self.world.grid.is_traversable(clicked_grid_ref)
+            and self._world.grid.is_traversable(clicked_grid_ref)
         ):
             self._selected.entity.destination = self._to_world(click_pos)
 
     def _clicked_grid_ref(self, click_pos: Vector2) -> GridRef:
         """Return the GridRef at click position, or None."""
-        return Grid.cell_from_world_pos(self.world, self._to_world(click_pos))
+        return Grid.cell_from_world_pos(self._world, self._to_world(click_pos))
 
     def render(self) -> None:
         """Render the `World` to the Pygame window."""
@@ -166,7 +166,7 @@ class View(Observer):
             color=colors.WORLD_FILL,
             rect=Rect(
                 (self._world_min, self._world_min),
-                (self.world.size, self.world.size),
+                (self._world.size, self._world.size),
             ),
         )
         # Axes
@@ -185,8 +185,8 @@ class View(Observer):
 
     def _draw_grid(self) -> None:
         """Draw the `Grid`."""
-        grid_size = self.world.grid.size
-        cell_size = self.world.size / grid_size
+        grid_size = self._world.grid.size
+        cell_size = self._world.size / grid_size
 
         for cell_index in range(grid_size + 1):
             cell_offset = cell_size * (cell_index - grid_size / 2)
@@ -208,7 +208,7 @@ class View(Observer):
             )
 
         oversize_px = 2
-        for cell_ref in self.world.grid.untraversable_cells:
+        for cell_ref in self._world.grid.untraversable_cells:
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
             )
@@ -228,13 +228,13 @@ class View(Observer):
 
     def _draw_step_counter(self) -> None:
         """Render the step counter and blit to window."""
-        elapsed_time = self.world.step_counter / SIMULATION_FPS
+        elapsed_time = self._world.step_counter / SIMULATION_FPS
 
         text_content = (
             f"sim elapsed: {elapsed_time:.1f} s\n"
-            f"sim step: {self.world.step_counter}\n"
+            f"sim step: {self._world.step_counter}\n"
         )
-        if self.world.is_paused:
+        if self._world.is_paused:
             text_content += "paused"
         text = self._font.render(
             text=text_content,
