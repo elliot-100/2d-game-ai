@@ -6,6 +6,27 @@ from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
 
+def test_create() -> None:
+    """Test that `View` can be created and initialized."""
+    # arrange
+    w = World(200)
+    # act
+    v = View(world=w, name="the_view")
+    # assert
+    assert v
+
+
+def test_render() -> None:
+    """Test that `View` can be rendered without error."""
+    # arrange
+    w = World(200)
+    v = View(world=w, name="the_view")
+    # act
+    v.render()
+    # assert
+    assert True
+
+
 def test_to_display() -> None:
     """Test that coordinates are converted so that origin is at centre."""
     w = World(200)

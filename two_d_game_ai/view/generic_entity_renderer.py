@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.view import colors
-from two_d_game_ai.view.primitives import draw_scaled_blit
 
 if TYPE_CHECKING:
     from pygame import Font, Vector2
@@ -46,8 +45,7 @@ class GenericEntityRenderer(ABC):
             antialias=True,
             color=colors.WINDOW_TEXT,
         )
-        draw_scaled_blit(
-            self.view,
+        self.view.blit(
             source=label,
             dest=self.entity.pos,
             display_offset=self.LABEL_OFFSET,

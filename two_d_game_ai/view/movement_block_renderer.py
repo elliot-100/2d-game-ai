@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
-from two_d_game_ai.view.primitives import draw_scaled_circle
 
 if TYPE_CHECKING:
     from pygame import Font
@@ -36,8 +35,7 @@ class MovementBlockRenderer(GenericEntityRenderer):
             raise TypeError
 
         color = colors.DEBUG if self.is_selected else colors.MOVEMENT_BLOCK_LINE
-        draw_scaled_circle(
-            self.view,
+        self.view.draw_circle(
             color=color,
             center=self.entity.pos,
             radius=self.entity.radius,
