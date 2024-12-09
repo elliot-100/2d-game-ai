@@ -8,8 +8,13 @@ repos:
     -   id: check-toml
     -   id: check-yaml
     -   id: end-of-file-fixer
+    -   id: mixed-line-ending
     -   id: trailing-whitespace
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.8.2
     hooks:
+    # Run the linter.
     -   id: ruff
+        args: [ --fix ]
+    # Run the formatter.
+    -   id: ruff-format
