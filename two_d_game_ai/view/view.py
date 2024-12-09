@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING, ClassVar
 
 import pygame
-from pygame import Rect, Vector2
+from pygame import Color, Rect, Surface, Vector2
 
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.bot import Bot
@@ -14,7 +14,6 @@ from two_d_game_ai.entities.observer_pattern import Observer
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
-from two_d_game_ai.view.primitives import draw_scaled_line, draw_scaled_rect
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
@@ -78,13 +77,16 @@ class View(Observer):
         )
 
     def _initialize_renderers(self) -> None:
-        self._renderers = [
+        self._bot_renderers = {
             BotRenderer(view=self, entity=bot, font=self._font)
             for bot in self.world.bots
-        ] + [
+        }
+        self._block_renderers = {
             MovementBlockRenderer(view=self, entity=block, font=self._font)
             for block in self.world.movement_blocks
-        ]
+        }
+        self._clickables = self._bot_renderers | self._block_renderers
+
         for bot in self.world.bots:
             bot.register_observer(self)
         self._selected: None | MovementBlockRenderer | BotRenderer = None
@@ -111,14 +113,14 @@ class View(Observer):
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)
-        for renderer in self._renderers:
+        for renderer in self._clickables:
             renderer.is_selected = renderer == self._selected
 
     def _clicked_entity(
         self, click_pos: Vector2
     ) -> MovementBlockRenderer | BotRenderer | None:
         """Return the EntityRenderer at click position, or None."""
-        for renderer in self._renderers:
+        for renderer in self._clickables:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
                 logging.info(log_msg)
@@ -148,8 +150,11 @@ class View(Observer):
         self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
         self._draw_grid()
-        for renderer in self._renderers:
-            renderer.draw()
+        for _ in self._bot_renderers:
+            _.draw()
+        for _ in self._block_renderers:
+            _.draw()
+
         self._draw_step_counter()
         # update entire display
         pygame.display.flip()
@@ -157,28 +162,24 @@ class View(Observer):
     def _draw_world_limits(self) -> None:
         """Draw the `World` limits."""
         # Border
-        draw_scaled_rect(
-            self,
-            colors.WORLD_FILL,
-            Rect(
+        self.draw_rect(
+            color=colors.WORLD_FILL,
+            rect=Rect(
                 (self._world_min, self._world_min),
                 (self.world.size, self.world.size),
             ),
-            width=0,
         )
         # Axes
-        draw_scaled_line(  # Y
-            self,
-            colors.WORLD_AXES_LINE,
-            Vector2(0, self._world_min),
-            Vector2(0, self._world_max),
-            width=3,
+        self.draw_line(
+            color=colors.WORLD_AXES_LINE,
+            start_pos=Vector2(0, self._world_min),
+            end_pos=Vector2(0, self._world_max),
         )
-        draw_scaled_line(  # X
-            self,
-            colors.WORLD_AXES_LINE,
-            Vector2(self._world_min, 0),
-            Vector2(self._world_max, 0),
+
+        self.draw_line(  # X
+            color=colors.WORLD_AXES_LINE,
+            start_pos=Vector2(self._world_min, 0),
+            end_pos=Vector2(self._world_max, 0),
             width=3,
         )
 
@@ -190,32 +191,38 @@ class View(Observer):
         for cell_index in range(grid_size + 1):
             cell_offset = cell_size * (cell_index - grid_size / 2)
             # horizontal grid line
-            draw_scaled_line(
-                self,
-                colors.WORLD_GRID_LINE,
-                Vector2(self._world_min, cell_offset),
-                Vector2(self._world_max, cell_offset),
+            self.draw_line(
+                color=colors.WORLD_GRID_LINE,
+                start_pos=Vector2(self._world_min, cell_offset),
+                end_pos=Vector2(self._world_max, cell_offset),
                 width=1,
                 anti_alias=False,
             )
             # vertical grid line
-            draw_scaled_line(
-                self,
-                colors.WORLD_GRID_LINE,
-                Vector2(cell_offset, self._world_min),
-                Vector2(cell_offset, self._world_max),
+            self.draw_line(
+                color=colors.WORLD_GRID_LINE,
+                start_pos=Vector2(cell_offset, self._world_min),
+                end_pos=Vector2(cell_offset, self._world_max),
                 width=1,
                 anti_alias=False,
             )
 
+        oversize_px = 2
         for cell_ref in self.world.grid.untraversable_cells:
-            draw_scaled_rect(
-                self,
-                colors.MOVEMENT_BLOCK_FILL,
-                Rect(
-                    (cell_ref.x * cell_size, cell_ref.y * cell_size),
-                    (cell_size, cell_size),
-                ),
+            grid_rect = Rect(
+                (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
+            )
+            # draw slightly oversize to hide gridlines
+            oversize_grid_rect = grid_rect.move(
+                -int(oversize_px / self.scale_factor),
+                -int(oversize_px / self.scale_factor),
+            )
+            oversize_grid_rect.width = oversize_grid_rect.height = int(
+                grid_rect.width + 2 * oversize_px / self.scale_factor
+            )
+            self.draw_rect(
+                color=colors.MOVEMENT_BLOCK_FILL,
+                rect=Rect(oversize_grid_rect),
                 width=0,
             )
 
@@ -271,3 +278,122 @@ class View(Observer):
         pos = (display_pos - self._display_offset) / self.scale_factor
         pos.y = -pos.y
         return pos
+
+    def draw_line(
+        self,
+        *,
+        color: Color,
+        start_pos: Vector2,
+        end_pos: Vector2,
+        width: int = 1,
+        anti_alias: bool = True,
+    ) -> None:
+        """Draw a line in `World` units.
+
+        `width`: display pixels.
+        """
+        if anti_alias and width == 1:
+            pygame.draw.aaline(
+                surface=self.window,
+                color=color,
+                start_pos=self.to_display(start_pos),
+                end_pos=self.to_display(end_pos),
+            )
+
+        else:
+            # pygame.draw.aaline() only draws single-pixel width lines
+            pygame.draw.line(
+                surface=self.window,
+                color=color,
+                start_pos=self.to_display(start_pos),
+                end_pos=self.to_display(end_pos),
+                width=width,
+            )
+
+    def draw_rect(
+        self,
+        *,
+        color: Color,
+        rect: Rect,
+        width: int = 0,
+    ) -> None:
+        """Draw a rectangle in `World` units.
+
+        `width`: display pixels.
+
+        """
+        scaled_pos = self.to_display(Vector2(rect.left, rect.top))
+        scaled_width = rect.width * self.scale_factor
+        scaled_height = rect.height * self.scale_factor
+        pygame.draw.rect(
+            surface=self.window,
+            color=color,
+            rect=(
+                scaled_pos.x,
+                scaled_pos.y - scaled_height,
+                scaled_width,
+                scaled_height,
+            ),
+            width=width,
+        )
+
+    def draw_circle(
+        self,
+        *,
+        color: Color,
+        center: Vector2,
+        radius: float,
+        width: int = 0,
+        scale_radius: bool = True,
+    ) -> None:
+        """Draw a circle in `World` units.
+
+        Optionally supress radius scaling e.g. for icons whose size is independent
+        of view scaling.
+
+        `width`: display pixels.
+        """
+        if scale_radius:
+            radius *= self.scale_factor
+        pygame.draw.circle(
+            surface=self.window,
+            color=color,
+            center=self.to_display(center),
+            radius=radius,
+            width=width,
+        )
+
+    def draw_poly(
+        self,
+        *,
+        color: Color,
+        closed: bool = False,
+        points: list[Vector2],
+    ) -> None:
+        """Draw a closed polygon on the `View`, in `World` units,
+        which are scaled/translated for display.
+        """
+        pygame.draw.aalines(
+            surface=self.window,
+            color=color,
+            closed=closed,
+            points=[self.to_display(p) for p in points],
+        )
+
+    def blit(
+        self,
+        *,
+        source: Surface,
+        dest: Vector2,
+        display_offset: tuple[int, int],
+    ) -> None:
+        """Blit to the `View`.
+
+        `dest`: `World` units, which are scaled/translated for display.
+
+        `display_offset`: unscaled display units.
+        """
+        self.window.blit(
+            source=source,
+            dest=self.to_display(dest) + display_offset,
+        )
