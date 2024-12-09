@@ -11,8 +11,8 @@ from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 from two_d_game_ai.view.primitives import (
     draw_scaled_circle,
-    draw_scaled_circular_arc,
     draw_scaled_line,
+    draw_scaled_poly,
 )
 
 if TYPE_CHECKING:
@@ -83,43 +83,31 @@ class BotRenderer(GenericEntityRenderer):
 
     def _draw_vision_cone(self) -> None:
         """Draw Bot vision cone to surface."""
+        angle_step_degrees: int = 10
+
         if not isinstance(self.entity, Bot):
             raise TypeError
-        vision_start_angle = (
-            self.entity.heading.degrees - self.entity.VISION_CONE_ANGLE / 2
-        )
-        vision_end_angle = (
-            self.entity.heading.degrees + self.entity.VISION_CONE_ANGLE / 2
-        )
+
         vision_limit_offset = Vector2(0, self.ICON_RADIUS * 2)
 
-        # NB legacy use of Pygame CCW rotation here, thus negative angle:
-        start_wedge_point = self.entity.pos + vision_limit_offset.rotate(
-            -vision_start_angle
-        )
-        end_wedge_point = self.entity.pos + vision_limit_offset.rotate(
-            -vision_end_angle
-        )
+        draw_angles = [
+            *list(range(0, int(self.entity.VISION_CONE_ANGLE), angle_step_degrees)),
+            self.entity.VISION_CONE_ANGLE,
+        ]
+        # include the last angle so it's always drawn, irrespective of
+        # `angle_step_degrees`
 
-        draw_scaled_line(
+        offsets = [
+            # NB legacy use of Pygame CCW rotation here, thus negative angle:
+            vision_limit_offset.rotate(
+                self.entity.VISION_CONE_ANGLE / 2 - self.entity.heading.degrees - angle
+            )
+            for angle in draw_angles
+        ]
+        draw_scaled_poly(
             self.view,
             color=colors.BOT_CAN_SEE_LINE,
-            start_pos=self.entity.pos,
-            end_pos=start_wedge_point,
-        )
-        draw_scaled_line(
-            self.view,
-            color=colors.BOT_CAN_SEE_LINE,
-            start_pos=self.entity.pos,
-            end_pos=end_wedge_point,
-        )
-        draw_scaled_circular_arc(
-            self.view,
-            color=colors.BOT_CAN_SEE_LINE,
-            center=self.entity.pos,
-            radius=2 * self.ICON_RADIUS,
-            start_angle=vision_start_angle,
-            stop_angle=vision_end_angle,
+            points=[self.entity.pos] + [self.entity.pos + offset for offset in offsets],
         )
 
     def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:

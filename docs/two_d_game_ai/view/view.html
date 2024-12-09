@@ -275,87 +275,90 @@
 </span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a>        <span class="n">grid_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">size</span>
 </span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>        <span class="n">cell_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid_size</span>
 </span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a>
-</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>        <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">grid_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">grid_size</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>            <span class="c1"># horizontal grid line</span>
-</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
-</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
-</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">,</span> <span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">,</span> <span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a>            <span class="p">)</span>
-</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>            <span class="c1"># vertical grid line</span>
-</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
-</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
-</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">),</span>
-</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">),</span>
-</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a>            <span class="p">)</span>
-</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>
-</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a>        <span class="k">for</span> <span class="n">cell_ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="p">:</span>
-</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>            <span class="n">draw_scaled_rect</span><span class="p">(</span>
-</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_FILL</span><span class="p">,</span>
-</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>                <span class="n">Rect</span><span class="p">(</span>
-</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>                    <span class="p">(</span><span class="n">cell_ref</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_ref</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>                    <span class="p">(</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>                <span class="p">),</span>
-</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a>            <span class="p">)</span>
-</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a>
-</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a>    <span class="k">def</span> <span class="nf">_draw_step_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the step counter and blit to window.&quot;&quot;&quot;</span>
-</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a>        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">/</span> <span class="n">SIMULATION_FPS</span>
-</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a>
-</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a>        <span class="n">text_content</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a>            <span class="sa">f</span><span class="s2">&quot;sim elapsed: </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a>            <span class="sa">f</span><span class="s2">&quot;sim step: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a>        <span class="p">)</span>
-</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
-</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a>            <span class="n">text_content</span> <span class="o">+=</span> <span class="s2">&quot;paused&quot;</span>
-</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a>        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a>            <span class="n">text</span><span class="o">=</span><span class="n">text_content</span><span class="p">,</span>
-</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>            <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">WINDOW_TEXT</span><span class="p">,</span>
-</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a>        <span class="p">)</span>
-</span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a>
-</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
-</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
+</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>        <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>            <span class="n">cell_offset</span> <span class="o">=</span> <span class="n">cell_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">cell_index</span> <span class="o">-</span> <span class="n">grid_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>            <span class="c1"># horizontal grid line</span>
+</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
+</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
+</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">,</span> <span class="n">cell_offset</span><span class="p">),</span>
+</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">,</span> <span class="n">cell_offset</span><span class="p">),</span>
+</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>                <span class="n">anti_alias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>            <span class="p">)</span>
+</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a>            <span class="c1"># vertical grid line</span>
+</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
+</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
+</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">),</span>
+</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">),</span>
+</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a>                <span class="n">anti_alias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>            <span class="p">)</span>
+</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>
+</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>        <span class="k">for</span> <span class="n">cell_ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="p">:</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>            <span class="n">draw_scaled_rect</span><span class="p">(</span>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_FILL</span><span class="p">,</span>
+</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>                <span class="n">Rect</span><span class="p">(</span>
+</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a>                    <span class="p">(</span><span class="n">cell_ref</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_ref</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
+</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a>                    <span class="p">(</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">),</span>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a>                <span class="p">),</span>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a>            <span class="p">)</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a>    <span class="k">def</span> <span class="nf">_draw_step_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the step counter and blit to window.&quot;&quot;&quot;</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a>        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">/</span> <span class="n">SIMULATION_FPS</span>
+</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a>
+</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a>        <span class="n">text_content</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a>            <span class="sa">f</span><span class="s2">&quot;sim elapsed: </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a>            <span class="sa">f</span><span class="s2">&quot;sim step: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a>        <span class="p">)</span>
+</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
+</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>            <span class="n">text_content</span> <span class="o">+=</span> <span class="s2">&quot;paused&quot;</span>
+</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a>            <span class="n">text</span><span class="o">=</span><span class="n">text_content</span><span class="p">,</span>
+</span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a>            <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">WINDOW_TEXT</span><span class="p">,</span>
+</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a>        <span class="p">)</span>
+</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </span><span id="L-238"><a href="#L-238"><span class="linenos">238</span></a>
-</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a><span class="sd">        Parameters</span>
-</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="sd">        ----------</span>
-</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a><span class="sd">        world_pos</span>
-</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a><span class="sd">            `World` coordinates</span>
-</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a>
-</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a><span class="sd">        Returns</span>
-</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a><span class="sd">        -------</span>
-</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a><span class="sd">        Vector2</span>
-</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a><span class="sd">            Display window coordinates.</span>
-</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
-</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
-</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a>        <span class="p">)</span>
-</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>
-</span><span id="L-254"><a href="#L-254"><span class="linenos">254</span></a>    <span class="k">def</span> <span class="nf">_to_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
-</span><span id="L-255"><a href="#L-255"><span class="linenos">255</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert window coordinates to `World` coordinates.</span>
+</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
+</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a>
+</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a><span class="sd">        Parameters</span>
+</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a><span class="sd">        ----------</span>
+</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a><span class="sd">        world_pos</span>
+</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a><span class="sd">            `World` coordinates</span>
+</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a>
+</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a><span class="sd">        Returns</span>
+</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a><span class="sd">        -------</span>
+</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a><span class="sd">        Vector2</span>
+</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a><span class="sd">            Display window coordinates.</span>
+</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
+</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="L-254"><a href="#L-254"><span class="linenos">254</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
+</span><span id="L-255"><a href="#L-255"><span class="linenos">255</span></a>        <span class="p">)</span>
 </span><span id="L-256"><a href="#L-256"><span class="linenos">256</span></a>
-</span><span id="L-257"><a href="#L-257"><span class="linenos">257</span></a><span class="sd">        Parameters</span>
-</span><span id="L-258"><a href="#L-258"><span class="linenos">258</span></a><span class="sd">        ----------</span>
-</span><span id="L-259"><a href="#L-259"><span class="linenos">259</span></a><span class="sd">        display_pos</span>
-</span><span id="L-260"><a href="#L-260"><span class="linenos">260</span></a><span class="sd">            Display window coordinates.</span>
-</span><span id="L-261"><a href="#L-261"><span class="linenos">261</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
-</span><span id="L-262"><a href="#L-262"><span class="linenos">262</span></a>
-</span><span id="L-263"><a href="#L-263"><span class="linenos">263</span></a><span class="sd">        Returns</span>
-</span><span id="L-264"><a href="#L-264"><span class="linenos">264</span></a><span class="sd">        -------</span>
-</span><span id="L-265"><a href="#L-265"><span class="linenos">265</span></a><span class="sd">        Vector2</span>
-</span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a><span class="sd">            `World` coordinates.</span>
-</span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">display_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
-</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a>        <span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span>
-</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a>        <span class="k">return</span> <span class="n">pos</span>
+</span><span id="L-257"><a href="#L-257"><span class="linenos">257</span></a>    <span class="k">def</span> <span class="nf">_to_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="L-258"><a href="#L-258"><span class="linenos">258</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert window coordinates to `World` coordinates.</span>
+</span><span id="L-259"><a href="#L-259"><span class="linenos">259</span></a>
+</span><span id="L-260"><a href="#L-260"><span class="linenos">260</span></a><span class="sd">        Parameters</span>
+</span><span id="L-261"><a href="#L-261"><span class="linenos">261</span></a><span class="sd">        ----------</span>
+</span><span id="L-262"><a href="#L-262"><span class="linenos">262</span></a><span class="sd">        display_pos</span>
+</span><span id="L-263"><a href="#L-263"><span class="linenos">263</span></a><span class="sd">            Display window coordinates.</span>
+</span><span id="L-264"><a href="#L-264"><span class="linenos">264</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
+</span><span id="L-265"><a href="#L-265"><span class="linenos">265</span></a>
+</span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a><span class="sd">        Returns</span>
+</span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a><span class="sd">        -------</span>
+</span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a><span class="sd">        Vector2</span>
+</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a><span class="sd">            `World` coordinates.</span>
+</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-271"><a href="#L-271"><span class="linenos">271</span></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">display_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+</span><span id="L-272"><a href="#L-272"><span class="linenos">272</span></a>        <span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span>
+</span><span id="L-273"><a href="#L-273"><span class="linenos">273</span></a>        <span class="k">return</span> <span class="n">pos</span>
 </span></pre></div>
 
 
@@ -363,7 +366,7 @@
                 <section id="View">
                             <input id="View-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">View</span><wbr>(<span class="base"><a href="../entities/observer_pattern.html#Observer">two_d_game_ai.entities.observer_pattern.Observer</a></span>):
 
@@ -533,87 +536,90 @@
 </span><span id="View-188"><a href="#View-188"><span class="linenos">188</span></a>        <span class="n">grid_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">size</span>
 </span><span id="View-189"><a href="#View-189"><span class="linenos">189</span></a>        <span class="n">cell_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid_size</span>
 </span><span id="View-190"><a href="#View-190"><span class="linenos">190</span></a>
-</span><span id="View-191"><a href="#View-191"><span class="linenos">191</span></a>        <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">grid_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">grid_size</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="View-192"><a href="#View-192"><span class="linenos">192</span></a>            <span class="c1"># horizontal grid line</span>
-</span><span id="View-193"><a href="#View-193"><span class="linenos">193</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
-</span><span id="View-194"><a href="#View-194"><span class="linenos">194</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="View-195"><a href="#View-195"><span class="linenos">195</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
-</span><span id="View-196"><a href="#View-196"><span class="linenos">196</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">,</span> <span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="View-197"><a href="#View-197"><span class="linenos">197</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">,</span> <span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="View-198"><a href="#View-198"><span class="linenos">198</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="View-199"><a href="#View-199"><span class="linenos">199</span></a>            <span class="p">)</span>
-</span><span id="View-200"><a href="#View-200"><span class="linenos">200</span></a>            <span class="c1"># vertical grid line</span>
-</span><span id="View-201"><a href="#View-201"><span class="linenos">201</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
-</span><span id="View-202"><a href="#View-202"><span class="linenos">202</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="View-203"><a href="#View-203"><span class="linenos">203</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
-</span><span id="View-204"><a href="#View-204"><span class="linenos">204</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">),</span>
-</span><span id="View-205"><a href="#View-205"><span class="linenos">205</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_index</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">),</span>
-</span><span id="View-206"><a href="#View-206"><span class="linenos">206</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="View-207"><a href="#View-207"><span class="linenos">207</span></a>            <span class="p">)</span>
-</span><span id="View-208"><a href="#View-208"><span class="linenos">208</span></a>
-</span><span id="View-209"><a href="#View-209"><span class="linenos">209</span></a>        <span class="k">for</span> <span class="n">cell_ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="p">:</span>
-</span><span id="View-210"><a href="#View-210"><span class="linenos">210</span></a>            <span class="n">draw_scaled_rect</span><span class="p">(</span>
-</span><span id="View-211"><a href="#View-211"><span class="linenos">211</span></a>                <span class="bp">self</span><span class="p">,</span>
-</span><span id="View-212"><a href="#View-212"><span class="linenos">212</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_FILL</span><span class="p">,</span>
-</span><span id="View-213"><a href="#View-213"><span class="linenos">213</span></a>                <span class="n">Rect</span><span class="p">(</span>
-</span><span id="View-214"><a href="#View-214"><span class="linenos">214</span></a>                    <span class="p">(</span><span class="n">cell_ref</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_ref</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="View-215"><a href="#View-215"><span class="linenos">215</span></a>                    <span class="p">(</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">),</span>
-</span><span id="View-216"><a href="#View-216"><span class="linenos">216</span></a>                <span class="p">),</span>
-</span><span id="View-217"><a href="#View-217"><span class="linenos">217</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-</span><span id="View-218"><a href="#View-218"><span class="linenos">218</span></a>            <span class="p">)</span>
-</span><span id="View-219"><a href="#View-219"><span class="linenos">219</span></a>
-</span><span id="View-220"><a href="#View-220"><span class="linenos">220</span></a>    <span class="k">def</span> <span class="nf">_draw_step_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="View-221"><a href="#View-221"><span class="linenos">221</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the step counter and blit to window.&quot;&quot;&quot;</span>
-</span><span id="View-222"><a href="#View-222"><span class="linenos">222</span></a>        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">/</span> <span class="n">SIMULATION_FPS</span>
-</span><span id="View-223"><a href="#View-223"><span class="linenos">223</span></a>
-</span><span id="View-224"><a href="#View-224"><span class="linenos">224</span></a>        <span class="n">text_content</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="View-225"><a href="#View-225"><span class="linenos">225</span></a>            <span class="sa">f</span><span class="s2">&quot;sim elapsed: </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="View-226"><a href="#View-226"><span class="linenos">226</span></a>            <span class="sa">f</span><span class="s2">&quot;sim step: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="View-227"><a href="#View-227"><span class="linenos">227</span></a>        <span class="p">)</span>
-</span><span id="View-228"><a href="#View-228"><span class="linenos">228</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
-</span><span id="View-229"><a href="#View-229"><span class="linenos">229</span></a>            <span class="n">text_content</span> <span class="o">+=</span> <span class="s2">&quot;paused&quot;</span>
-</span><span id="View-230"><a href="#View-230"><span class="linenos">230</span></a>        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-</span><span id="View-231"><a href="#View-231"><span class="linenos">231</span></a>            <span class="n">text</span><span class="o">=</span><span class="n">text_content</span><span class="p">,</span>
-</span><span id="View-232"><a href="#View-232"><span class="linenos">232</span></a>            <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="View-233"><a href="#View-233"><span class="linenos">233</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">WINDOW_TEXT</span><span class="p">,</span>
-</span><span id="View-234"><a href="#View-234"><span class="linenos">234</span></a>        <span class="p">)</span>
-</span><span id="View-235"><a href="#View-235"><span class="linenos">235</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="View-236"><a href="#View-236"><span class="linenos">236</span></a>
-</span><span id="View-237"><a href="#View-237"><span class="linenos">237</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
-</span><span id="View-238"><a href="#View-238"><span class="linenos">238</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
+</span><span id="View-191"><a href="#View-191"><span class="linenos">191</span></a>        <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="View-192"><a href="#View-192"><span class="linenos">192</span></a>            <span class="n">cell_offset</span> <span class="o">=</span> <span class="n">cell_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">cell_index</span> <span class="o">-</span> <span class="n">grid_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="View-193"><a href="#View-193"><span class="linenos">193</span></a>            <span class="c1"># horizontal grid line</span>
+</span><span id="View-194"><a href="#View-194"><span class="linenos">194</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
+</span><span id="View-195"><a href="#View-195"><span class="linenos">195</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="View-196"><a href="#View-196"><span class="linenos">196</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
+</span><span id="View-197"><a href="#View-197"><span class="linenos">197</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">,</span> <span class="n">cell_offset</span><span class="p">),</span>
+</span><span id="View-198"><a href="#View-198"><span class="linenos">198</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">,</span> <span class="n">cell_offset</span><span class="p">),</span>
+</span><span id="View-199"><a href="#View-199"><span class="linenos">199</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="View-200"><a href="#View-200"><span class="linenos">200</span></a>                <span class="n">anti_alias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="View-201"><a href="#View-201"><span class="linenos">201</span></a>            <span class="p">)</span>
+</span><span id="View-202"><a href="#View-202"><span class="linenos">202</span></a>            <span class="c1"># vertical grid line</span>
+</span><span id="View-203"><a href="#View-203"><span class="linenos">203</span></a>            <span class="n">draw_scaled_line</span><span class="p">(</span>
+</span><span id="View-204"><a href="#View-204"><span class="linenos">204</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="View-205"><a href="#View-205"><span class="linenos">205</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">WORLD_GRID_LINE</span><span class="p">,</span>
+</span><span id="View-206"><a href="#View-206"><span class="linenos">206</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_min</span><span class="p">),</span>
+</span><span id="View-207"><a href="#View-207"><span class="linenos">207</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">cell_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world_max</span><span class="p">),</span>
+</span><span id="View-208"><a href="#View-208"><span class="linenos">208</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="View-209"><a href="#View-209"><span class="linenos">209</span></a>                <span class="n">anti_alias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="View-210"><a href="#View-210"><span class="linenos">210</span></a>            <span class="p">)</span>
+</span><span id="View-211"><a href="#View-211"><span class="linenos">211</span></a>
+</span><span id="View-212"><a href="#View-212"><span class="linenos">212</span></a>        <span class="k">for</span> <span class="n">cell_ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="p">:</span>
+</span><span id="View-213"><a href="#View-213"><span class="linenos">213</span></a>            <span class="n">draw_scaled_rect</span><span class="p">(</span>
+</span><span id="View-214"><a href="#View-214"><span class="linenos">214</span></a>                <span class="bp">self</span><span class="p">,</span>
+</span><span id="View-215"><a href="#View-215"><span class="linenos">215</span></a>                <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_FILL</span><span class="p">,</span>
+</span><span id="View-216"><a href="#View-216"><span class="linenos">216</span></a>                <span class="n">Rect</span><span class="p">(</span>
+</span><span id="View-217"><a href="#View-217"><span class="linenos">217</span></a>                    <span class="p">(</span><span class="n">cell_ref</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_ref</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">cell_size</span><span class="p">),</span>
+</span><span id="View-218"><a href="#View-218"><span class="linenos">218</span></a>                    <span class="p">(</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">),</span>
+</span><span id="View-219"><a href="#View-219"><span class="linenos">219</span></a>                <span class="p">),</span>
+</span><span id="View-220"><a href="#View-220"><span class="linenos">220</span></a>                <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span id="View-221"><a href="#View-221"><span class="linenos">221</span></a>            <span class="p">)</span>
+</span><span id="View-222"><a href="#View-222"><span class="linenos">222</span></a>
+</span><span id="View-223"><a href="#View-223"><span class="linenos">223</span></a>    <span class="k">def</span> <span class="nf">_draw_step_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="View-224"><a href="#View-224"><span class="linenos">224</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the step counter and blit to window.&quot;&quot;&quot;</span>
+</span><span id="View-225"><a href="#View-225"><span class="linenos">225</span></a>        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">/</span> <span class="n">SIMULATION_FPS</span>
+</span><span id="View-226"><a href="#View-226"><span class="linenos">226</span></a>
+</span><span id="View-227"><a href="#View-227"><span class="linenos">227</span></a>        <span class="n">text_content</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="View-228"><a href="#View-228"><span class="linenos">228</span></a>            <span class="sa">f</span><span class="s2">&quot;sim elapsed: </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="View-229"><a href="#View-229"><span class="linenos">229</span></a>            <span class="sa">f</span><span class="s2">&quot;sim step: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">step_counter</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="View-230"><a href="#View-230"><span class="linenos">230</span></a>        <span class="p">)</span>
+</span><span id="View-231"><a href="#View-231"><span class="linenos">231</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
+</span><span id="View-232"><a href="#View-232"><span class="linenos">232</span></a>            <span class="n">text_content</span> <span class="o">+=</span> <span class="s2">&quot;paused&quot;</span>
+</span><span id="View-233"><a href="#View-233"><span class="linenos">233</span></a>        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+</span><span id="View-234"><a href="#View-234"><span class="linenos">234</span></a>            <span class="n">text</span><span class="o">=</span><span class="n">text_content</span><span class="p">,</span>
+</span><span id="View-235"><a href="#View-235"><span class="linenos">235</span></a>            <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="View-236"><a href="#View-236"><span class="linenos">236</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">WINDOW_TEXT</span><span class="p">,</span>
+</span><span id="View-237"><a href="#View-237"><span class="linenos">237</span></a>        <span class="p">)</span>
+</span><span id="View-238"><a href="#View-238"><span class="linenos">238</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </span><span id="View-239"><a href="#View-239"><span class="linenos">239</span></a>
-</span><span id="View-240"><a href="#View-240"><span class="linenos">240</span></a><span class="sd">        Parameters</span>
-</span><span id="View-241"><a href="#View-241"><span class="linenos">241</span></a><span class="sd">        ----------</span>
-</span><span id="View-242"><a href="#View-242"><span class="linenos">242</span></a><span class="sd">        world_pos</span>
-</span><span id="View-243"><a href="#View-243"><span class="linenos">243</span></a><span class="sd">            `World` coordinates</span>
-</span><span id="View-244"><a href="#View-244"><span class="linenos">244</span></a>
-</span><span id="View-245"><a href="#View-245"><span class="linenos">245</span></a><span class="sd">        Returns</span>
-</span><span id="View-246"><a href="#View-246"><span class="linenos">246</span></a><span class="sd">        -------</span>
-</span><span id="View-247"><a href="#View-247"><span class="linenos">247</span></a><span class="sd">        Vector2</span>
-</span><span id="View-248"><a href="#View-248"><span class="linenos">248</span></a><span class="sd">            Display window coordinates.</span>
-</span><span id="View-249"><a href="#View-249"><span class="linenos">249</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
-</span><span id="View-250"><a href="#View-250"><span class="linenos">250</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="View-251"><a href="#View-251"><span class="linenos">251</span></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="View-252"><a href="#View-252"><span class="linenos">252</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
-</span><span id="View-253"><a href="#View-253"><span class="linenos">253</span></a>        <span class="p">)</span>
-</span><span id="View-254"><a href="#View-254"><span class="linenos">254</span></a>
-</span><span id="View-255"><a href="#View-255"><span class="linenos">255</span></a>    <span class="k">def</span> <span class="nf">_to_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
-</span><span id="View-256"><a href="#View-256"><span class="linenos">256</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert window coordinates to `World` coordinates.</span>
+</span><span id="View-240"><a href="#View-240"><span class="linenos">240</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="View-241"><a href="#View-241"><span class="linenos">241</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
+</span><span id="View-242"><a href="#View-242"><span class="linenos">242</span></a>
+</span><span id="View-243"><a href="#View-243"><span class="linenos">243</span></a><span class="sd">        Parameters</span>
+</span><span id="View-244"><a href="#View-244"><span class="linenos">244</span></a><span class="sd">        ----------</span>
+</span><span id="View-245"><a href="#View-245"><span class="linenos">245</span></a><span class="sd">        world_pos</span>
+</span><span id="View-246"><a href="#View-246"><span class="linenos">246</span></a><span class="sd">            `World` coordinates</span>
+</span><span id="View-247"><a href="#View-247"><span class="linenos">247</span></a>
+</span><span id="View-248"><a href="#View-248"><span class="linenos">248</span></a><span class="sd">        Returns</span>
+</span><span id="View-249"><a href="#View-249"><span class="linenos">249</span></a><span class="sd">        -------</span>
+</span><span id="View-250"><a href="#View-250"><span class="linenos">250</span></a><span class="sd">        Vector2</span>
+</span><span id="View-251"><a href="#View-251"><span class="linenos">251</span></a><span class="sd">            Display window coordinates.</span>
+</span><span id="View-252"><a href="#View-252"><span class="linenos">252</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
+</span><span id="View-253"><a href="#View-253"><span class="linenos">253</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="View-254"><a href="#View-254"><span class="linenos">254</span></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="View-255"><a href="#View-255"><span class="linenos">255</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
+</span><span id="View-256"><a href="#View-256"><span class="linenos">256</span></a>        <span class="p">)</span>
 </span><span id="View-257"><a href="#View-257"><span class="linenos">257</span></a>
-</span><span id="View-258"><a href="#View-258"><span class="linenos">258</span></a><span class="sd">        Parameters</span>
-</span><span id="View-259"><a href="#View-259"><span class="linenos">259</span></a><span class="sd">        ----------</span>
-</span><span id="View-260"><a href="#View-260"><span class="linenos">260</span></a><span class="sd">        display_pos</span>
-</span><span id="View-261"><a href="#View-261"><span class="linenos">261</span></a><span class="sd">            Display window coordinates.</span>
-</span><span id="View-262"><a href="#View-262"><span class="linenos">262</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
-</span><span id="View-263"><a href="#View-263"><span class="linenos">263</span></a>
-</span><span id="View-264"><a href="#View-264"><span class="linenos">264</span></a><span class="sd">        Returns</span>
-</span><span id="View-265"><a href="#View-265"><span class="linenos">265</span></a><span class="sd">        -------</span>
-</span><span id="View-266"><a href="#View-266"><span class="linenos">266</span></a><span class="sd">        Vector2</span>
-</span><span id="View-267"><a href="#View-267"><span class="linenos">267</span></a><span class="sd">            `World` coordinates.</span>
-</span><span id="View-268"><a href="#View-268"><span class="linenos">268</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="View-269"><a href="#View-269"><span class="linenos">269</span></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">display_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
-</span><span id="View-270"><a href="#View-270"><span class="linenos">270</span></a>        <span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span>
-</span><span id="View-271"><a href="#View-271"><span class="linenos">271</span></a>        <span class="k">return</span> <span class="n">pos</span>
+</span><span id="View-258"><a href="#View-258"><span class="linenos">258</span></a>    <span class="k">def</span> <span class="nf">_to_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="View-259"><a href="#View-259"><span class="linenos">259</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert window coordinates to `World` coordinates.</span>
+</span><span id="View-260"><a href="#View-260"><span class="linenos">260</span></a>
+</span><span id="View-261"><a href="#View-261"><span class="linenos">261</span></a><span class="sd">        Parameters</span>
+</span><span id="View-262"><a href="#View-262"><span class="linenos">262</span></a><span class="sd">        ----------</span>
+</span><span id="View-263"><a href="#View-263"><span class="linenos">263</span></a><span class="sd">        display_pos</span>
+</span><span id="View-264"><a href="#View-264"><span class="linenos">264</span></a><span class="sd">            Display window coordinates.</span>
+</span><span id="View-265"><a href="#View-265"><span class="linenos">265</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
+</span><span id="View-266"><a href="#View-266"><span class="linenos">266</span></a>
+</span><span id="View-267"><a href="#View-267"><span class="linenos">267</span></a><span class="sd">        Returns</span>
+</span><span id="View-268"><a href="#View-268"><span class="linenos">268</span></a><span class="sd">        -------</span>
+</span><span id="View-269"><a href="#View-269"><span class="linenos">269</span></a><span class="sd">        Vector2</span>
+</span><span id="View-270"><a href="#View-270"><span class="linenos">270</span></a><span class="sd">            `World` coordinates.</span>
+</span><span id="View-271"><a href="#View-271"><span class="linenos">271</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="View-272"><a href="#View-272"><span class="linenos">272</span></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">display_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+</span><span id="View-273"><a href="#View-273"><span class="linenos">273</span></a>        <span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span>
+</span><span id="View-274"><a href="#View-274"><span class="linenos">274</span></a>        <span class="k">return</span> <span class="n">pos</span>
 </span></pre></div>
 
 
@@ -626,7 +632,7 @@
                             <div id="View.__init__" class="classattr">
                                         <input id="View.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="name">View</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">world</span><span class="p">:</span> <span class="n"><a href="../world/world.html#World">two_d_game_ai.world.world.World</a></span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>,</span><span class="param">	<span class="n">margin</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span></span>)</span>
 
                 <label class="view-source-button" for="View.__init__-view-source"><span>View Source</span></label>
@@ -675,7 +681,7 @@
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div id="View.FONT_SIZE" class="classattr">
@@ -683,10 +689,10 @@
             <span class="name">FONT_SIZE</span><span class="annotation">: ClassVar[int]</span>        =
 <span class="default_value">24</span>
 
-        
+
     </div>
     <a class="headerlink" href="#View.FONT_SIZE"></a>
-    
+
             <div class="docstring"><p>Base font size for all text.</p>
 </div>
 
@@ -696,10 +702,10 @@
                                 <div class="attr variable">
             <span class="name">world</span>
 
-        
+
     </div>
     <a class="headerlink" href="#View.world"></a>
-    
+
             <div class="docstring"><p>The <code>World</code> to be rendered.</p>
 </div>
 
@@ -709,10 +715,10 @@
                                 <div class="attr variable">
             <span class="name">scale_factor</span>
 
-        
+
     </div>
     <a class="headerlink" href="#View.scale_factor"></a>
-    
+
             <div class="docstring"><p>Scale factor applied to the <code>World</code>.</p>
 </div>
 
@@ -722,10 +728,10 @@
                                 <div class="attr variable">
             <span class="name">window</span>
 
-        
+
     </div>
     <a class="headerlink" href="#View.window"></a>
-    
+
             <div class="docstring"><p>Top level Pygame <code>Surface</code>.</p>
 </div>
 
@@ -735,10 +741,10 @@
                                 <div class="attr variable">
             <span class="name">running</span><span class="annotation">: bool</span>
 
-        
+
     </div>
     <a class="headerlink" href="#View.running"></a>
-    
+
             <div class="docstring"><p>Flag to control e.g. input handling.</p>
 </div>
 
@@ -747,7 +753,7 @@
                             <div id="View.handle_inputs" class="classattr">
                                         <input id="View.handle_inputs-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">handle_inputs</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -785,7 +791,7 @@
                             <div id="View.render" class="classattr">
                                         <input id="View.render-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">render</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -818,7 +824,7 @@
                             <div id="View.to_display" class="classattr">
                                         <input id="View.to_display-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">to_display</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">world_pos</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span>:</span></span>
 
@@ -826,23 +832,23 @@
 
     </div>
     <a class="headerlink" href="#View.to_display"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="View.to_display-237"><a href="#View.to_display-237"><span class="linenos">237</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
-</span><span id="View.to_display-238"><a href="#View.to_display-238"><span class="linenos">238</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
-</span><span id="View.to_display-239"><a href="#View.to_display-239"><span class="linenos">239</span></a>
-</span><span id="View.to_display-240"><a href="#View.to_display-240"><span class="linenos">240</span></a><span class="sd">        Parameters</span>
-</span><span id="View.to_display-241"><a href="#View.to_display-241"><span class="linenos">241</span></a><span class="sd">        ----------</span>
-</span><span id="View.to_display-242"><a href="#View.to_display-242"><span class="linenos">242</span></a><span class="sd">        world_pos</span>
-</span><span id="View.to_display-243"><a href="#View.to_display-243"><span class="linenos">243</span></a><span class="sd">            `World` coordinates</span>
-</span><span id="View.to_display-244"><a href="#View.to_display-244"><span class="linenos">244</span></a>
-</span><span id="View.to_display-245"><a href="#View.to_display-245"><span class="linenos">245</span></a><span class="sd">        Returns</span>
-</span><span id="View.to_display-246"><a href="#View.to_display-246"><span class="linenos">246</span></a><span class="sd">        -------</span>
-</span><span id="View.to_display-247"><a href="#View.to_display-247"><span class="linenos">247</span></a><span class="sd">        Vector2</span>
-</span><span id="View.to_display-248"><a href="#View.to_display-248"><span class="linenos">248</span></a><span class="sd">            Display window coordinates.</span>
-</span><span id="View.to_display-249"><a href="#View.to_display-249"><span class="linenos">249</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
-</span><span id="View.to_display-250"><a href="#View.to_display-250"><span class="linenos">250</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="View.to_display-251"><a href="#View.to_display-251"><span class="linenos">251</span></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="View.to_display-252"><a href="#View.to_display-252"><span class="linenos">252</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
-</span><span id="View.to_display-253"><a href="#View.to_display-253"><span class="linenos">253</span></a>        <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="View.to_display-240"><a href="#View.to_display-240"><span class="linenos">240</span></a>    <span class="k">def</span> <span class="nf">to_display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="View.to_display-241"><a href="#View.to_display-241"><span class="linenos">241</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert `World` coordinates to window coordinates.</span>
+</span><span id="View.to_display-242"><a href="#View.to_display-242"><span class="linenos">242</span></a>
+</span><span id="View.to_display-243"><a href="#View.to_display-243"><span class="linenos">243</span></a><span class="sd">        Parameters</span>
+</span><span id="View.to_display-244"><a href="#View.to_display-244"><span class="linenos">244</span></a><span class="sd">        ----------</span>
+</span><span id="View.to_display-245"><a href="#View.to_display-245"><span class="linenos">245</span></a><span class="sd">        world_pos</span>
+</span><span id="View.to_display-246"><a href="#View.to_display-246"><span class="linenos">246</span></a><span class="sd">            `World` coordinates</span>
+</span><span id="View.to_display-247"><a href="#View.to_display-247"><span class="linenos">247</span></a>
+</span><span id="View.to_display-248"><a href="#View.to_display-248"><span class="linenos">248</span></a><span class="sd">        Returns</span>
+</span><span id="View.to_display-249"><a href="#View.to_display-249"><span class="linenos">249</span></a><span class="sd">        -------</span>
+</span><span id="View.to_display-250"><a href="#View.to_display-250"><span class="linenos">250</span></a><span class="sd">        Vector2</span>
+</span><span id="View.to_display-251"><a href="#View.to_display-251"><span class="linenos">251</span></a><span class="sd">            Display window coordinates.</span>
+</span><span id="View.to_display-252"><a href="#View.to_display-252"><span class="linenos">252</span></a><span class="sd">            Origin is at centre, positive y upwards.</span>
+</span><span id="View.to_display-253"><a href="#View.to_display-253"><span class="linenos">253</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="View.to_display-254"><a href="#View.to_display-254"><span class="linenos">254</span></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="View.to_display-255"><a href="#View.to_display-255"><span class="linenos">255</span></a>            <span class="n">world_pos</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_offset</span>
+</span><span id="View.to_display-256"><a href="#View.to_display-256"><span class="linenos">256</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 

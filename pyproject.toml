@@ -8,20 +8,20 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.11, <4"
 # pydoclint dep docstring-parser-fork requires python < 4
-pygame-ce = ">=2.4.0"
+pygame-ce = ">=2.5.0"
 
 [tool.poetry.group.dev.dependencies]
-invoke = ">=2.2.0"
-mypy = ">=1.11.2"
-pdoc = ">=14.7.0"
-pre-commit = ">=3.8.0"
-pydoclint = ">=0.4.1"
-pydoctest = ">=0.1.22"
-ruff = "^0.8.1"
+invoke = "^2.0.0"
+mypy = "^1.13.0"
+pdoc = "^15.0.0"
+pre-commit = "^4.0.1"
+pydoclint = "^0.5.10"
+pydoctest = "^0.2.1"
+ruff = "^0.8.2"
 
 [tool.poetry.group.test.dependencies]
-pytest = ">=8.0.2"
-mypy = ">=1.8.0"
+pytest = "^8.3.4"
+mypy = "^1.13.0"  # match dev dependency value
 
 [tool.mypy]
 ## Config file:

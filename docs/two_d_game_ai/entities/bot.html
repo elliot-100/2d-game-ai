@@ -311,7 +311,7 @@
                 <section id="Bot">
                             <input id="Bot-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+
     <span class="def">class</span>
     <span class="name">Bot</span><wbr>(<span class="base"><a href="generic_entity.html#GenericEntity">two_d_game_ai.entities.generic_entity.GenericEntity</a></span>):
 
@@ -496,7 +496,7 @@
                             <div id="Bot.__init__" class="classattr">
                                         <input id="Bot.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="name">Bot</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">world</span><span class="p">:</span> <span class="n"><a href="../world/world.html#World">two_d_game_ai.world.world.World</a></span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span></span>)</span>
 
                 <label class="view-source-button" for="Bot.__init__-view-source"><span>View Source</span></label>
@@ -520,7 +520,7 @@
 </span></pre></div>
 
 
-    
+
 
                             </div>
                             <div id="Bot.MAX_SPEED" class="classattr">
@@ -528,10 +528,10 @@
             <span class="name">MAX_SPEED</span><span class="annotation">: ClassVar[float]</span>        =
 <span class="default_value">60</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.MAX_SPEED"></a>
-    
+
             <div class="docstring"><p>World units / second.</p>
 </div>
 
@@ -542,10 +542,10 @@
             <span class="name">MAX_ROTATION_RATE</span><span class="annotation">: ClassVar[float]</span>        =
 <span class="default_value">90</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.MAX_ROTATION_RATE"></a>
-    
+
             <div class="docstring"><p>Degrees / second.</p>
 </div>
 
@@ -556,11 +556,11 @@
             <span class="name">INITIAL_HEADING_DEGREES</span><span class="annotation">: ClassVar[float]</span>        =
 <span class="default_value">0</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.INITIAL_HEADING_DEGREES"></a>
-    
-    
+
+
 
                             </div>
                             <div id="Bot.VISION_CONE_ANGLE" class="classattr">
@@ -568,10 +568,10 @@
             <span class="name">VISION_CONE_ANGLE</span><span class="annotation">: ClassVar[float]</span>        =
 <span class="default_value">90</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.VISION_CONE_ANGLE"></a>
-    
+
             <div class="docstring"><p>Degrees.</p>
 </div>
 
@@ -581,21 +581,21 @@
                                 <div class="attr variable">
             <span class="name">velocity</span><span class="annotation">: pygame.math.Vector2</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.velocity"></a>
-    
-    
+
+
 
                             </div>
                             <div id="Bot.route" class="classattr">
                                 <div class="attr variable">
             <span class="name">route</span><span class="annotation">: list[pygame.math.Vector2]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.route"></a>
-    
+
             <div class="docstring"><p>Waypoints to be visited.</p>
 </div>
 
@@ -605,10 +605,10 @@
                                 <div class="attr variable">
             <span class="name">heading</span><span class="annotation">: <a href="../geometry.html#Bearing">two_d_game_ai.geometry.Bearing</a></span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.heading"></a>
-    
+
             <div class="docstring"><p>Direction the <code><a href="#Bot">Bot</a></code> is facing.</p>
 </div>
 
@@ -618,10 +618,10 @@
                                 <div class="attr variable">
             <span class="name">known_bots</span><span class="annotation">: set[<a href="#Bot">Bot</a>]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.known_bots"></a>
-    
+
             <div class="docstring"><p>Peers which are known about, but aren't currently in sight.</p>
 </div>
 
@@ -631,10 +631,10 @@
                                 <div class="attr variable">
             <span class="name">visible_bots</span><span class="annotation">: set[<a href="#Bot">Bot</a>]</span>
 
-        
+
     </div>
     <a class="headerlink" href="#Bot.visible_bots"></a>
-    
+
             <div class="docstring"><p>Peers which are currently in sight.</p>
 </div>
 
@@ -664,7 +664,7 @@
                             <div id="Bot.set_destination" class="classattr">
                                         <input id="Bot.set_destination-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">set_destination</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">float</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -712,7 +712,7 @@
                             <div id="Bot.update" class="classattr">
                                         <input id="Bot.update-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">update</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">other_bots</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n"><a href="#Bot">Bot</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -767,7 +767,7 @@
                             <div id="Bot.is_at" class="classattr">
                                         <input id="Bot.is_at-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">is_at</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">location</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
@@ -793,7 +793,7 @@
                             <div id="Bot.rotate" class="classattr">
                                         <input id="Bot.rotate-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">rotate</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">rotation_delta</span><span class="p">:</span> <span class="nb">float</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -829,7 +829,7 @@
                             <div id="Bot.stop" class="classattr">
                                         <input id="Bot.stop-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">stop</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -851,7 +851,7 @@
                             <div id="Bot.can_see" class="classattr">
                                         <input id="Bot.can_see-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">can_see</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">other_bot</span><span class="p">:</span> <span class="n"><a href="#Bot">Bot</a></span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
@@ -878,7 +878,7 @@
                             <div id="Bot.can_see_point" class="classattr">
                                         <input id="Bot.can_see_point-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">can_see_point</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">point</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
@@ -909,7 +909,7 @@
                             <div id="Bot.route_to" class="classattr">
                                         <input id="Bot.route_to-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">route_to</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">goal</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span> <span class="o">|</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span><span class="p">]</span>:</span></span>
 

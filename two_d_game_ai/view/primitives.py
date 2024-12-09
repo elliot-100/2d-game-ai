@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING
 import pygame
 from pygame import Rect, Vector2
 
-from two_d_game_ai.geometry import to_display_radians
-
 if TYPE_CHECKING:
     from pygame import Color, Surface
 
@@ -23,7 +21,7 @@ def draw_circle(
     width: int = 0,
 ) -> None:
     """Draw a circle on the `View`."""
-    pygame.draw.circle(
+    pygame.draw.aacircle(
         surface=view.window,
         color=color,
         center=center,
@@ -56,55 +54,37 @@ def draw_scaled_circle(
     )
 
 
-def draw_scaled_circular_arc(
-    view: View,
-    color: Color,
-    center: Vector2,
-    radius: int,
-    start_angle: float,
-    stop_angle: float,
-    width: int = 1,
-) -> None:
-    """Draw a circular arc on the `View`, in `World` units,
-    which are scaled/translated for display.
-
-    `width`: unscaled display units.
-    """
-    enclosing_rect_dimension = int(2 * radius * view.scale_factor)
-    enclosing_rect = Rect(0, 0, enclosing_rect_dimension, enclosing_rect_dimension)
-    display_center = view.to_display(center)
-    # Pygame.Rect requires integer coordinates; draw.arc call does not accept Frect
-    enclosing_rect.center = int(display_center.x), int(display_center.y)
-
-    pygame.draw.arc(
-        surface=view.window,
-        color=color,
-        rect=enclosing_rect,
-        start_angle=to_display_radians(stop_angle),
-        stop_angle=to_display_radians(start_angle),
-        width=width,
-    )
-
-
 def draw_scaled_line(
     view: View,
     color: Color,
     start_pos: Vector2,
     end_pos: Vector2,
     width: int = 1,
+    *,
+    anti_alias: bool = True,
 ) -> None:
     """Draw a line on the `View`, in `World` units,
     which are scaled/translated for display.
 
     `width`: unscaled display units.
     """
-    pygame.draw.line(
-        surface=view.window,
-        color=color,
-        start_pos=view.to_display(start_pos),
-        end_pos=view.to_display(end_pos),
-        width=width,
-    )
+    if anti_alias and width == 1:
+        pygame.draw.aaline(
+            surface=view.window,
+            color=color,
+            start_pos=view.to_display(start_pos),
+            end_pos=view.to_display(end_pos),
+        )
+
+    else:
+        # pygame.draw.aaline() only draws single-pixel width lines
+        pygame.draw.line(
+            surface=view.window,
+            color=color,
+            start_pos=view.to_display(start_pos),
+            end_pos=view.to_display(end_pos),
+            width=width,
+        )
 
 
 def draw_scaled_rect(
@@ -131,6 +111,22 @@ def draw_scaled_rect(
             scaled_height,
         ),
         width=width,
+    )
+
+
+def draw_scaled_poly(
+    view: View,
+    color: Color,
+    points: list[Vector2],
+) -> None:
+    """Draw a closed polygon on the `View`, in `World` units,
+    which are scaled/translated for display.
+    """
+    pygame.draw.aalines(
+        surface=view.window,
+        color=color,
+        closed=True,
+        points=[view.to_display(p) for p in points],
     )
 
 
