@@ -11,12 +11,20 @@ Historic and pre-release versions aren't necessarily included.
 
 ## UNRELEASED - TBC
 
+### Added
+
+- View:
+  - show untraversable Grid cells
+  - show Bot route lines between waypoints
+  - anti-aliased graphics
+- Docs: HTML in `/docs` in source
+
 ### Changed:
 
 - Bot pathfinding:
-  - Ignore destination setting if an untraversable cell
-  - Direct route if there's a line-of-sight to destination
-  - Simplify route by removing collinear points
+  - ignore attempted destination setting to an untraversable cell
+  - direct route if there's a line-of-sight to destination
+  - simplify route by removing collinear points
 
 
 ## [0.5.0] - 2024-09-26
@@ -42,10 +50,12 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added
 
-- View: user can select a Bot with primary mouse button; set destination with secondary mouse button
-- View: World is initially paused; user can toggle pause with P key
-- View: draw Bot vision cone indicator (doesn't reflect infinite vision range)
-- View: draw World origin
+- View:
+  - user can select a Bot with primary mouse button; set destination with secondary
+    mouse button
+  - World is initially paused; user can toggle pause with P key
+  - draw Bot vision cone indicator (doesn't reflect infinite vision range)
+  - draw World origin
 - `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
 
 ### Fixed
@@ -72,8 +82,9 @@ Historic and pre-release versions aren't necessarily included.
 ### Added
 
 - Bot keeps track of visible and known (but no-longer visible) others
-- View renders can-see and knows-about relationships as lines
-- View scaling
+- View:
+  - render can-see and knows-about relationships as lines
+  - scaling
 - Introduced Observer pattern for Bot and View
 - Trivial logging
 
@@ -86,9 +97,6 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bots are now created in their own right, with reference to World, instead of World
   method: `Bot(the_world, ...)` instead of `World.add_bot(...)`
-- Upgrade dependency: pygame-ce to >=2.4.0
-- Upgrade dev/test dependencies: black, mypy, pytest, pre-commit, ruff
-- Upgrade CI dependencies: actions/setup-python
 
 
 ## [0.2.0] - 2023-09-06

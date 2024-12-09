@@ -14,9 +14,9 @@ Implemented as a library. User interface uses [pygame-ce](https://pyga.me/).
 ## Example
 
 ```python
-from two_d_game_ai.entities import Bot
-from two_d_game_ai.view import View
-from two_d_game_ai.world import World
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.view.view import View
+from two_d_game_ai.world.world import World
 
 # WORLD
 
@@ -32,11 +32,11 @@ the_world = World(
 b0 = Bot(
   name="b0",
   world=the_world,
-  pos=(20, 20),
+  position=(20, 20),
 )
 
 # ... with a destination
-b1.destination = (25, -50)
+b0.destination = (25, -50)
 
 # Create a View to the World.
 # Provides user interface, but not required: e.g. Bot, World test suites don't have one.
@@ -92,7 +92,7 @@ while view.running:
 
 - As icons with:
   - Direction indicator
-  - Destination point and waypoints on calculated route to it
+  - Destination point and calculated route to it
   - Vision cone
   - Can-see and knows-about relationships as lines
 - Primary mouse click to select a Bot; secondary mouse click to set a destination
