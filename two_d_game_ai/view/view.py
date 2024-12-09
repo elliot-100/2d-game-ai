@@ -206,13 +206,24 @@ class View(Observer):
                 width=1,
                 anti_alias=False,
             )
+
+        oversize_px = 2
         for cell_ref in self.world.grid.untraversable_cells:
+            grid_rect = Rect(
+                (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
+            )
+            # draw slightly oversize to hide gridlines
+            oversize_grid_rect = grid_rect.move(
+                -int(oversize_px / self.scale_factor),
+                -int(oversize_px / self.scale_factor),
+            )
+            oversize_grid_rect.width = oversize_grid_rect.height = int(
+                grid_rect.width + 2 * oversize_px / self.scale_factor
+            )
             self.draw_rect(
                 color=colors.MOVEMENT_BLOCK_FILL,
-                rect=Rect(
-                    (cell_ref.x * cell_size, cell_ref.y * cell_size),
-                    (cell_size, cell_size),
-                ),
+                rect=Rect(oversize_grid_rect),
+                width=0,
             )
 
     def _draw_step_counter(self) -> None:
