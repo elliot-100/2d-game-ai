@@ -62,6 +62,8 @@ class BotRenderer(GenericEntityRenderer):
         )
 
     def _draw_route(self) -> None:
+        min_path_nodes: int = 2
+
         if not isinstance(self.entity, Bot):
             raise TypeError
         for i in range(len(self.entity.route)):
@@ -70,6 +72,11 @@ class BotRenderer(GenericEntityRenderer):
                 center=self.entity.route[i],
                 radius=self.ICON_RADIUS / 4,
                 scale_radius=False,
+            )
+        if len(self.entity.route) >= min_path_nodes:
+            self.view.draw_poly(
+                color=colors.BOT_ROUTE_LINE,
+                points=[self.entity.pos, *self.entity.route],
             )
 
     def _draw_vision_cone(self) -> None:
@@ -97,6 +104,7 @@ class BotRenderer(GenericEntityRenderer):
         ]
         self.view.draw_poly(
             color=colors.BOT_CAN_SEE_LINE,
+            closed=True,
             points=[self.entity.pos] + [self.entity.pos + offset for offset in offsets],
         )
 

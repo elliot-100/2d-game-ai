@@ -367,6 +367,7 @@ class View(Observer):
         self,
         *,
         color: Color,
+        closed: bool = False,
         points: list[Vector2],
     ) -> None:
         """Draw a closed polygon on the `View`, in `World` units,
@@ -375,7 +376,7 @@ class View(Observer):
         pygame.draw.aalines(
             surface=self.window,
             color=color,
-            closed=True,
+            closed=closed,
             points=[self.to_display(p) for p in points],
         )
 
