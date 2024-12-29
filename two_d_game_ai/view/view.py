@@ -154,6 +154,7 @@ class View(Observer):
             _.draw()
         for _ in self._block_renderers:
             _.draw()
+        self._draw_axes()
 
         self._draw_step_counter()
         # update entire display
@@ -169,18 +170,17 @@ class View(Observer):
                 (self.world.size, self.world.size),
             ),
         )
-        # Axes
-        self.draw_line(
+
+    def _draw_axes(self) -> None:
+        self.draw_line(  # Y
             color=colors.WORLD_AXES_LINE,
             start_pos=Vector2(0, self._world_min),
             end_pos=Vector2(0, self._world_max),
         )
-
         self.draw_line(  # X
             color=colors.WORLD_AXES_LINE,
             start_pos=Vector2(self._world_min, 0),
             end_pos=Vector2(self._world_max, 0),
-            width=3,
         )
 
     def _draw_grid(self) -> None:
