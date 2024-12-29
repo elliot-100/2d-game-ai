@@ -77,4 +77,8 @@ class GenericEntityRenderer(ABC):
         bool
             True if the click position is within or on the clickable radius.
         """
-        return point_in_or_on_circle(click_pos, self._pos_v, self.clickable_radius)
+        return point_in_or_on_circle(
+            point=click_pos,
+            circle_centre=self._pos_v,
+            circle_radius=self.clickable_radius,
+        )

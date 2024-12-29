@@ -16,6 +16,8 @@ from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
 
+    from two_d_game_ai.entities.movement_block import MovementBlock
+
 logger = logging.getLogger(__name__)
 
 
@@ -90,6 +92,12 @@ class Bot(GenericEntity):
         """Update `Bot`, including move over 1 simulation step."""
         self._handle_sensing(b for b in self.world.bots if b is not self)
 
+        for block in self.world.movement_blocks:
+            if self.in_collision(block):
+                log_msg = f"Bot '{self.name}' in collision with block '{block.name}'."
+                logger.info(log_msg)
+                self.stop()
+
         if self.route and self.is_at(self.route[0]):
             del self.route[0]
             self.stop()
@@ -124,9 +132,9 @@ class Bot(GenericEntity):
     def is_at(self, location: Vector2) -> bool:
         """Get whether `Bot` is at location (True) or not (False)."""
         return point_in_or_on_circle(
-            self.position,
-            location,
-            self.POSITION_ARRIVAL_TOLERANCE,
+            point=self.position,
+            circle_centre=location,
+            circle_radius=self.POSITION_ARRIVAL_TOLERANCE,
         )
 
     def rotate(self, rotation_delta: float) -> None:
@@ -189,3 +197,11 @@ class Bot(GenericEntity):
             Empty if no path found.
         """
         return [] if goal is None else self.world.route(self.position, goal)
+
+    def in_collision(self, movement_block: MovementBlock) -> bool:
+        """Determine if entity is in collision with `movement_block`."""
+        return point_in_or_on_circle(
+            point=self.position,
+            circle_centre=movement_block.position,
+            circle_radius=movement_block.radius,
+        )

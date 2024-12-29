@@ -10,12 +10,13 @@ __all__ = ("CIRCLE_DEGREES", "Bearing", "point_in_or_on_circle")
 
 
 def point_in_or_on_circle(
+    *,
     point: Vector2,
     circle_centre: Vector2,
     circle_radius: float,
 ) -> bool:
     """Return `True` if `point` is (inside or on) the circle, else `False`."""
-    return (point - circle_centre).length() <= circle_radius
+    return (point - circle_centre).length_squared() <= circle_radius**2
 
 
 def to_display_radians(bearing_deg: float) -> float:

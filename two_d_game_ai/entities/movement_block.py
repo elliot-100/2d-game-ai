@@ -25,9 +25,9 @@ class MovementBlock(GenericEntity):
         for cell in self.world.grid.cells:
             cell_centre = Grid.cell_centre_to_world_pos(cell, self.world)
             if point_in_or_on_circle(
-                cell_centre,
-                self.position,
-                self.radius,
+                point=cell_centre,
+                circle_centre=self.position,
+                circle_radius=self.radius,
             ):
                 self.world.grid.untraversable_cells.add(cell)
 
