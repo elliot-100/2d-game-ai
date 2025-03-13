@@ -9,7 +9,14 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
-## UNRELEASED - TBC
+## [0.6.0] - 2025-03-13
+
+### Added:
+
+- Documentation:
+  - in source `/docs`
+  - `inv doc` to open docs in browser (local pdoc server); `-b` to build docs  
+- View: render Grid untraversable cells; Bot path between waypoints
 
 ### Changed:
 
@@ -17,6 +24,9 @@ Historic and pre-release versions aren't necessarily included.
   - Ignore destination setting if an untraversable cell
   - Direct route if there's a line-of-sight to destination
   - Simplify route by removing collinear points
+- Revise and explicitly declare API
+- View: anti-alias most graphics; other rendering improvements
+- Deps: require pygame-ce >=2.5.0
 
 
 ## [0.5.0] - 2024-09-26
@@ -95,6 +105,7 @@ Historic and pre-release versions aren't necessarily included.
 
 Baseline release.
 
+[0.6.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/elliot-100/2d-game-ai/compare/v0.2.0...v0.3.0
