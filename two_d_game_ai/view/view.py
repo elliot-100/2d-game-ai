@@ -230,14 +230,14 @@ class View(Observer):
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter / SIMULATION_FPS
 
-        text_content = (
-            f"sim elapsed: {elapsed_time:.1f} s\n"
-            f"sim step: {self.world.step_counter}\n"
-        )
+        text_content = [
+            f"sim elapsed: {elapsed_time:.1f} s",
+            f"sim step: {self.world.step_counter}",
+        ]
         if self.world.is_paused:
-            text_content += "paused"
+            text_content.append("paused")
         text = self._font.render(
-            text=text_content,
+            text="\n".join(text_content),
             antialias=True,
             color=colors.WINDOW_TEXT,
         )
