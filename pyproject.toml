@@ -11,14 +11,14 @@ python = ">=3.11, <4"
 pygame-ce = ">=2.5.0"
 
 [tool.poetry.group.dev.dependencies]
-invoke = "^2.0.0"
-mypy = "^1.13.0"
-pdoc = "^15.0.0"
-pre-commit = "^4.0.1"
-pydoclint = "^0.5.10"
+invoke = "^2.2.0"
+mypy = "^1.15.0"
+pdoc = "^15.0.1"
+pre-commit = "^4.1.0"
+pydoclint = "^0.6.2"
 pydoctest = "^0.2.1"
 pytest = "^8.3.4"
-ruff = "^0.8.2"
+ruff = "^0.11.0"
 
 [tool.mypy]
 ## Config file:
