@@ -5,11 +5,13 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+from pygame import Font
+
 from two_d_game_ai.geometry import point_in_or_on_circle
-from two_d_game_ai.view import colors
+from two_d_game_ai.view import FONT_SIZE, colors
 
 if TYPE_CHECKING:
-    from pygame import Font, Vector2
+    from pygame import Vector2
 
     from two_d_game_ai.entities.generic_entity import GenericEntity
     from two_d_game_ai.view.view import View
@@ -21,12 +23,12 @@ class GenericEntityRenderer(ABC):
     LABEL_OFFSET = (10, 10)
     """Display units."""
 
-    def __init__(self, view: View, entity: GenericEntity, font: Font) -> None:
+    def __init__(self, view: View, entity: GenericEntity) -> None:
         self.view = view
         self.entity = entity
-        self.font = font
         self.is_selected = False
         self.clickable_radius: float = 0
+        self.font = Font(size=FONT_SIZE)
 
     @property
     def _pos_v(self) -> Vector2:

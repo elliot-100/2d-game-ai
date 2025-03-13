@@ -11,7 +11,7 @@ from pygame import Color, Rect, Surface, Vector2
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.observer_pattern import Observer
-from two_d_game_ai.view import colors
+from two_d_game_ai.view import FONT_SIZE, colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.world.grid import Grid
@@ -32,9 +32,6 @@ class View(Observer):
     NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
 
-    FONT_SIZE: ClassVar[int] = 24
-    """Base font size for all text."""
-
     _CAPTION: ClassVar[str] = "2dGameAI"
     _MAX_RENDER_FPS: ClassVar = SIMULATION_FPS
 
@@ -54,7 +51,7 @@ class View(Observer):
         """Margin in display units applied to all sides of the `World`."""
 
         pygame.init()
-        self._font = pygame.font.Font(None, self.FONT_SIZE)
+        self.font = pygame.font.Font(None, FONT_SIZE)
 
         _window_size = self.world.size * self.scale_factor + 2 * self._margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
@@ -80,11 +77,10 @@ class View(Observer):
 
     def _initialize_renderers(self) -> None:
         self._bot_renderers = {
-            BotRenderer(view=self, entity=bot, font=self._font)
-            for bot in self.world.bots
+            BotRenderer(view=self, entity=bot) for bot in self.world.bots
         }
         self._block_renderers = {
-            MovementBlockRenderer(view=self, entity=block, font=self._font)
+            MovementBlockRenderer(view=self, entity=block)
             for block in self.world.movement_blocks
         }
         self._clickables = self._bot_renderers | self._block_renderers
@@ -232,14 +228,14 @@ class View(Observer):
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter / SIMULATION_FPS
 
-        text_content = (
-            f"sim elapsed: {elapsed_time:.1f} s\n"
-            f"sim step: {self.world.step_counter}\n"
-        )
+        text_content = [
+            f"sim elapsed: {elapsed_time:.1f} s",
+            f"sim step: {self.world.step_counter}",
+        ]
         if self.world.is_paused:
-            text_content += "paused"
-        text = self._font.render(
-            text=text_content,
+            text_content.append("paused")
+        text = self.font.render(
+            text="\n".join(text_content),
             antialias=True,
             color=colors.WINDOW_TEXT,
         )

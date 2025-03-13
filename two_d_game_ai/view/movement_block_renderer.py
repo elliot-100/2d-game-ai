@@ -9,8 +9,6 @@ from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
 if TYPE_CHECKING:
-    from pygame import Font
-
     from two_d_game_ai.view.view import View
 
 
@@ -24,9 +22,8 @@ class MovementBlockRenderer(GenericEntityRenderer):
         self,
         view: View,
         entity: MovementBlock,
-        font: Font,
     ) -> None:
-        super().__init__(view, entity, font)
+        super().__init__(view, entity)
         if isinstance(self.entity, MovementBlock):
             self.clickable_radius = self.entity.radius
 
