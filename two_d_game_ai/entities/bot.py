@@ -53,16 +53,20 @@ class Bot(GenericEntity):
         return self._destination
 
     @destination.setter
-    def destination(self, value: Vector2) -> None:
+    def destination(self, value: Vector2 | None) -> None:
         """Set destination point."""
-        if value is None or self.world.point_is_inside_world_bounds(value):
+        if value is None:
+            self._destination = None
+        elif self.world.point_is_inside_world_bounds(value):
             self.stop()
             self._destination = value
-        log_msg = f"Bot '{self.name}' destination set: {self._destination}."
-        logger.info(log_msg)
-        self.route = self.route_to(self._destination)
-        log_msg = f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
-        logger.info(log_msg)
+            self.route = self.route_to(self._destination)
+            log_msg = f"Bot '{self.name}' destination set: {self._destination}."
+            logger.info(log_msg)
+            log_msg = (
+                f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
+            )
+            logger.info(log_msg)
 
     def set_destination(self, *args: float) -> None:
         """Set destination point as pair of floats, avoiding `Vector2`.
