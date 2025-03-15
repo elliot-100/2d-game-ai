@@ -15,6 +15,8 @@ from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
 if TYPE_CHECKING:
     from two_d_game_ai.world.world import World
 
+logger = logging.getLogger(__name__)
+
 
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
@@ -42,7 +44,8 @@ class Bot(GenericEntity):
         self.visible_bots: set[Bot] = set()
         """Peers which are currently in sight."""
         self.world.bots.add(self)
-        logging.info("Bot `%s` created.", self.name)
+        log_msg = f"Bot '{self.name}' created."
+        logger.info(log_msg)
 
     @property
     def destination(self) -> Vector2 | None:
@@ -55,11 +58,11 @@ class Bot(GenericEntity):
         if value is None or self.world.point_is_inside_world_bounds(value):
             self.stop()
             self._destination = value
-        log_msg = f"Bot {self.name} destination set: {self._destination}."
-        logging.info(log_msg)
+        log_msg = f"Bot '{self.name}' destination set: {self._destination}."
+        logger.info(log_msg)
         self.route = self.route_to(self._destination)
-        log_msg = f"Bot {self.name} route calculated with {len(self.route)} waypoints."
-        logging.info(log_msg)
+        log_msg = f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
+        logger.info(log_msg)
 
     def set_destination(self, *args: float) -> None:
         """Set destination point as pair of floats, avoiding `Vector2`.

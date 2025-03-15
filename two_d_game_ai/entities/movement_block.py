@@ -14,6 +14,8 @@ from two_d_game_ai.world.grid import Grid
 if TYPE_CHECKING:
     from two_d_game_ai.world.world import World
 
+logger = logging.getLogger(__name__)
+
 
 class MovementBlock(GenericEntity):
     """Circular entity that blocks movement."""
@@ -40,4 +42,4 @@ class MovementBlock(GenericEntity):
 
         self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
-        logging.info(log_msg)
+        logger.info(log_msg)
