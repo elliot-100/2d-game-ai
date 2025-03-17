@@ -3,23 +3,39 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-ObserverException = Exception
+if TYPE_CHECKING:
+    from two_d_game_ai.world.world import World
+
 
 logger = logging.getLogger(__name__)
 
+ObserverException = Exception
 
+
+@dataclass(kw_only=True)
 class Subject:
     """Subject (a.k.a. Observable) class.
 
     All simulated entity classes inherit from this class.
     """
 
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.observers: set[Observer] = set()
+    id: int = field(init=False)
+    """Used as hash value."""
+    world: World
+    """Reference to `World` object."""
+    name: str
+    observers: set[Observer] = field(default_factory=set)
+
+    def __post_init__(self) -> None:
+        self.id = len(self.world.entities)
         log_msg = f"Subject '{self.name}' initiated."
         logger.debug(log_msg)
+
+    def __hash__(self) -> int:
+        return hash(self.id)
 
     def register_observer(self, observer: Observer) -> None:
         """Register an observer."""
@@ -45,16 +61,25 @@ class Subject:
             raise ObserverException(error_msg)
 
 
+@dataclass
 class Observer:
     """Observer class.
 
     Viewers (e.g. renderers) inherit from this class.
     """
 
-    def __init__(self, name: str) -> None:
-        self.name = name
+    world: World
+    """Reference to `World` object."""
+    name: str
+    _id: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        self._id = len(self.world.entities)
         log_msg = f"Observer '{self.name}' initiated."
         logger.debug(log_msg)
+
+    def __hash__(self) -> int:
+        return hash(self._id)
 
     def report_event(self, message: str, sender: Subject) -> None:
         """Report the received message.

@@ -4,20 +4,20 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import TYPE_CHECKING, ClassVar
+from dataclasses import dataclass, field
+from typing import ClassVar
 
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.generic_entity import GenericEntity
+from two_d_game_ai.entities.observer_pattern import Subject
 from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
-
-if TYPE_CHECKING:
-    from two_d_game_ai.world.world import World
 
 logger = logging.getLogger(__name__)
 
 
+@dataclass(kw_only=True)
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
@@ -28,24 +28,31 @@ class Bot(GenericEntity):
     INITIAL_HEADING_DEGREES: ClassVar[float] = 0
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
-    _POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
+    POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """World units."""
 
-    def __init__(self, world: World, name: str, position: tuple[float, float]) -> None:
-        super().__init__(world, name, position)
+    heading: Bearing = field(init=False)
+    """Direction the `Bot` is facing."""
+    velocity: Vector2 = field(init=False)
+    route: list[Vector2] = field(default_factory=list)
+    """Waypoints to be visited."""
+    known_bots: set[Bot] = field(default_factory=set)
+    """Peers which are known about, but aren't currently in sight."""
+    visible_bots: set[Bot] = field(default_factory=set)
+    """Peers which are currently in sight."""
+
+    _destination: Vector2 | None = None
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self.heading: Bearing = Bearing(self.INITIAL_HEADING_DEGREES)
         self.velocity: Vector2 = Vector2(0, 0)
-        self._destination: Vector2 | None = None
-        self.route: list[Vector2] = []
-        """Waypoints to be visited."""
-        self.heading: Bearing = Bearing(Bot.INITIAL_HEADING_DEGREES)
-        """Direction the `Bot` is facing."""
-        self.known_bots: set[Bot] = set()
-        """Peers which are known about, but aren't currently in sight."""
-        self.visible_bots: set[Bot] = set()
-        """Peers which are currently in sight."""
         self.world.bots.add(self)
         log_msg = f"Bot '{self.name}' created."
         logger.info(log_msg)
+
+    def __hash__(self) -> int:
+        return Subject.__hash__(self)
 
     @property
     def destination(self) -> Vector2 | None:
@@ -122,7 +129,7 @@ class Bot(GenericEntity):
         return point_in_or_on_circle(
             self.pos,
             location,
-            self._POSITION_ARRIVAL_TOLERANCE,
+            self.POSITION_ARRIVAL_TOLERANCE,
         )
 
     def rotate(self, rotation_delta: float) -> None:

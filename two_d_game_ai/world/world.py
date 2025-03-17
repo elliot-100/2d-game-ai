@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any
 
 from two_d_game_ai.world.grid import Grid
 
@@ -13,6 +14,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.entities.movement_block import MovementBlock
 
 
+@dataclass
 class World:
     """Simulated domain.
 
@@ -21,25 +23,30 @@ class World:
     Has a `two_d_game_ai.world.grid.Grid`.
     """
 
-    def __init__(
+    size: int
+    """`World` units per side."""
+    grid_size: int = 2
+    # TODO: should be InitVar and/or derived from Grid classvar
+    grid_resolution: float = field(init=False)
+    """Size of a `Grid` cell in `World` units."""
+    grid: Grid = field(init=False)
+    """`Grid` instance."""
+    entities: set[Any] = field(default_factory=set)
+    """All entities."""
+    bots: set[Bot] = field(default_factory=set)
+    """All `Bot`s."""
+    movement_blocks: list[MovementBlock] = field(default_factory=list)
+    """All `MovementBlock`s."""
+    step_counter: int = 0
+    """Number of update steps taken."""
+    is_paused: bool = True
+    """Whether the `World` is paused."""
+
+    def __post_init__(
         self,
-        size: int,
-        grid_size: int = 2,
     ) -> None:
-        self.size = size
-        """`World` units per side."""
-        self.grid = Grid(size=grid_size)
-        """`Grid` instance."""
-        self.grid_resolution = self.size / grid_size
-        """Size of a `Grid` cell in `World` units."""
-        self.bots: set[Bot] = set()
-        """All `Bot`s."""
-        self.movement_blocks: list[MovementBlock] = []
-        """All `MovementBlock`s."""
-        self.step_counter: int = 0
-        """Number of update steps taken."""
-        self.is_paused: bool = True
-        """Whether the `World` is paused."""
+        self.grid = Grid(size=self.grid_size)
+        self.grid_resolution = self.size / self.grid_size
 
     def update(self) -> None:
         """Change all `Bot` positions over 1 simulation step."""

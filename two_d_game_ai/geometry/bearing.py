@@ -16,9 +16,10 @@ class Bearing:
     Stored as a unit vector, based on Pygame's Vector2 class.
     """
 
-    vector: Vector2 = field(default_factory=Vector2, init=False)
-    """The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.
-    """
+    vector: Vector2 = field(init=False)
+    """The bearing as a standard (positive, right-handed, y-axis up)
+    coordinate vector."""
+
     _degrees: float
 
     def __post_init__(self) -> None:

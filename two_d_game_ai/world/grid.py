@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
@@ -15,17 +16,21 @@ from two_d_game_ai.world.priority_queue import PriorityQueue
 if TYPE_CHECKING:
     from two_d_game_ai.world.world import World
 
+
 _MIN_PATH_NODES: int = 3
 
 logger = logging.getLogger(__name__)
 
 
+@dataclass
 class Grid:
     """Grid class.
 
     NB: there is no 'Grid cell' class.
 
     """
+
+    DEFAULT_SIZE: ClassVar = 2
 
     _DIRECTIONS: ClassVar = {
         (1, 0),
@@ -37,22 +42,21 @@ class Grid:
         (-1, -1),
         (1, -1),
     }
+    size: int = DEFAULT_SIZE
+    """`Grid` units per side."""
+    offset: GridRef = field(init=False)
+    untraversable_cells: set[GridRef] = field(default_factory=set)
+    """Untraversable cells."""
 
-    def __init__(
-        self,
-        size: int,
-    ) -> None:
-        self.size = size
-        """`Grid` units per side."""
-        self.untraversable_cells: set[GridRef] = set()
-        """Untraversable cells."""
-        self._offset = GridRef(-size // 2, -size // 2)
+    def __post_init__(self) -> None:
+        _offset = -self.size // 2
+        self.offset = GridRef(_offset, _offset)
 
     @property
     def cells(self) -> set[GridRef]:
-        """Return all cells.."""
+        """Return all cells."""
         return {
-            GridRef(x, y) + self._offset
+            GridRef(x, y) + self.offset
             for x in range(self.size)
             for y in range(self.size)
         }

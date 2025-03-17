@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
@@ -13,12 +15,23 @@ from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 if TYPE_CHECKING:
     from pygame import Color
 
+logger = logging.getLogger(__name__)
 
+
+@dataclass
 class BotRenderer(GenericEntityRenderer):
     """Renders a Bot to a Surface."""
 
     ICON_RADIUS: ClassVar[int] = 10
     """Display units."""
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        log_msg = f"BotRenderer created for {self.entity.name}"
+        logger.debug(log_msg)
+
+    def __hash__(self) -> int:
+        return super().__hash__()
 
     def draw(self) -> None:
         """Draws the Bot and decorations to the surface."""

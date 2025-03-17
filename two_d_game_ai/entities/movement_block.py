@@ -3,43 +3,33 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
-
-from pygame import Vector2
+from dataclasses import dataclass
 
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.world.grid import Grid
 
-if TYPE_CHECKING:
-    from two_d_game_ai.world.world import World
-
 logger = logging.getLogger(__name__)
 
 
+@dataclass(kw_only=True)
 class MovementBlock(GenericEntity):
     """Circular entity that blocks movement."""
 
-    def __init__(
-        self,
-        world: World,
-        name: str,
-        pos: tuple[float, float],
-        radius: float,
-    ) -> None:
-        super().__init__(world, name, pos, radius)
-
+    def __post_init__(self) -> None:
+        super().__post_init__()
         for cell in self.world.grid.cells:
+            cell_centre = Grid.cell_centre_to_world_pos(cell, self.world)
             if point_in_or_on_circle(
-                Grid.cell_centre_to_world_pos(
-                    cell,
-                    self.world,
-                ),
-                Vector2(pos),
-                radius,
+                cell_centre,
+                self.pos,
+                self.radius,
             ):
-                world.grid.untraversable_cells.add(cell)
+                self.world.grid.untraversable_cells.add(cell)
 
         self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
         logger.info(log_msg)
+
+    def __hash__(self) -> int:
+        return super().__hash__()
