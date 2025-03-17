@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 
+logger = logging.getLogger(__name__)
+
 
 class View(Observer):
     """Renders a `two_d_game_ai.world.world.World` to a window.
@@ -123,7 +125,7 @@ class View(Observer):
         for renderer in self._clickables:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
-                logging.info(log_msg)
+                logger.debug(log_msg)
                 return renderer
         return None
 

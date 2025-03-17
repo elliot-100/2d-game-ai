@@ -21,17 +21,13 @@ class TestSubject:
 
     def test_notification_logged(self, caplog: pytest.LogCaptureFixture) -> None:
         """Test notification is logged by Observer."""
-        caplog.set_level(logging.INFO)
-        s = Subject("S")
-        o = Observer("O")
-        s.register_observer(o)
+        with caplog.at_level(logging.DEBUG):
+            s = Subject("S")
+            o = Observer("O")
+            s.register_observer(o)
 
-        s.notify_observers("TestDispatchMessage")
-        assert (
-            "root",
-            logging.INFO,
-            "Subject `S` notifying observers: 'TestDispatchMessage'",
-        ) in caplog.record_tuples
+            s.notify_observers("TestDispatchMessage")
+        assert "Subject 'S' notifying observers: 'TestDispatchMessage'" in caplog.text
 
     def test_notification_raises_exception_if_no_subscribers(self) -> None:
         """Test Exception is raised on notification if no Observers."""
@@ -67,14 +63,10 @@ class TestObserver:
 
     def test_report_event(self, caplog: pytest.LogCaptureFixture) -> None:
         """Test received event is logged."""
-        caplog.set_level(logging.INFO)
-        s = Subject("S")
-        o = Observer("O")
-        s.register_observer(o)
+        with caplog.at_level(logging.DEBUG):
+            s = Subject("S")
+            o = Observer("O")
+            s.register_observer(o)
 
-        s.notify_observers("TestReportMessage")
-        assert (
-            "root",
-            logging.INFO,
-            "Observer `O` got message 'TestReportMessage' from `S`",
-        ) in caplog.record_tuples
+            s.notify_observers("TestReportMessage")
+        assert "Observer 'O' got 'TestReportMessage' from 'S'" in caplog.text

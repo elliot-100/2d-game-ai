@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 
 _MIN_PATH_NODES: int = 3
 
+logger = logging.getLogger(__name__)
+
 
 class Grid:
     """Grid class.
@@ -194,7 +196,7 @@ class Grid:
     def _simplify_path(self, path: list[GridRef]) -> list[GridRef]:
         """Simplify a path by removing redundant points."""
         log_msg = f"Calculated path: {len(path)} points."
-        logging.info(log_msg)
+        logger.debug(log_msg)
         return self._remove_collinear_nodes(path)
 
     @staticmethod
@@ -208,8 +210,6 @@ class Grid:
                 culled_path[-2], culled_path[-1], node
             ):
                 culled_path.append(node)
-        log_msg = f"- collinear points cull -> {len(culled_path)} points."
-        logging.info(log_msg)
         return culled_path
 
     @staticmethod
