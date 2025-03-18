@@ -6,8 +6,7 @@
 
 from typing import Any
 
-# mypy: ignore-errors
-from invoke import task
+from invoke.tasks import task
 
 
 @task
