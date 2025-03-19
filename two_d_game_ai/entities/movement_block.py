@@ -27,7 +27,6 @@ class MovementBlock(GenericEntity):
             ):
                 self.world.grid.untraversable_cells.add(cell)
 
-        self.world.movement_blocks.append(self)
         log_msg = f"MovementBlock '{self.name}' created."
         logger.info(log_msg)
 

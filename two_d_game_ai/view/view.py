@@ -52,9 +52,10 @@ class View(Observer):
     clock: Clock = field(init=False)
     world_max: float = field(init=False)
     display_offset: Vector2 = field(init=False)
-    entity_renderers: set[BotRenderer | MovementBlockRenderer] = field(
-        default_factory=set
+    entity_renderers: dict[int, BotRenderer | MovementBlockRenderer] = field(
+        default_factory=dict
     )
+    """Maps entity `id` to Renderer."""
     selected: None | MovementBlockRenderer | BotRenderer = field(init=False)
 
     def __post_init__(self) -> None:
@@ -66,7 +67,6 @@ class View(Observer):
         pygame.display.set_caption(self.CAPTION)
         self.clock = Clock()
         self.running = True
-        self._initialize_renderers()
 
         self.world_max = self.world.size / 2
         self.display_offset = Vector2(
@@ -76,6 +76,7 @@ class View(Observer):
             self.margin,
             self.margin,
         )
+        self.selected = None
 
     def __hash__(self) -> int:
         return super().__hash__()
@@ -83,19 +84,21 @@ class View(Observer):
     @property
     def bot_renderers(self) -> set[BotRenderer]:
         """TO DO."""
-        return {r for r in self.entity_renderers if isinstance(r, BotRenderer)}
+        return {r for r in self.entity_renderers.values() if isinstance(r, BotRenderer)}
 
     @property
     def movement_block_renderers(self) -> set[MovementBlockRenderer]:
         """TO DO."""
         return {
-            r for r in self.entity_renderers if isinstance(r, MovementBlockRenderer)
+            r
+            for r in self.entity_renderers.values()
+            if isinstance(r, MovementBlockRenderer)
         }
 
     @property
     def clickables(self) -> set[BotRenderer | MovementBlockRenderer]:
         """Clickable elements."""
-        return self.entity_renderers
+        return set(self.entity_renderers.values())
 
     def handle_inputs(self) -> None:
         """Handle user inputs."""
@@ -122,6 +125,7 @@ class View(Observer):
         # Limit update rate to save CPU:
         self.clock.tick(self.MAX_RENDER_FPS)
 
+        self._ensure_renderers()
         # Drawn in order, bottom layer to top:
         self.window.fill(colors.WINDOW_FILL)
         self._draw_world_limits()
@@ -136,17 +140,18 @@ class View(Observer):
         # update entire display
         pygame.display.flip()
 
-    def _initialize_renderers(self) -> None:
-        self.entity_renderers = {
-            BotRenderer(view=self, entity=bot) for bot in self.world.bots
-        }
-        self.entity_renderers.update(
-            MovementBlockRenderer(view=self, entity=block)
-            for block in self.world.movement_blocks
-        )
-
-        for bot in self.world.bots:
-            bot.register_observer(self)
+    def _ensure_renderers(self) -> None:
+        for m in self.world.movement_blocks:
+            if m.id not in self.entity_renderers:
+                self.entity_renderers[m.id] = MovementBlockRenderer(view=self, entity=m)
+                log_msg = f"{m.name} renderer added."
+                logger.debug(log_msg)
+        for b in self.world.bots:
+            if b.id not in self.entity_renderers:
+                b.register_observer(self)
+                self.entity_renderers[b.id] = BotRenderer(view=self, entity=b)
+                log_msg = f"{b.name} renderer added."
+                logger.debug(log_msg)
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)

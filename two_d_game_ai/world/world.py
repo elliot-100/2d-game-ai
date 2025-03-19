@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
+from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
     from pygame import Vector2
 
-    from two_d_game_ai.entities.bot import Bot
-    from two_d_game_ai.entities.movement_block import MovementBlock
+    from two_d_game_ai.entities.generic_entity import GenericEntity
 
 
 @dataclass
@@ -31,12 +32,8 @@ class World:
     """Size of a `Grid` cell in `World` units."""
     grid: Grid = field(init=False)
     """`Grid` instance."""
-    entities: set[Any] = field(default_factory=set)
+    entities: set[GenericEntity] = field(default_factory=set)
     """All entities."""
-    bots: set[Bot] = field(default_factory=set)
-    """All `Bot`s."""
-    movement_blocks: list[MovementBlock] = field(default_factory=list)
-    """All `MovementBlock`s."""
     step_counter: int = 0
     """Number of update steps taken."""
     is_paused: bool = True
@@ -48,10 +45,21 @@ class World:
         self.grid = Grid(size=self.grid_size)
         self.grid_resolution = self.size / self.grid_size
 
+    @property
+    def bots(self) -> set[Bot]:
+        """TO DO."""
+        return {e for e in self.entities if isinstance(e, Bot)}
+
+    @property
+    def movement_blocks(self) -> set[MovementBlock]:
+        """TO DO."""
+        return {e for e in self.entities if isinstance(e, MovementBlock)}
+
     def update(self) -> None:
         """Change all `Bot` positions over 1 simulation step."""
-        for bot in self.bots:
-            bot.update({b for b in self.bots if b is not bot})
+        for e in self.entities:
+            if isinstance(e, Bot):
+                e.update({b for b in self.bots if b is not e})
         self.step_counter += 1
 
     def point_is_inside_world_bounds(self, point: Vector2) -> bool:

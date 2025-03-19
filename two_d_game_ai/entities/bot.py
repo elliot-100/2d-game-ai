@@ -47,7 +47,6 @@ class Bot(GenericEntity):
         super().__post_init__()
         self.heading: Bearing = Bearing(self.INITIAL_HEADING_DEGREES)
         self.velocity: Vector2 = Vector2(0, 0)
-        self.world.bots.add(self)
         log_msg = f"Bot '{self.name}' created."
         logger.info(log_msg)
 

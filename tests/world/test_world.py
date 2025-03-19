@@ -21,6 +21,7 @@ def test_add_bot() -> None:
         name="b0",
         position=(0, 0),
     )
+    assert w.entities == {b}
     assert w.bots == {b}
 
 
@@ -32,7 +33,7 @@ def test_add_movement_block() -> None:
         name="m0",
         position=(0, 0),
     )
-    assert w.movement_blocks == [m]
+    assert w.entities == {m}
 
 
 def test_point_is_inside_world_bounds() -> None:

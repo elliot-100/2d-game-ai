@@ -24,6 +24,7 @@ class GenericEntity(Subject, ABC):
 
     def __post_init__(self) -> None:
         Subject.__post_init__(self)
+        self.world.entities.add(self)
         self.pos = Vector2(self.position)
 
     def __hash__(self) -> int:
