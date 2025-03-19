@@ -13,6 +13,8 @@ from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from pygame import Color
 
 logger = logging.getLogger(__name__)
@@ -122,7 +124,9 @@ class BotRenderer(GenericEntityRenderer):
             + [self.entity.position + offset for offset in offsets],
         )
 
-    def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:
+    def _draw_lines_to_others(
+        self, bots: Iterable[Bot], color: Color, width: int
+    ) -> None:
         """Draw lines from Bot to other bots based on visibility or knowledge."""
         for bot in bots:
             self.view.draw_line(

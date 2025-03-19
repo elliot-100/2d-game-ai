@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import math
 from dataclasses import dataclass, field
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
 
@@ -13,6 +13,9 @@ from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.entities.observer_pattern import Subject
 from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +89,7 @@ class Bot(GenericEntity):
         """Get maximum rotation, in degrees per simulation step."""
         return self.MAX_ROTATION_RATE / SIMULATION_FPS
 
-    def update(self, other_bots: set[Bot]) -> None:
+    def update(self, other_bots: Iterable[Bot]) -> None:
         """Update Bot, including move over 1 simulation step."""
         self._handle_sensing(other_bots)
 
@@ -151,7 +154,7 @@ class Bot(GenericEntity):
         """Change position over 1 simulation step."""
         self.position += self.velocity / SIMULATION_FPS
 
-    def _handle_sensing(self, other_bots: set[Bot]) -> None:
+    def _handle_sensing(self, other_bots: Iterable[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
         newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
