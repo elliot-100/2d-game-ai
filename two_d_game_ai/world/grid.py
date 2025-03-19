@@ -206,7 +206,7 @@ class Grid:
     @staticmethod
     def _remove_collinear_nodes(path: list[GridRef]) -> list[GridRef]:
         if not path or len(path) <= _MIN_PATH_NODES:
-            return path
+            return list(path)
 
         culled_path = path[:2]
         for node in path[2:]:

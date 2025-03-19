@@ -59,7 +59,7 @@ class World:
         """Change all `Bot` positions over 1 simulation step."""
         for e in self.entities:
             if isinstance(e, Bot):
-                e.update({b for b in self.bots if b is not e})
+                e.update(b for b in self.bots if b is not e)
         self.step_counter += 1
 
     def point_is_inside_world_bounds(self, point: Vector2) -> bool:

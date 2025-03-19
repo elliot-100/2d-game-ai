@@ -19,7 +19,7 @@ def test_add_bot() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position=(0, 0),
+        position_from_tuple=(0, 0),
     )
     assert w.entities == {b}
     assert w.bots == {b}
@@ -31,9 +31,10 @@ def test_add_movement_block() -> None:
     m = MovementBlock(
         world=w,
         name="m0",
-        position=(0, 0),
+        position_from_tuple=(0, 0),
     )
     assert w.entities == {m}
+    assert w.movement_blocks == {m}
 
 
 def test_point_is_inside_world_bounds() -> None:

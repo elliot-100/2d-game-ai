@@ -15,7 +15,7 @@ the_world = World(200)
 b0 = Bot(
     world=the_world,
     name="b0",
-    position=(20, 20),
+    position_from_tuple=(20, 20),
 )
 
 # Create a View of the World
@@ -30,7 +30,7 @@ view = View(
 b1 = Bot(
     world=the_world,
     name="b1",
-    position=(0, 0),
+    position_from_tuple=(0, 0),
 )
 
 # ... with a destination

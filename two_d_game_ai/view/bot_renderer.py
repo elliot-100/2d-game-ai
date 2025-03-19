@@ -13,6 +13,8 @@ from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from pygame import Color
 
 logger = logging.getLogger(__name__)
@@ -70,7 +72,7 @@ class BotRenderer(GenericEntityRenderer):
         # Line from Bot centre to destination
         self.view.draw_line(
             color=colors.BOT_DESTINATION_LINE,
-            start_pos=self.entity.pos,
+            start_pos=self.entity.position,
             end_pos=self.entity.destination,
         )
 
@@ -89,7 +91,7 @@ class BotRenderer(GenericEntityRenderer):
         if len(self.entity.route) >= min_path_nodes:
             self.view.draw_poly(
                 color=colors.BOT_ROUTE_LINE,
-                points=[self.entity.pos, *self.entity.route],
+                points=[self.entity.position, *self.entity.route],
             )
 
     def _draw_vision_cone(self) -> None:
@@ -118,16 +120,19 @@ class BotRenderer(GenericEntityRenderer):
         self.view.draw_poly(
             color=colors.BOT_CAN_SEE_LINE,
             closed=True,
-            points=[self.entity.pos] + [self.entity.pos + offset for offset in offsets],
+            points=[self.entity.position]
+            + [self.entity.position + offset for offset in offsets],
         )
 
-    def _draw_lines_to_others(self, bots: set[Bot], color: Color, width: int) -> None:
+    def _draw_lines_to_others(
+        self, bots: Iterable[Bot], color: Color, width: int
+    ) -> None:
         """Draw lines from Bot to other bots based on visibility or knowledge."""
         for bot in bots:
             self.view.draw_line(
                 color=color,
-                start_pos=self.entity.pos,
-                end_pos=bot.pos,
+                start_pos=self.entity.position,
+                end_pos=bot.position,
                 width=width,
             )
 
@@ -138,7 +143,7 @@ class BotRenderer(GenericEntityRenderer):
         fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
         self.view.draw_circle(
             color=fill_color,
-            center=self.entity.pos,
+            center=self.entity.position,
             radius=self.ICON_RADIUS,
             scale_radius=False,
         )
@@ -148,7 +153,7 @@ class BotRenderer(GenericEntityRenderer):
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
         self.view.draw_line(
             color=colors.BOT_HEADING_INDICATOR_LINE,
-            start_pos=self.entity.pos,
-            end_pos=self.entity.pos + nose_offset / self.view.scale_factor,
+            start_pos=self.entity.position,
+            end_pos=self.entity.position + nose_offset / self.view.scale_factor,
             width=3,
         )

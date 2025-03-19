@@ -18,6 +18,8 @@ from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from two_d_game_ai.world.grid_ref import GridRef
     from two_d_game_ai.world.world import World
 
@@ -391,7 +393,7 @@ class View(Observer):
         *,
         color: Color,
         closed: bool = False,
-        points: list[Vector2],
+        points: Sequence[Vector2],
     ) -> None:
         """Draw a closed polygon on the `View`, in `World` units,
         which are scaled/translated for display.
