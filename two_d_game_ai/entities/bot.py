@@ -43,8 +43,8 @@ class Bot(GenericEntity):
 
     _destination: Vector2 | None = None
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
+    def __post_init__(self, position_from_tuple: tuple[float, float]) -> None:
+        super().__post_init__(position_from_tuple)
         self.heading: Bearing = Bearing(self.INITIAL_HEADING_DEGREES)
         self.velocity: Vector2 = Vector2(0, 0)
         log_msg = f"Bot '{self.name}' created."
@@ -103,7 +103,7 @@ class Bot(GenericEntity):
 
         if self.route:
             waypoint_relative_bearing = self.heading.relative(
-                self.route[0] - self.pos
+                self.route[0] - self.position
             ).degrees_normalised
 
             #  if Bot can complete rotation to face wp this step...
@@ -126,7 +126,7 @@ class Bot(GenericEntity):
     def is_at(self, location: Vector2) -> bool:
         """Get whether Bot is at location (True) or not (False)."""
         return point_in_or_on_circle(
-            self.pos,
+            self.position,
             location,
             self.POSITION_ARRIVAL_TOLERANCE,
         )
@@ -149,7 +149,7 @@ class Bot(GenericEntity):
 
     def _move(self) -> None:
         """Change position over 1 simulation step."""
-        self.pos += self.velocity / SIMULATION_FPS
+        self.position += self.velocity / SIMULATION_FPS
 
     def _handle_sensing(self, other_bots: set[Bot]) -> None:
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
@@ -170,7 +170,7 @@ class Bot(GenericEntity):
 
         Considers only the Bot vision cone angle.
         """
-        return self.can_see_point(other_bot.pos)
+        return self.can_see_point(other_bot.position)
 
     def can_see_point(self, point: Vector2) -> bool:
         """Determine whether the Bot can see a point.
@@ -178,7 +178,7 @@ class Bot(GenericEntity):
         Considers only the Bot vision cone angle.
         """
         relative_bearing_to_point = self.heading.relative(
-            point - self.pos
+            point - self.position
         ).degrees_normalised
 
         return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
@@ -195,4 +195,4 @@ class Bot(GenericEntity):
             Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
-        return [] if goal is None else self.world.route(self.pos, goal)
+        return [] if goal is None else self.world.route(self.position, goal)

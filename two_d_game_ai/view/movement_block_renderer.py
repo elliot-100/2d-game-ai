@@ -40,7 +40,7 @@ class MovementBlockRenderer(GenericEntityRenderer):
         color = colors.DEBUG if self.is_selected else colors.MOVEMENT_BLOCK_LINE
         self.view.draw_circle(
             color=color,
-            center=self.entity.pos,
+            center=self.entity.position,
             radius=self.entity.radius,
             width=1,
         )

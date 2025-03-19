@@ -14,11 +14,11 @@ def test_bot_move_in_world_context() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position=(0, 0),
+        position_from_tuple=(0, 0),
     )
     b.velocity = Vector2(1, 0)
 
     # act
     w.update()
 
-    assert b.pos == Vector2(1 / SIMULATION_FPS, 0)
+    assert b.position == Vector2(1 / SIMULATION_FPS, 0)

@@ -19,17 +19,17 @@ the_world = World(
 bot = Bot(
     world=the_world,
     name="bt0",
-    position=(-100, 0),
+    position_from_tuple=(-100, 0),
 )
 
 
 # Add a MovementBlock between Bot and destination
-MovementBlock(world=the_world, name="mb0", position=(0, 0), radius=50)
+MovementBlock(world=the_world, name="mb0", position_from_tuple=(0, 0), radius=50)
 # And more
-MovementBlock(world=the_world, name="mb1", position=(100, 0), radius=20)
-MovementBlock(world=the_world, name="mb2", position=(-30, 50), radius=35)
-MovementBlock(world=the_world, name="mb3", position=(50, 50), radius=40)
-MovementBlock(world=the_world, name="mb2", position=(-60, 70), radius=40)
+MovementBlock(world=the_world, name="mb1", position_from_tuple=(100, 0), radius=20)
+MovementBlock(world=the_world, name="mb2", position_from_tuple=(-30, 50), radius=35)
+MovementBlock(world=the_world, name="mb3", position_from_tuple=(50, 50), radius=40)
+MovementBlock(world=the_world, name="mb2", position_from_tuple=(-60, 70), radius=40)
 
 # ... with a destination
 bot.set_destination(125, 5)
