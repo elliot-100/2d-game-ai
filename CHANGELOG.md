@@ -9,6 +9,20 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## [0.6.2] - 2025-03-19
+
+### Fixed:
+
+- Missing documentation
+- Deps: remove poetry, added in error
+
+
+### Changed:
+
+- CI: install and run ruff explicitly instead of via action, in order to use the
+  version specified in dev-deps
+
+
 ## [0.6.0] - 2025-03-13
 
 ### Added:
