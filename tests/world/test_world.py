@@ -34,6 +34,7 @@ def test_add_movement_block() -> None:
         position_from_tuple=(0, 0),
     )
     assert w.entities == {m}
+    assert w.movement_blocks == {m}
 
 
 def test_point_is_inside_world_bounds() -> None:
