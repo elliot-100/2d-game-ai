@@ -2,33 +2,33 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import logging
+from dataclasses import dataclass
+from typing import ClassVar
 
 from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
-if TYPE_CHECKING:
-    from pygame import Font
-
-    from two_d_game_ai.view.view import View
+logger = logging.getLogger(__name__)
 
 
+@dataclass
 class MovementBlockRenderer(GenericEntityRenderer):
     """Renders a Block to a Surface."""
 
-    LABEL_OFFSET = (0, 0)
+    LABEL_OFFSET: ClassVar = (0, 0)
     """Display units."""
 
-    def __init__(
-        self,
-        view: View,
-        entity: MovementBlock,
-        font: Font,
-    ) -> None:
-        super().__init__(view, entity, font)
+    def __post_init__(self) -> None:
+        super().__post_init__()
         if isinstance(self.entity, MovementBlock):
             self.clickable_radius = self.entity.radius
+        log_msg = f"BotRenderer created for {self.entity.name}"
+        logger.debug(log_msg)
+
+    def __hash__(self) -> int:
+        return super().__hash__()
 
     def draw(self) -> None:
         """Draws the MovementBlock to the surface."""

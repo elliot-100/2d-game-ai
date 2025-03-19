@@ -6,7 +6,7 @@ from pygame import Vector2
 
 from .bearing import CIRCLE_DEGREES, Bearing
 
-__all__ = ("CIRCLE_DEGREES", "Bearing")
+__all__ = ("CIRCLE_DEGREES", "Bearing", "point_in_or_on_circle")
 
 
 def point_in_or_on_circle(

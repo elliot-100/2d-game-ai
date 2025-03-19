@@ -24,12 +24,12 @@ bot = Bot(
 
 
 # Add a MovementBlock between Bot and destination
-MovementBlock(world=the_world, name="mb0", pos=(0, 0), radius=50)
+MovementBlock(world=the_world, name="mb0", position=(0, 0), radius=50)
 # And more
-MovementBlock(world=the_world, name="mb1", pos=(100, 0), radius=20)
-MovementBlock(world=the_world, name="mb2", pos=(-30, 50), radius=35)
-MovementBlock(world=the_world, name="mb3", pos=(50, 50), radius=40)
-MovementBlock(world=the_world, name="mb2", pos=(-60, 70), radius=40)
+MovementBlock(world=the_world, name="mb1", position=(100, 0), radius=20)
+MovementBlock(world=the_world, name="mb2", position=(-30, 50), radius=35)
+MovementBlock(world=the_world, name="mb3", position=(50, 50), radius=40)
+MovementBlock(world=the_world, name="mb2", position=(-60, 70), radius=40)
 
 # ... with a destination
 bot.set_destination(125, 5)

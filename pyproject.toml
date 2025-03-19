@@ -11,14 +11,14 @@ python = ">=3.11, <4"
 pygame-ce = ">=2.5.0"
 
 [tool.poetry.group.dev.dependencies]
-invoke = "^2.0.0"
-mypy = "^1.13.0"
-pdoc = "^15.0.0"
-pre-commit = "^4.0.1"
-pydoclint = "^0.5.10"
+invoke = "^2.2.0"
+mypy = "^1.15.0"
+pdoc = "^15.0.1"
+pre-commit = "^4.1.0"
+pydoclint = "^0.6.2"
 pydoctest = "^0.2.1"
 pytest = "^8.3.4"
-ruff = "^0.8.2"
+ruff = "^0.11.0"
 
 [tool.mypy]
 ## Config file:
@@ -70,11 +70,8 @@ ignore = [
 "ISC001",  # Implicitly concatenated string literals on one line
 
 # Other:
-"ANN401",  # any-type [in function args]
-# - Appropriate to use for *args, **kwargs
 "D105",  # Missing docstring in magic method
 "D205",  # 1 blank line required between summary line and description
-"ERA001",  # Found commented-out code
 "FIX002",  # Line contains TODO, consider resolving the issue
 "TD002",  # Missing author in TODO
 "TD003",  # Missing issue link on the line following this TODO
@@ -82,33 +79,26 @@ ignore = [
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
 extend-safe-fixes = [
-"TCH001",  # Move import into a type-checking block
-"TCH003",  # Move standard library import into a type-checking block
-"TCH004",  # Move import out of type-checking block
+    "TCH001",  # Move import into a type-checking block
+    "TCH003",  # Move standard library import into a type-checking block
+    "TCH004",  # Move import out of type-checking block
 ]
 
 [tool.ruff.lint.per-file-ignores]
 # Not relevant in tests:
 "tests/*" = [
-"PLR2004",  # Magic value used in comparison
-"S101",  # Use of assert detected
-"SLF001",  # Private member accessed
+    "PLR2004",  # Magic value used in comparison
+    "S101",  # Use of assert detected
+    "SLF001",  # Private member accessed
 ]
-
 # Ignore rules for Invoke command-line tooling:
 "tasks.py" = [
-"ANN401",  # Dynamically typed expressions (typing.Any)
-"T201",  # `print` found
+    "ANN401",  # Dynamically typed expressions (typing.Any)
+    "T201",  # `print` found
 ]
-
-# Ignore rules that conflict with Mypy:
-"__init__.py" = [
-"PLC0414",  # Import alias does not rename original package
-]
-
 ## Special cases for top-level documentation:
 "two_d_game_ai/__init__.py" = [
-"D400",  # First line should end with a period
+    "D400",  # First line should end with a period
 ]
 
 [tool.ruff.lint.pylint]

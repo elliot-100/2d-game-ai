@@ -12,7 +12,7 @@ def test_bot_move_in_world_context() -> None:
     # arrange
     w = World(10)
     b = Bot(
-        w,
+        world=w,
         name="b0",
         position=(0, 0),
     )

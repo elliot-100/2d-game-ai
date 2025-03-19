@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 import pygame
-from pygame import Color, Rect, Surface, Vector2
+from pygame import Clock, Color, Font, Rect, Surface, Vector2
 
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.observer_pattern import Observer
-from two_d_game_ai.view import colors
+from two_d_game_ai.view import FONT_SIZE, colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.world.grid import Grid
@@ -26,72 +27,78 @@ _SECONDARY_MOUSE_BUTTON = 3
 logger = logging.getLogger(__name__)
 
 
+@dataclass(kw_only=True)
 class View(Observer):
     """Renders a `two_d_game_ai.world.world.World` to a window.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
 
-    FONT_SIZE: ClassVar[int] = 24
-    """Base font size for all text."""
+    CAPTION: ClassVar[str] = "2dGameAI"
+    MAX_RENDER_FPS: ClassVar = SIMULATION_FPS
 
-    _CAPTION: ClassVar[str] = "2dGameAI"
-    _MAX_RENDER_FPS: ClassVar = SIMULATION_FPS
+    world: World
+    """The `World` to be rendered."""
+    name: str
+    scale_factor: float = 1
+    """Scale factor applied to the `World`."""
+    margin: int = 0
 
-    def __init__(
-        self,
-        world: World,
-        name: str,
-        scale_factor: float = 1,
-        margin: int = 0,
-    ) -> None:
-        self.world = world
-        """The `World` to be rendered."""
-        super().__init__(name)
-        self.scale_factor = scale_factor
-        """Scale factor applied to the `World`."""
-        self._margin = margin
-        """Margin in display units applied to all sides of the `World`."""
+    running: bool = field(init=False)
+    """Flag to control e.g. input handling."""
+    window: Surface = field(init=False)
+    """Top level Pygame `Surface`."""
+    font: Font = field(init=False)
+    clock: Clock = field(init=False)
+    world_max: float = field(init=False)
+    display_offset: Vector2 = field(init=False)
+    entity_renderers: dict[int, BotRenderer | MovementBlockRenderer] = field(
+        default_factory=dict
+    )
+    """Maps entity `id` to Renderer."""
+    selected: None | MovementBlockRenderer | BotRenderer = field(init=False)
 
+    def __post_init__(self) -> None:
+        super().__post_init__()
         pygame.init()
-        self._font = pygame.font.Font(None, self.FONT_SIZE)
-
-        _window_size = self.world.size * self.scale_factor + 2 * self._margin
+        self.font = Font(None, FONT_SIZE)
+        _window_size = self.world.size * self.scale_factor + 2 * self.margin
         self.window = pygame.display.set_mode((_window_size, _window_size))
-        """Top level Pygame `Surface`."""
+        pygame.display.set_caption(self.CAPTION)
+        self.clock = Clock()
+        self.running = True
 
-        pygame.display.set_caption(self._CAPTION)
-        self._clock = pygame.Clock()
-        self.running: bool = True
-        """Flag to control e.g. input handling."""
-
-        self._initialize_renderers()
-
-        self._world_max = self.world.size / 2
-        self._world_min = -self._world_max
-
-        self._display_offset = Vector2(
-            self._world_max,
-            self._world_max,
+        self.world_max = self.world.size / 2
+        self.display_offset = Vector2(
+            self.world_max,
+            self.world_max,
         ) * self.scale_factor + Vector2(
-            self._margin,
-            self._margin,
+            self.margin,
+            self.margin,
         )
+        self.selected = None
 
-    def _initialize_renderers(self) -> None:
-        self._bot_renderers = {
-            BotRenderer(view=self, entity=bot, font=self._font)
-            for bot in self.world.bots
-        }
-        self._block_renderers = {
-            MovementBlockRenderer(view=self, entity=block, font=self._font)
-            for block in self.world.movement_blocks
-        }
-        self._clickables = self._bot_renderers | self._block_renderers
+    def __hash__(self) -> int:
+        return super().__hash__()
 
-        for bot in self.world.bots:
-            bot.register_observer(self)
-        self._selected: None | MovementBlockRenderer | BotRenderer = None
+    @property
+    def bot_renderers(self) -> set[BotRenderer]:
+        """TO DO."""
+        return {r for r in self.entity_renderers.values() if isinstance(r, BotRenderer)}
+
+    @property
+    def movement_block_renderers(self) -> set[MovementBlockRenderer]:
+        """TO DO."""
+        return {
+            r
+            for r in self.entity_renderers.values()
+            if isinstance(r, MovementBlockRenderer)
+        }
+
+    @property
+    def clickables(self) -> set[BotRenderer | MovementBlockRenderer]:
+        """Clickable elements."""
+        return set(self.entity_renderers.values())
 
     def handle_inputs(self) -> None:
         """Handle user inputs."""
@@ -113,16 +120,49 @@ class View(Observer):
                     if event.key == pygame.K_p:  # toggle [P]ause
                         self.world.is_paused = not self.world.is_paused
 
+    def render(self) -> None:
+        """Render the `World` to the Pygame window."""
+        # Limit update rate to save CPU:
+        self.clock.tick(self.MAX_RENDER_FPS)
+
+        self._ensure_renderers()
+        # Drawn in order, bottom layer to top:
+        self.window.fill(colors.WINDOW_FILL)
+        self._draw_world_limits()
+        self._draw_grid()
+        for b in self.bot_renderers:
+            b.draw()
+        for m in self.movement_block_renderers:
+            m.draw()
+        self._draw_axes()
+
+        self._draw_step_counter()
+        # update entire display
+        pygame.display.flip()
+
+    def _ensure_renderers(self) -> None:
+        for m in self.world.movement_blocks:
+            if m.id not in self.entity_renderers:
+                self.entity_renderers[m.id] = MovementBlockRenderer(view=self, entity=m)
+                log_msg = f"{m.name} renderer added."
+                logger.debug(log_msg)
+        for b in self.world.bots:
+            if b.id not in self.entity_renderers:
+                b.register_observer(self)
+                self.entity_renderers[b.id] = BotRenderer(view=self, entity=b)
+                log_msg = f"{b.name} renderer added."
+                logger.debug(log_msg)
+
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
         self._selected = self._clicked_entity(click_pos)
-        for renderer in self._clickables:
+        for renderer in self.clickables:
             renderer.is_selected = renderer == self._selected
 
     def _clicked_entity(
         self, click_pos: Vector2
     ) -> MovementBlockRenderer | BotRenderer | None:
         """Return the EntityRenderer at click position, or None."""
-        for renderer in self._clickables:
+        for renderer in self.clickables:
             if renderer.is_clicked(click_pos):
                 log_msg = f"{renderer.entity.name} clicked."
                 logger.debug(log_msg)
@@ -143,32 +183,13 @@ class View(Observer):
         """Return the GridRef at click position, or None."""
         return Grid.cell_from_world_pos(self.world, self._to_world(click_pos))
 
-    def render(self) -> None:
-        """Render the `World` to the Pygame window."""
-        # Limit update rate to save CPU:
-        self._clock.tick(self._MAX_RENDER_FPS)
-
-        # Drawn in order, bottom layer to top:
-        self.window.fill(colors.WINDOW_FILL)
-        self._draw_world_limits()
-        self._draw_grid()
-        for _ in self._bot_renderers:
-            _.draw()
-        for _ in self._block_renderers:
-            _.draw()
-        self._draw_axes()
-
-        self._draw_step_counter()
-        # update entire display
-        pygame.display.flip()
-
     def _draw_world_limits(self) -> None:
         """Draw the `World` limits."""
         # Border
         self.draw_rect(
             color=colors.WORLD_FILL,
             rect=Rect(
-                (self._world_min, self._world_min),
+                (-self.world_max, -self.world_max),
                 (self.world.size, self.world.size),
             ),
         )
@@ -176,13 +197,13 @@ class View(Observer):
     def _draw_axes(self) -> None:
         self.draw_line(  # Y
             color=colors.WORLD_AXES_LINE,
-            start_pos=Vector2(0, self._world_min),
-            end_pos=Vector2(0, self._world_max),
+            start_pos=Vector2(0, -self.world_max),
+            end_pos=Vector2(0, self.world_max),
         )
         self.draw_line(  # X
             color=colors.WORLD_AXES_LINE,
-            start_pos=Vector2(self._world_min, 0),
-            end_pos=Vector2(self._world_max, 0),
+            start_pos=Vector2(-self.world_max, 0),
+            end_pos=Vector2(self.world_max, 0),
         )
 
     def _draw_grid(self) -> None:
@@ -195,16 +216,16 @@ class View(Observer):
             # horizontal grid line
             self.draw_line(
                 color=colors.WORLD_GRID_LINE,
-                start_pos=Vector2(self._world_min, cell_offset),
-                end_pos=Vector2(self._world_max, cell_offset),
+                start_pos=Vector2(-self.world_max, cell_offset),
+                end_pos=Vector2(self.world_max, cell_offset),
                 width=1,
                 anti_alias=False,
             )
             # vertical grid line
             self.draw_line(
                 color=colors.WORLD_GRID_LINE,
-                start_pos=Vector2(cell_offset, self._world_min),
-                end_pos=Vector2(cell_offset, self._world_max),
+                start_pos=Vector2(cell_offset, -self.world_max),
+                end_pos=Vector2(cell_offset, self.world_max),
                 width=1,
                 anti_alias=False,
             )
@@ -232,14 +253,14 @@ class View(Observer):
         """Render the step counter and blit to window."""
         elapsed_time = self.world.step_counter / SIMULATION_FPS
 
-        text_content = (
-            f"sim elapsed: {elapsed_time:.1f} s\n"
-            f"sim step: {self.world.step_counter}\n"
-        )
+        text_content = [
+            f"sim elapsed: {elapsed_time:.1f} s",
+            f"sim step: {self.world.step_counter}",
+        ]
         if self.world.is_paused:
-            text_content += "paused"
-        text = self._font.render(
-            text=text_content,
+            text_content.append("paused")
+        text = self.font.render(
+            text="\n".join(text_content),
             antialias=True,
             color=colors.WINDOW_TEXT,
         )
@@ -260,7 +281,7 @@ class View(Observer):
             Origin is at centre, positive y upwards.
         """
         return (
-            world_pos.reflect(Vector2(0, 1)) * self.scale_factor + self._display_offset
+            world_pos.reflect(Vector2(0, 1)) * self.scale_factor + self.display_offset
         )
 
     def _to_world(self, display_pos: Vector2) -> Vector2:
@@ -277,7 +298,7 @@ class View(Observer):
         Vector2
             `World` coordinates.
         """
-        pos = (display_pos - self._display_offset) / self.scale_factor
+        pos = (display_pos - self.display_offset) / self.scale_factor
         pos.y = -pos.y
         return pos
 
