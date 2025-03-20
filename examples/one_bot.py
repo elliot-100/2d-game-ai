@@ -1,4 +1,4 @@
-"""Demonstrate implemented features using renderer."""
+"""Demo a single Bot."""
 
 import logging
 
@@ -6,10 +6,10 @@ from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 # Create a World
-the_world = World(200)
+the_world = World(400)
 
 # Add a Bot to the World...
 b0 = Bot(
@@ -17,24 +17,11 @@ b0 = Bot(
     name="b0",
     position_from_tuple=(20, 20),
 )
-
 # Create a View of the World
 view = View(
-    name="the_view",
     world=the_world,
-    scale_factor=2,
-    margin=20,
+    scale_factor=0.7,
 )
-
-# Add another Bot to the World...
-b1 = Bot(
-    world=the_world,
-    name="b1",
-    position_from_tuple=(0, 0),
-)
-
-# ... with a destination
-b1.set_destination(25, -50)
 
 while view.running:
     view.handle_inputs()

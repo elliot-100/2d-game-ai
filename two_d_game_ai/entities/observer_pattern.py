@@ -31,6 +31,7 @@ class Subject:
 
     def __post_init__(self) -> None:
         self.id = len(self.world.entities)
+        # TODO: fragile, assumes is about to be added to `self.world.entities`
         log_msg = f"Subject '{self.name}' initiated."
         logger.debug(log_msg)
 

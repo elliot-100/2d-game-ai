@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class BotRenderer(GenericEntityRenderer):
-    """Renders a Bot to a Surface."""
+    """Renders a `Bot` to a `View`."""
 
     ICON_RADIUS: ClassVar[int] = 10
     """Display units."""
@@ -57,20 +57,20 @@ class BotRenderer(GenericEntityRenderer):
             return  # Guard clause
 
         # Destination marker (X)
-        offset = self.ICON_RADIUS / self.view.scale_factor
-        self.view.draw_line(
+        offset = self.ICON_RADIUS / self.world_renderer.scale_factor
+        self.world_renderer.draw_line(
             color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.destination + Vector2(-offset, -offset),
             end_pos=self.entity.destination + Vector2(offset, offset),
         )
-        self.view.draw_line(
+        self.world_renderer.draw_line(
             color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.destination + Vector2(offset, -offset),
             end_pos=self.entity.destination + Vector2(-offset, offset),
         )
 
         # Line from Bot centre to destination
-        self.view.draw_line(
+        self.world_renderer.draw_line(
             color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.position,
             end_pos=self.entity.destination,
@@ -82,14 +82,14 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
         for i in range(len(self.entity.route)):
-            self.view.draw_circle(
+            self.world_renderer.draw_circle(
                 color=colors.BOT_ROUTE_LINE,
                 center=self.entity.route[i],
                 radius=self.ICON_RADIUS / 4,
                 scale_radius=False,
             )
         if len(self.entity.route) >= min_path_nodes:
-            self.view.draw_poly(
+            self.world_renderer.draw_poly(
                 color=colors.BOT_ROUTE_LINE,
                 points=[self.entity.position, *self.entity.route],
             )
@@ -117,7 +117,7 @@ class BotRenderer(GenericEntityRenderer):
             )
             for angle in draw_angles
         ]
-        self.view.draw_poly(
+        self.world_renderer.draw_poly(
             color=colors.BOT_CAN_SEE_LINE,
             closed=True,
             points=[self.entity.position]
@@ -129,7 +129,7 @@ class BotRenderer(GenericEntityRenderer):
     ) -> None:
         """Draw lines from Bot to other bots based on visibility or knowledge."""
         for bot in bots:
-            self.view.draw_line(
+            self.world_renderer.draw_line(
                 color=color,
                 start_pos=self.entity.position,
                 end_pos=bot.position,
@@ -141,7 +141,7 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
         fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
-        self.view.draw_circle(
+        self.world_renderer.draw_circle(
             color=fill_color,
             center=self.entity.position,
             radius=self.ICON_RADIUS,
@@ -151,9 +151,10 @@ class BotRenderer(GenericEntityRenderer):
         # Heading indicator (line from centre to 'nose')
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
         nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
-        self.view.draw_line(
+        self.world_renderer.draw_line(
             color=colors.BOT_HEADING_INDICATOR_LINE,
             start_pos=self.entity.position,
-            end_pos=self.entity.position + nose_offset / self.view.scale_factor,
+            end_pos=self.entity.position
+            + nose_offset / self.world_renderer.scale_factor,
             width=3,
         )

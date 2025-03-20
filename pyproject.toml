@@ -21,35 +21,18 @@ pytest = "^8.3.4"
 ruff = "^0.11.0"
 
 [tool.mypy]
-## Config file:
-warn_unused_configs = true
+strict = true
 ## Disallow dynamic typing:
-## Disallow the use of the dynamic 'Any' type under certain conditions.
+##   Disallow the use of the dynamic 'Any' type under certain conditions.
 disallow_any_unimported = true  # additional to 'strict' config
-disallow_any_generics = true
-disallow_subclassing_any = true
-## Untyped definitions and calls:
-## Configure how untyped definitions and calls are handled.
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
 ## None and Optional handling:
-## Adjust how values of type 'None' are handled.
+##   Adjust how values of type 'None' are handled.
 no_implicit_optional = true  # additional to 'strict' config
 ## Configuring warnings:
-## Detect code that is sound but redundant or problematic.
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
+##   Detect code that is sound but redundant or problematic.
 warn_unreachable = true  # additional to 'strict' config
-## Miscellaneous strictness flags:
-no_implicit_reexport = true
-strict_equality = true
-extra_checks = true
-##  Configuring error messages:
-## Adjust the amount of detail shown in error messages.
+## Configuring error messages:
+##   Adjust the amount of detail shown in error messages.
 show_error_codes = true  # additional to 'strict' config
 pretty = true  # additional to 'strict' config
 
@@ -100,6 +83,10 @@ extend-safe-fixes = [
 "two_d_game_ai/__init__.py" = [
     "D400",  # First line should end with a period
 ]
+"examples/*" = [
+    "INP001",  # ...part of an implicit namespace package. Add an `__init__.py`.
+]
+
 
 [tool.ruff.lint.pylint]
 max-args = 7
