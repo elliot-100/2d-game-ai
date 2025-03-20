@@ -4,7 +4,7 @@ from math import radians
 
 from pygame import Vector2
 
-from .bearing import CIRCLE_DEGREES, Bearing
+from two_d_game_ai.geometry.bearing import CIRCLE_DEGREES, Bearing
 
 __all__ = ("CIRCLE_DEGREES", "Bearing", "point_in_or_on_circle")
 
@@ -14,7 +14,7 @@ def point_in_or_on_circle(
     circle_centre: Vector2,
     circle_radius: float,
 ) -> bool:
-    """Return True if the point is (inside or on) the circle, else False."""
+    """Return `True` if `point` is (inside or on) the circle, else `False`."""
     return (point - circle_centre).length() <= circle_radius
 
 

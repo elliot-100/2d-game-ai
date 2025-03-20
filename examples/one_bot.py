@@ -15,7 +15,7 @@ the_world = World(400)
 b0 = Bot(
     world=the_world,
     name="b0",
-    position_from_tuple=(20, 20),
+    position_from_sequence=(20, 20),
 )
 # Create a View of the World
 view = View(

@@ -1,4 +1,4 @@
-"""Module containing `Bearing` class."""
+"""Contains `Bearing` class."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ CIRCLE_DEGREES = 360
 class Bearing:
     """Represents a conventional bearing (aka azimuthal angle).
 
-    Stored as a unit vector, based on Pygame's Vector2 class.
+    Stored as a unit vector, based on Pygame's `Vector2` class.
     """
 
     vector: Vector2 = field(init=False)
@@ -63,5 +63,5 @@ class Bearing:
 
 
 def _flip_vector_y(vector: Vector2) -> Vector2:
-    """Inverse the vector's y-axis to convert from Pygame's Vector2 implementation."""
+    """Inverse the vector's y-axis to convert from Pygame's `Vector2` implementation."""
     return Vector2(vector.x, -vector.y)

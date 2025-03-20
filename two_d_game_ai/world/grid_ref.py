@@ -1,4 +1,4 @@
-"""Module containing `GridRef` class."""
+"""Contains `GridRef` class."""
 
 from __future__ import annotations
 

@@ -14,7 +14,7 @@ def test_bot_move_in_world_context() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     b.velocity = Vector2(1, 0)
 

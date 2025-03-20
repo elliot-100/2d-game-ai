@@ -1,4 +1,4 @@
-"""Module containing `MovementBlockRenderer` class."""
+"""Contains `MovementBlockRenderer` class."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class MovementBlockRenderer(GenericEntityRenderer):
-    """Renders a `MovementBlock` to a `View`."""
+    """Renders a `MovementBlock` to a `WorldRenderer`."""
 
     LABEL_OFFSET: ClassVar = (0, 0)
     """Display units."""
@@ -24,14 +24,14 @@ class MovementBlockRenderer(GenericEntityRenderer):
         super().__post_init__()
         if isinstance(self.entity, MovementBlock):
             self.clickable_radius = self.entity.radius
-        log_msg = f"BotRenderer created for {self.entity.name}"
+        log_msg = f"BotRenderer initialised for {self.entity.name}"
         logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return super().__hash__()
 
     def draw(self) -> None:
-        """Draws the MovementBlock to the surface."""
+        """Draw the `MovementBlock`."""
         super().draw()  # label only
 
         if not isinstance(self.entity, MovementBlock):

@@ -33,7 +33,7 @@ def test_create() -> None:
     b = Bot(
         world=w,
         name="b1",
-        position_from_tuple=(0.7, 100.35),
+        position_from_sequence=(0.7, 100.35),
     )
     assert b.name == "b1"
     assert b.position == Vector2(0.7, 100.35)
@@ -59,7 +59,7 @@ def test_can_see_point__in_range(
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     # assert
     assert all(b.can_see_point(p) for p in visible_points)
@@ -73,7 +73,7 @@ def test_move() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     b.velocity = Vector2(1, 0)
     # act
@@ -89,7 +89,7 @@ def test_move_negative() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     # act
     b._move()
@@ -104,7 +104,7 @@ def test_destination() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     # act
     b.destination = Vector2(-17, -12)
@@ -119,9 +119,9 @@ def test_set_destination_tuple() -> None:
     b = Bot(
         world=w,
         name="b0",
-        position_from_tuple=(0, 0),
+        position_from_sequence=(0, 0),
     )
     # act
-    b.set_destination(25, -50)
+    b.destination_from_sequence((25, -50))
     # assert
     assert b.destination == Vector2(25, -50)

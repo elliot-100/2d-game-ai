@@ -1,4 +1,4 @@
-"""Module containing `BotRenderer` class."""
+"""Contains `BotRenderer` class."""
 
 from __future__ import annotations
 
@@ -22,21 +22,21 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class BotRenderer(GenericEntityRenderer):
-    """Renders a `Bot` to a `View`."""
+    """Renders a `Bot` to a `WorldRenderer`."""
 
     ICON_RADIUS: ClassVar[int] = 10
     """Display units."""
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        log_msg = f"BotRenderer created for {self.entity.name}"
+        log_msg = f"BotRenderer initialised for '{self.entity.name}'."
         logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return super().__hash__()
 
     def draw(self) -> None:
-        """Draws the Bot and decorations to the surface."""
+        """Draws `Bot` and decorations."""
         super().draw()
         if not isinstance(self.entity, Bot):
             raise TypeError
@@ -45,12 +45,14 @@ class BotRenderer(GenericEntityRenderer):
             self._draw_route()
         self._draw_vision_cone()
         self._draw_lines_to_others(self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 4)
-        self._draw_lines_to_others(self.entity.known_bots, colors.BOT_KNOWS_LINE, 1)
+        self._draw_lines_to_others(
+            self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
+        )
         self._draw_icon()
         self.clickable_radius = self.ICON_RADIUS
 
     def _draw_destination(self) -> None:
-        """Draw Bot destination icon, and line to it."""
+        """Draw `Bot` destination icon, and line to it."""
         if not isinstance(self.entity, Bot):
             raise TypeError
         if not self.entity.destination:
@@ -95,7 +97,7 @@ class BotRenderer(GenericEntityRenderer):
             )
 
     def _draw_vision_cone(self) -> None:
-        """Draw Bot vision cone to surface."""
+        """Draw `Bot` vision cone."""
         angle_step_degrees: int = 10
 
         if not isinstance(self.entity, Bot):

@@ -15,7 +15,7 @@ def test_create() -> None:
     m = MovementBlock(
         world=w,
         name="b1",
-        position_from_tuple=(0.7, 100.35),
+        position_from_sequence=(0.7, 100.35),
         radius=0.1,
     )
     v = View(world=w)

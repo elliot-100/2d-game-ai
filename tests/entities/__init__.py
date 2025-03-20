@@ -1,1 +1,1 @@
-"""Package containing test suite for `entities` package."""
+"""Package containing tests for `entities` package."""

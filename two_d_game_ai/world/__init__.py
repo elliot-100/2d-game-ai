@@ -1,1 +1,1 @@
-"""Module implementing the simulated domain."""
+"""Package implementing the simulated domain."""
