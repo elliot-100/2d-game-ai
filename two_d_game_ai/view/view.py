@@ -156,9 +156,9 @@ class View(Observer):
                 logger.debug(log_msg)
 
     def _handle_mouse_select(self, click_pos: Vector2) -> None:
-        self._selected = self._clicked_entity(click_pos)
+        self.selected = self._clicked_entity(click_pos)
         for renderer in self.clickables:
-            renderer.is_selected = renderer == self._selected
+            renderer.is_selected = renderer == self.selected
 
     def _clicked_entity(
         self, click_pos: Vector2
@@ -175,11 +175,11 @@ class View(Observer):
         """Attempt to set destination, if applicable to current selection."""
         clicked_grid_ref = self._clicked_grid_ref(click_pos)
         if (
-            isinstance(self._selected, BotRenderer)
-            and isinstance(self._selected.entity, Bot)
+            isinstance(self.selected, BotRenderer)
+            and isinstance(self.selected.entity, Bot)
             and self.world.grid.is_traversable(clicked_grid_ref)
         ):
-            self._selected.entity.destination = self._to_world(click_pos)
+            self.selected.entity.destination = self._to_world(click_pos)
 
     def _clicked_grid_ref(self, click_pos: Vector2) -> GridRef:
         """Return the GridRef at click position, or None."""
