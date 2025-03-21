@@ -33,6 +33,7 @@ class Bot(GenericEntity):
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """`World` units."""
 
+    leader: Bot | None = None
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
@@ -70,25 +71,22 @@ class Bot(GenericEntity):
     def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
         if proposed_destination is None:
-            log_msg = f"Bot '{self.name}': destination set to `None`."
+            log_msg = f"Bot '{self.name}': destination -> `None`."
             logger.debug(log_msg)
             self._destination = None
             return
 
-        if not self.is_at(
-            proposed_destination
-        ) and self.world.point_is_inside_world_bounds(proposed_destination):
-            log_msg = (
-                f"Bot '{self.name}' at `{self.position}`: "
-                f"destination: `{self.destination}` -> `{proposed_destination}`."
-            )
+        if (
+            proposed_destination != self.position
+            and not self.is_at(proposed_destination)
+            and self.world.point_is_inside_world_bounds(proposed_destination)
+        ):
+            log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
             logger.info(log_msg)
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
-            log_msg = (
-                f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
-            )
+            log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
             logger.info(log_msg)
 
     def destination_from_sequence(self, position: Sequence[float]) -> None:
@@ -98,6 +96,9 @@ class Bot(GenericEntity):
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
         self._handle_sensing(b for b in self.world.bots if b is not self)
+
+        if self.leader and self.destination != self.leader.position:
+            self.destination = self.leader.position.copy()
 
         if self.route:
             if self.destination is None:

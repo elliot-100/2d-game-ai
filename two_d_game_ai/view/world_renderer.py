@@ -212,12 +212,16 @@ class WorldRenderer:
         """Attempt to set destination, if applicable to current selection."""
         if not isinstance(self.selected_renderer, BotRenderer):
             return None  # Only `Bot`s support destination setting
+
         if not isinstance(self.selected_renderer.entity, Bot):
             raise TypeError
+
         world_pos = self.to_world(local_pos)
         cell = Grid.cell_from_world_pos(world=self.world, pos=world_pos)
+
         if not self.world.grid.is_traversable(cell):
             return None
+
         self.selected_renderer.entity.destination = world_pos
         return world_pos
 
