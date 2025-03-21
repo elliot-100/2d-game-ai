@@ -1,4 +1,4 @@
-"""Module containing `Grid` class."""
+"""Contains `Grid` class."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ class Grid:
     size: int = DEFAULT_SIZE
     """`Grid` units per side."""
     offset: GridRef = field(init=False)
-    untraversable_cells: set[GridRef] = field(default_factory=set)
+    untraversable_cells: set[GridRef] = field(init=False, default_factory=set)
     """Untraversable cells."""
 
     def __post_init__(self) -> None:

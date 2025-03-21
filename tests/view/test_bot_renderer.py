@@ -16,7 +16,7 @@ def test_create() -> None:
     b = Bot(
         world=w,
         name="b1",
-        position_from_tuple=(0.7, 100.35),
+        position_from_sequence=(0.7, 100.35),
     )
     # act
     v.render()

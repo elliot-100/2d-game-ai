@@ -13,6 +13,8 @@ def test_create() -> None:
     # arrange
     w = World(10)
     # act
-    m = MovementBlock(world=w, name="m0", position_from_tuple=(5000, -9000), radius=1)
+    m = MovementBlock(
+        world=w, name="m0", position_from_sequence=(5000, -9000), radius=1
+    )
     assert m.name == "m0"
     assert m.position == Vector2(5000, -9000)

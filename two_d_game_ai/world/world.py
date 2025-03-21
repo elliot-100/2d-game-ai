@@ -1,4 +1,4 @@
-"""Module containing `World` class."""
+"""Contains `World` class."""
 
 from __future__ import annotations
 
@@ -32,11 +32,11 @@ class World:
     """Size of a `Grid` cell in `World` units."""
     grid: Grid = field(init=False)
     """`Grid` instance."""
-    entities: set[GenericEntity] = field(default_factory=set)
+    entities: set[GenericEntity] = field(init=False, default_factory=set)
     """All entities."""
-    step_counter: int = 0
+    step_counter: int = field(init=False)
     """Number of update steps taken."""
-    is_paused: bool = True
+    is_paused: bool = field(init=False)
     """Whether the `World` is paused."""
 
     def __post_init__(
@@ -44,6 +44,8 @@ class World:
     ) -> None:
         self.grid = Grid(size=self.grid_size)
         self.grid_resolution = self.size / self.grid_size
+        self.step_counter = 0
+        self.is_paused = True
 
     @property
     def magnitude(self) -> float:
@@ -61,10 +63,10 @@ class World:
         return {e for e in self.entities if isinstance(e, MovementBlock)}
 
     def update(self) -> None:
-        """Change all `Bot` positions over 1 simulation step."""
+        """Only Bots currebtly need to be updated."""
         for e in self.entities:
             if isinstance(e, Bot):
-                e.update(b for b in self.bots if b is not e)
+                e.update()
         self.step_counter += 1
 
     def point_is_inside_world_bounds(self, point: Vector2) -> bool:

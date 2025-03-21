@@ -1,4 +1,4 @@
-"""Module containing `pygame.draw` calls."""
+"""Contains `pygame.draw` calls."""
 
 from collections.abc import Sequence
 

@@ -1,9 +1,9 @@
-"""Module containing `View` class."""
+"""Contains `View` class."""
 
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 import pygame
@@ -32,9 +32,8 @@ class View:
 
     world: World
     """The `World` to be rendered."""
-    world_renderer_name: str = "UNNAMED WORLD_RENDERER"
-
-    """Passed to `self.world_renderer."""
+    world_renderer_name: InitVar[str] = "UNNAMED WORLD_RENDERER"
+    """Passed to `self.world_renderer`."""
     scale_factor: float = 1
     """Scale factor applied to the `World` render."""
 
@@ -47,7 +46,7 @@ class View:
     font: Font = field(init=False)
     clock: Clock = field(init=False)
 
-    def __post_init__(self) -> None:
+    def __post_init__(self, world_renderer_name: str) -> None:
         pygame.init()
         self.font = Font(None, FONT_SIZE)
         world_render_size = self.world.size * self.scale_factor
@@ -57,7 +56,7 @@ class View:
         self.world_renderer = WorldRenderer(
             world=self.world,
             scale_factor=self.scale_factor,
-            name=self.world_renderer_name,
+            name=world_renderer_name,
         )
         self.clock = Clock()
         self.running = True

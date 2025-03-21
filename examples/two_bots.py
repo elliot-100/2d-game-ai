@@ -15,7 +15,7 @@ the_world = World(200)
 b0 = Bot(
     world=the_world,
     name="b0",
-    position_from_tuple=(20, 20),
+    position_from_sequence=(20, 20),
 )
 # Create a View of the World
 view = View(
@@ -26,10 +26,10 @@ view = View(
 b1 = Bot(
     world=the_world,
     name="b1",
-    position_from_tuple=(0, 0),
+    position_from_sequence=(0, 0),
 )
 # ... with a destination
-b1.set_destination(25, -50)
+b1.destination_from_sequence((25, -50))
 
 while view.running:
     view.handle_inputs()

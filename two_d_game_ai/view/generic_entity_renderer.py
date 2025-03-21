@@ -1,4 +1,4 @@
-"""Module containing `GenericEntityRenderer` class."""
+"""Contains `GenericEntityRenderer` class."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ class GenericEntityRenderer(ABC):
 
     entity: GenericEntity
     world_renderer: WorldRenderer
-    is_selected: bool = False
+    is_selected: bool = field(init=False)
     clickable_radius: float = 0
     id: int = field(init=False)
     """Used as hash value."""
@@ -38,7 +38,8 @@ class GenericEntityRenderer(ABC):
     def __post_init__(self) -> None:
         self.id = len(self.world_renderer.entity_renderers)
         self.font = Font(size=FONT_SIZE)
-        log_msg = f"GenericEntityRenderer created for {self.entity.name}"
+        self.is_selected = False
+        log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
         logger.debug(log_msg)
 
     def __hash__(self) -> int:

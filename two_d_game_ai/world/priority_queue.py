@@ -1,20 +1,23 @@
-"""Module containing `PriorityQueue` class."""
+"""Contains priority queue implementation."""
+
+from __future__ import annotations
 
 import heapq
-from dataclasses import dataclass
-from typing import Self
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Self
 
-from two_d_game_ai.world.grid_ref import GridRef
+if TYPE_CHECKING:
+    from two_d_game_ai.world.grid_ref import GridRef
 
 
+@dataclass(kw_only=True)
 class PriorityQueue:
     """Simple priority queue, using heapq.
 
     Specialised for holding locations.
     """
 
-    def __init__(self) -> None:
-        self.items: list[PrioritisedLocation] = []
+    items: list[PrioritisedLocation] = field(init=False, default_factory=list)
 
     @property
     def is_empty(self) -> bool:
@@ -23,7 +26,9 @@ class PriorityQueue:
 
     def put(self, priority: float, location: GridRef) -> None:
         """Add a location with priority."""
-        heapq.heappush(self.items, PrioritisedLocation(priority, location))
+        heapq.heappush(
+            self.items, PrioritisedLocation(priority=priority, location=location)
+        )
 
     def get(self) -> GridRef:
         """Remove and return the highest priority location.
@@ -33,7 +38,7 @@ class PriorityQueue:
         return heapq.heappop(self.items).location
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PrioritisedLocation:
     """Wrapper for prioritised location.
 

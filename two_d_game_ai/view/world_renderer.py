@@ -1,4 +1,4 @@
-"""Module containing `WorldRenderer` class."""
+"""Contains `WorldRenderer` class."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from pygame import Color, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.observer_pattern import Observer
+from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
