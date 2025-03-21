@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
 
-from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities import Bot
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 

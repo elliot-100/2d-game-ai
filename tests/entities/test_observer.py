@@ -9,7 +9,7 @@ from two_d_game_ai.entities.observer_pattern import (
     ObserverException,
     Subject,
 )
-from two_d_game_ai.world.world import World
+from two_d_game_ai.world import World
 
 
 class TestSubject:

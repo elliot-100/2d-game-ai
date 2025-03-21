@@ -3,7 +3,7 @@
 from pygame import Vector2
 
 from two_d_game_ai.view.world_renderer import WorldRenderer
-from two_d_game_ai.world.world import World
+from two_d_game_ai.world import World
 
 
 def test_to_local() -> None:

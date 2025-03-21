@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
-from two_d_game_ai.world.grid import Grid
+from two_d_game_ai.world import Grid
 
 logger = logging.getLogger(__name__)
 

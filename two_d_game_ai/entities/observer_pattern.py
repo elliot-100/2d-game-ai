@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from two_d_game_ai.world.world import World
+    from two_d_game_ai.world import World
 
 
 logger = logging.getLogger(__name__)

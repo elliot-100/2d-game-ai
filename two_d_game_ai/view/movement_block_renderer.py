@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass
 from typing import ClassVar
 
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities import MovementBlock
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
