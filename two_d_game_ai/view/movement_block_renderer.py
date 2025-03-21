@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class MovementBlockRenderer(GenericEntityRenderer):
-    """Renders a Block to a Surface."""
+    """Renders a `MovementBlock` to a `View`."""
 
     LABEL_OFFSET: ClassVar = (0, 0)
     """Display units."""
@@ -38,7 +38,7 @@ class MovementBlockRenderer(GenericEntityRenderer):
             raise TypeError
 
         color = colors.DEBUG if self.is_selected else colors.MOVEMENT_BLOCK_LINE
-        self.view.draw_circle(
+        self.world_renderer.draw_circle(
             color=color,
             center=self.entity.position,
             radius=self.entity.radius,

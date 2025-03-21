@@ -46,6 +46,11 @@ class World:
         self.grid_resolution = self.size / self.grid_size
 
     @property
+    def magnitude(self) -> float:
+        """TO DO."""
+        return self.size / 2
+
+    @property
     def bots(self) -> set[Bot]:
         """TO DO."""
         return {e for e in self.entities if isinstance(e, Bot)}
@@ -67,7 +72,7 @@ class World:
 
         Not currently used.
         """
-        return abs(point.x) <= self.size / 2 and abs(point.y) <= self.size / 2
+        return abs(point.x) <= self.magnitude and abs(point.y) <= self.magnitude
 
     def route(
         self,
