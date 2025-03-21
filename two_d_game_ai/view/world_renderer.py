@@ -219,15 +219,18 @@ class WorldRenderer(Observer):
                 return renderer
         return None
 
-    def handle_mouse_set_destination(self, pos: Vector2) -> None:
+    def handle_mouse_set_destination(self, local_pos: Vector2) -> Vector2 | None:
         """Attempt to set destination, if applicable to current selection."""
-        clicked_cell = Grid.cell_from_world_pos(world=self.world, pos=pos)
-        if (
-            isinstance(self.selected, BotRenderer)
-            and isinstance(self.selected.entity, Bot)
-            and self.world.grid.is_traversable(clicked_cell)
-        ):
-            self.selected.entity.destination = self.to_world(pos)
+        if not isinstance(self.selected, BotRenderer):
+            return None
+        if not isinstance(self.selected.entity, Bot):
+            raise TypeError
+        world_pos = self.to_world(local_pos)
+        cell = Grid.cell_from_world_pos(world=self.world, pos=world_pos)
+        if not self.world.grid.is_traversable(cell):
+            return None
+        self.selected.entity.destination = world_pos
+        return world_pos
 
     def draw_line(
         self,
