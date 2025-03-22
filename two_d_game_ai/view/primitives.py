@@ -19,7 +19,7 @@ def draw_line(
         draw.aaline(surface=surface, color=color, start_pos=start_pos, end_pos=end_pos)
 
     else:
-        # pygame.draw.aaline() only draws single-pixel width lines
+        # pygame.draw.aaline() has poor quality for width > 1
         draw.line(
             surface=surface,
             color=color,
@@ -49,7 +49,9 @@ def draw_circle(
     width: int = 0,
 ) -> None:
     """Draw a circle."""
-    draw.circle(surface=surface, color=color, center=center, radius=radius, width=width)
+    draw.aacircle(
+        surface=surface, color=color, center=center, radius=radius, width=width
+    )
 
 
 def draw_poly(

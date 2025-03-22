@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import itertools
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -149,47 +150,34 @@ class WorldRenderer:
         return pos.elementwise() * Vector2(1, -1)
 
     def render_base_grid(self, grid: Grid) -> None:
-        """Draw the `Grid`."""
+        """Draw the `Grid` nodes."""
         cell_size = self.world.grid_resolution
+        cell_offsets = [
+            cell_size * i - self.world.magnitude + cell_size / 2
+            for i in range(grid.size)
+        ]
 
-        for cell_index in range(grid.size + 1):
-            cell_offset = cell_size * (cell_index - grid.size / 2)
-            # horizontal grid line
-            self.draw_line(
+        for x, y in itertools.product(cell_offsets, cell_offsets):
+            self.draw_circle(
                 color=colors.WORLD_GRID_LINE,
-                start_pos=Vector2(-self.world.magnitude, cell_offset),
-                end_pos=Vector2(self.world.magnitude, cell_offset),
-                width=1,
-                anti_alias=False,
-            )
-            # vertical grid line
-            self.draw_line(
-                color=colors.WORLD_GRID_LINE,
-                start_pos=Vector2(cell_offset, -self.world.magnitude),
-                end_pos=Vector2(cell_offset, self.world.magnitude),
-                width=1,
-                anti_alias=False,
+                center=Vector2(x, y),
+                radius=1,
+                scale_radius=False,
             )
 
     def render_untraversable_cells(self, grid: Grid) -> None:
-        """Draw the `Grid`."""
-        oversize_px = 2
+        """Draw the blocked cells."""
         cell_size = self.world.grid_resolution
-
         for cell_ref in grid.untraversable_cells:
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
             )
-            # draw slightly oversize to hide gridlines
-            oversize_grid_rect = grid_rect.move(
-                -int(oversize_px / self.scale_factor),
-                -int(oversize_px / self.scale_factor),
-            )
-            oversize_grid_rect.width = oversize_grid_rect.height = int(
-                grid_rect.width + 2 * oversize_px / self.scale_factor
-            )
+            # draw slightly oversize to avoid antialiasing issues
+            grid_rect = grid_rect.move(-0.5, -0.5)
+            grid_rect.width += 1
+            grid_rect.height += 1
             self.draw_rect(
-                color=colors.MOVEMENT_BLOCK_FILL, rect=Rect(oversize_grid_rect), width=0
+                color=colors.MOVEMENT_BLOCK_FILL, rect=Rect(grid_rect), width=0
             )
 
     def render_axes(self) -> None:

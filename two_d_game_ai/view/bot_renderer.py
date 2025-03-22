@@ -90,7 +90,8 @@ class BotRenderer(GenericEntityRenderer):
             self.world_renderer.draw_circle(
                 color=colors.BOT_ROUTE_LINE,
                 center=self.entity.route[i],
-                radius=self.ICON_RADIUS / 4,
+                radius=2,
+                width=1,
                 scale_radius=False,
             )
         if len(self.entity.route) >= min_path_nodes:
