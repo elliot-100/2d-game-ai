@@ -9,6 +9,13 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## UNRELEASED - TBC
+
+### Changed:
+
+- View: most Bot debug decorations now only drawn on pause
+
+
 ## [0.6.2] - 2025-03-19
 
 ### Fixed:
@@ -29,7 +36,7 @@ Historic and pre-release versions aren't necessarily included.
 
 - Documentation:
   - in source `/docs`
-  - `inv doc` to open docs in browser (local pdoc server); `-b` to build docs  
+  - `inv doc` to open docs in browser (local pdoc server); `-b` to build docs
 - View: render Grid untraversable cells; Bot path between waypoints
 
 ### Changed:

@@ -35,7 +35,7 @@ class BotRenderer(GenericEntityRenderer):
     def __hash__(self) -> int:
         return super().__hash__()
 
-    def draw(self) -> None:
+    def draw(self, *, debug_render_mode: bool = False) -> None:
         """Draws `Bot` and decorations."""
         super().draw()
         if not isinstance(self.entity, Bot):
@@ -43,11 +43,14 @@ class BotRenderer(GenericEntityRenderer):
         if self.entity.destination is not None:
             self._draw_destination()
             self._draw_route()
-        self._draw_vision_cone()
-        self._draw_lines_to_others(self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 4)
-        self._draw_lines_to_others(
-            self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
-        )
+        if debug_render_mode:
+            self._draw_vision_cone()
+            self._draw_lines_to_others(
+                self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 3
+            )
+            self._draw_lines_to_others(
+                self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
+            )
         self._draw_icon()
         self.clickable_radius = self.ICON_RADIUS
 
