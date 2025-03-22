@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
+_PAUSE_KEY = pygame.K_p
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ class View:
 
                 # KEYBOARD EVENTS
                 case pygame.KEYDOWN:
-                    if event.key == pygame.K_p:  # toggle [P]ause
+                    if event.key == _PAUSE_KEY:
                         self.world.is_paused = not self.world.is_paused
 
     def render(self) -> None:
@@ -94,7 +95,7 @@ class View:
         # Limit update rate to save CPU:
         self.clock.tick(self.MAX_RENDER_FPS)
         self.window.fill(colors.WINDOW_FILL)
-        self.world_renderer.render()
+        self.world_renderer.render(debug_render_mode=self.world.is_paused)
         self.window.blit(
             source=self.world_renderer.surface, dest=(self.MARGIN, self.MARGIN)
         )

@@ -82,14 +82,14 @@ class WorldRenderer(Observer):
         """Clickable elements."""
         return set(self.entity_renderers.values())
 
-    def render(self) -> None:
+    def render(self, *, debug_render_mode: bool = False) -> None:
         """Render the `World` to `self.surface`."""
         self.ensure_renderers()
         # Drawn in order, bottom layer to top:
         self.surface.fill(colors.WORLD_FILL)
         self._render_grid()
         for b in self.bot_renderers:
-            b.draw()
+            b.draw(debug_render_mode=debug_render_mode)
         for m in self.movement_block_renderers:
             m.draw()
         self._render_axes()
