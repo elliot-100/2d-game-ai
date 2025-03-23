@@ -11,7 +11,6 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.generic_entity import GenericEntity
-from two_d_game_ai.entities.subject import Subject
 from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
 
 if TYPE_CHECKING:
@@ -55,7 +54,7 @@ class Bot(GenericEntity):
         logger.info(log_msg)
 
     def __hash__(self) -> int:
-        return Subject.__hash__(self)
+        return super().__hash__()
 
     @property
     def max_rotation_step(self) -> float:
@@ -92,12 +91,10 @@ class Bot(GenericEntity):
         self._handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.route and self.is_at(self.route[0]):
-            self.notify_observers("I've reached next waypoint.")
             del self.route[0]
             self.stop()
 
         if self.destination and self.is_at(self.destination):
-            self.notify_observers("I've reached destination.")
             self.destination = None
             self.stop()
             return
@@ -156,11 +153,6 @@ class Bot(GenericEntity):
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
         newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
-
-        for bot in newly_spotted_bots:
-            self.notify_observers(f"I've spotted `{bot.name}`")
-        for bot in newly_lost_bots:
-            self.notify_observers(f"I've lost sight of `{bot.name}`")
 
         self.visible_bots.update(newly_spotted_bots)
         self.visible_bots.difference_update(newly_lost_bots)
