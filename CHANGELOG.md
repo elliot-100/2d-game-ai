@@ -11,6 +11,10 @@ Historic and pre-release versions aren't necessarily included.
 
 ## UNRELEASED - TBC
 
+### Added:
+
+- View: render Grid nodes instead of cells; anti-aliased circles
+
 ### Removed:
 
 - Unused Observer pattern
