@@ -11,6 +11,10 @@ Historic and pre-release versions aren't necessarily included.
 
 ## UNRELEASED - TBC
 
+### Removed:
+
+- Unused Observer pattern
+
 ### Changed:
 
 - View: most Bot debug decorations now only drawn on pause

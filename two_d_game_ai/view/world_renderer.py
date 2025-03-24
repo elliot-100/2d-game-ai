@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from pygame import Color, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.observer import Observer
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
@@ -31,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
-class WorldRenderer(Observer):
+class WorldRenderer:
     """Renders the `World` to the `view`.
 
     NB: Unlike Pygame default, origin at centre, positive y upwards.
@@ -52,7 +51,6 @@ class WorldRenderer(Observer):
     selected: None | MovementBlockRenderer | BotRenderer = field(init=False)
 
     def __post_init__(self) -> None:
-        super().__post_init__()
         scaled_world_size = self.world.size * self.scale_factor
         self.surface = Surface((scaled_world_size, scaled_world_size))
         self.selected = None
@@ -106,7 +104,6 @@ class WorldRenderer(Observer):
 
         for b in self.world.bots:
             if b.id not in self.entity_renderers:
-                b.register_observer(self)
                 self.entity_renderers[b.id] = BotRenderer(world_renderer=self, entity=b)
                 log_msg = f"{b.name} renderer added."
                 logger.debug(log_msg)
