@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 # Create a World
 the_world = World(
     size=300,
-    grid_size=32,
+    grid_size=8,
 )
 # Add a Bot to the World...
 bot = Bot(

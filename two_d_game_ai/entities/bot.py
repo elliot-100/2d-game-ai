@@ -200,8 +200,17 @@ class Bot(GenericEntity):
 
     def in_collision(self, movement_block: MovementBlock) -> bool:
         """Determine if entity is in collision with `movement_block`."""
-        return point_in_or_on_circle(
+        if not point_in_or_on_circle(
             point=self.position,
             circle_centre=movement_block.position,
             circle_radius=movement_block.radius,
+        ):
+            return False
+
+        cell_size = self.world.grid_resolution
+
+        return any(
+            cell.x <= self.position.x <= cell.x + cell_size
+            and cell.y <= self.position.y <= cell.y + cell_size
+            for cell in self.world.grid.untraversable_cells
         )
