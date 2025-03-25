@@ -67,16 +67,26 @@ class Bot(GenericEntity):
         return self._destination
 
     @destination.setter
-    def destination(self, value: Vector2 | None) -> None:
+    def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
-        if value is None:
-            self._destination = None
-        elif self.world.point_is_inside_world_bounds(value):
-            self.stop()
-            self._destination = value
-            self.route = self.route_to(self.destination)
-            log_msg = f"Bot '{self.name}' destination set: {self.destination}."
+        if proposed_destination is None:
+            log_msg = (
+                f"Bot '{self.name}': destination: `{self.destination}` -> "
+                f"`{proposed_destination}`."
+            )
             logger.info(log_msg)
+            self._destination = None
+            return
+
+        if self.world.point_is_inside_world_bounds(proposed_destination):
+            log_msg = (
+                f"Bot '{self.name}': destination: `{self.destination}` -> "
+                f"`{proposed_destination}`."
+            )
+            logger.info(log_msg)
+            self.stop()
+            self._destination = proposed_destination
+            self.route = self.route_to(self.destination)
             log_msg = (
                 f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
             )
@@ -92,12 +102,9 @@ class Bot(GenericEntity):
 
         if self.route and self.is_at(self.route[0]):
             del self.route[0]
+            log_msg = f"Bot '{self.name}': arrived at waypoint."
+            logger.info(log_msg)
             self.stop()
-
-        if self.destination and self.is_at(self.destination):
-            self.destination = None
-            self.stop()
-            return
 
         if self.route:
             waypoint_relative_bearing = self.heading.relative(
