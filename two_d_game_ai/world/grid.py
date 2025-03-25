@@ -34,7 +34,7 @@ class Grid:
 
     DEFAULT_SIZE: ClassVar = 2
 
-    _DIRECTIONS: ClassVar = {
+    CELL_NEIGHBOURS: ClassVar = {
         (1, 0),
         (0, 1),
         (-1, 0),
@@ -49,6 +49,8 @@ class Grid:
     offset: GridRef = field(init=False)
     untraversable_cells: set[GridRef] = field(init=False, default_factory=set)
     """Untraversable cells."""
+    cached_waypoint_cells: set[GridRef] = field(init=False, default_factory=set)
+    """`boundary_cells` on previously calculated routes."""
 
     def __post_init__(self) -> None:
         _offset = -self.size // 2
@@ -74,7 +76,7 @@ class Grid:
         if cell in self.untraversable_cells:
             return reachable_neighbours
 
-        for dir_ in self._DIRECTIONS:
+        for dir_ in self.CELL_NEIGHBOURS:
             neighbour = GridRef(cell.x + dir_[0], cell.y + dir_[1])
             if self._cell_is_in_bounds(neighbour) and self.is_traversable(neighbour):
                 reachable_neighbours.add(neighbour)
@@ -83,6 +85,12 @@ class Grid:
     def is_traversable(self, cell: GridRef) -> bool:
         """Determine whether a cell is traversable."""
         return cell not in self.untraversable_cells
+
+    def is_boundary(self, cell: GridRef) -> bool:
+        """Determine whether a cell bounds a block."""
+        return cell not in self.untraversable_cells and len(
+            self.reachable_neighbours(cell)
+        ) < len(self.CELL_NEIGHBOURS)
 
     def route(
         self,
@@ -125,7 +133,11 @@ class Grid:
         simplified_path = self.cull_path_line_of_sight(
             path=simplified_path, reverse=True
         )
-        return self.cull_path_collinear_nodes(simplified_path)
+        simplified_path = self.cull_path_collinear_nodes(simplified_path)
+        self.cached_waypoint_cells.update(
+            cell for cell in simplified_path if self.is_boundary(cell)
+        )
+        return simplified_path
 
     def _uniform_cost_search(
         self,
@@ -144,9 +156,7 @@ class Grid:
                 break
 
             for new_cell in self.reachable_neighbours(current_cell):
-                new_cost = cost_so_far[current_cell] + self._cost(
-                    current_cell, new_cell
-                )
+                new_cost = cost_so_far[current_cell] + self.cost(current_cell, new_cell)
                 if (
                     new_cell not in came_from or new_cost < cost_so_far[new_cell]
                     # add new_cell to frontier if cheaper
@@ -156,9 +166,8 @@ class Grid:
                     came_from[new_cell] = current_cell
         return came_from
 
-    @staticmethod
-    def _cost(from_cell: GridRef, to_cell: GridRef) -> float:
-        """Calculate the cost as Euclidean distance from one cell to another.
+    def cost(self, from_cell: GridRef, to_cell: GridRef) -> float:
+        """Calculate the cost, based on as Euclidean distance from one cell to another.
 
         NB: when calculating next step in a search, locations will be adjacent, so a
         cardinal move has basic cost = 1, and diagonal basic cost =~ 1.4.

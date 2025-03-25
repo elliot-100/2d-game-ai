@@ -89,6 +89,7 @@ class WorldRenderer:
         self.surface.fill(colors.WORLD_FILL)
         self.render_base_grid(self.world.grid)
         self.render_untraversable_cells(self.world.grid)
+        self.render_cached_waypoint_nodes(self.world.grid)
         for b in self.bot_renderers:
             b.draw(debug_render_mode=debug_render_mode)
         for m in self.movement_block_renderers:
@@ -152,6 +153,7 @@ class WorldRenderer:
     def render_base_grid(self, grid: Grid) -> None:
         """Draw the `Grid` nodes."""
         cell_size = self.world.grid_resolution
+
         cell_offsets = [
             cell_size * i - self.world.magnitude + cell_size / 2
             for i in range(grid.size)
@@ -166,8 +168,9 @@ class WorldRenderer:
             )
 
     def render_untraversable_cells(self, grid: Grid) -> None:
-        """Draw the blocked cells."""
+        """Draw the blocked cells (over nodes)."""
         cell_size = self.world.grid_resolution
+
         for cell_ref in grid.untraversable_cells:
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
@@ -178,6 +181,22 @@ class WorldRenderer:
             grid_rect.height += 1
             self.draw_rect(
                 color=colors.MOVEMENT_BLOCK_FILL, rect=Rect(grid_rect), width=0
+            )
+
+    def render_cached_waypoint_nodes(self, grid: Grid) -> None:
+        """Draw the cached_waypoint nodes."""
+        cell_size = self.world.grid_resolution
+
+        for cell_ref in grid.cached_waypoint_cells:
+            self.draw_circle(
+                color=colors.BOT_ROUTE_LINE,
+                center=Vector2(
+                    cell_ref.x * cell_size + cell_size / 2,
+                    cell_ref.y * cell_size + cell_size / 2,
+                ),
+                radius=4,
+                scale_radius=False,
+                width=1,
             )
 
     def render_axes(self) -> None:
