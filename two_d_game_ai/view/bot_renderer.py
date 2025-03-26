@@ -40,9 +40,12 @@ class BotRenderer(GenericEntityRenderer):
         super().draw()
         if not isinstance(self.entity, Bot):
             raise TypeError
-        if self.entity.destination is not None:
+
+        if self.entity.destination:
             self._draw_destination()
-            self._draw_route()
+            if self.entity.route:
+                self._draw_route()
+
         if debug_render_mode:
             self._draw_vision_cone()
             self._draw_lines_to_others(
@@ -86,6 +89,7 @@ class BotRenderer(GenericEntityRenderer):
 
         if not isinstance(self.entity, Bot):
             raise TypeError
+
         for i in range(len(self.entity.route)):
             self.world_renderer.draw_circle(
                 color=colors.BOT_ROUTE_LINE,

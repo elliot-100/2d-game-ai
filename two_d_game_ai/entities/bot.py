@@ -67,16 +67,25 @@ class Bot(GenericEntity):
         return self._destination
 
     @destination.setter
-    def destination(self, value: Vector2 | None) -> None:
+    def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
-        if value is None:
+        if proposed_destination is None:
+            log_msg = f"Bot '{self.name}': destination set to `None`."
+            logger.debug(log_msg)
             self._destination = None
-        elif self.world.point_is_inside_world_bounds(value):
-            self.stop()
-            self._destination = value
-            self.route = self.route_to(self.destination)
-            log_msg = f"Bot '{self.name}' destination set: {self.destination}."
+            return
+
+        if not self.is_at(
+            proposed_destination
+        ) and self.world.point_is_inside_world_bounds(proposed_destination):
+            log_msg = (
+                f"Bot '{self.name}' at `{self.position}`: "
+                f"destination: `{self.destination}` -> `{proposed_destination}`."
+            )
             logger.info(log_msg)
+            self.stop()
+            self._destination = proposed_destination
+            self.route = self.route_to(self.destination)
             log_msg = (
                 f"Bot '{self.name}' route calculated: {len(self.route)} waypoints."
             )
@@ -90,16 +99,24 @@ class Bot(GenericEntity):
         """Update `Bot`, including move over 1 simulation step."""
         self._handle_sensing(b for b in self.world.bots if b is not self)
 
-        if self.route and self.is_at(self.route[0]):
-            del self.route[0]
-            self.stop()
-
-        if self.destination and self.is_at(self.destination):
-            self.destination = None
-            self.stop()
-            return
-
         if self.route:
+            if self.destination is None:
+                raise TypeError
+            if self.is_at(self.destination):
+                log_msg = f"Bot '{self.name}': arrived at destination."
+                logger.info(log_msg)
+                self.stop()
+                self.route = []
+                self.destination = None
+                return
+
+            if self.is_at(self.route[0]):
+                log_msg = f"Bot '{self.name}': arrived at waypoint."
+                logger.info(log_msg)
+                self.stop()
+                del self.route[0]
+                return
+
             waypoint_relative_bearing = self.heading.relative(
                 self.route[0] - self.position
             ).degrees_normalised
