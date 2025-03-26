@@ -14,6 +14,8 @@ from two_d_game_ai.world.grid_ref import GridRef
 from two_d_game_ai.world.priority_queue import PriorityQueue
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from two_d_game_ai.world.world import World
 
 
@@ -116,8 +118,14 @@ class Grid:
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
-        path = list(reversed(path_from_goal))
-        return self._simplify_path(path)
+        log_msg = f"Calculated path: {len(path_from_goal)} points."
+        logger.debug(log_msg)
+
+        simplified_path = self.cull_path_line_of_sight(path=path_from_goal)
+        simplified_path = self.cull_path_line_of_sight(
+            path=simplified_path, reverse=True
+        )
+        return self.cull_path_collinear_nodes(simplified_path)
 
     def _uniform_cost_search(
         self,
@@ -197,14 +205,35 @@ class Grid:
     ) -> tuple[float, float]:
         return lerp(cell_0.x, cell_1.x, t), lerp(cell_0.y, cell_1.y, t)
 
-    def _simplify_path(self, path: list[GridRef]) -> list[GridRef]:
-        """Simplify a path by removing redundant points."""
-        log_msg = f"Calculated path: {len(path)} points."
+    def cull_path_line_of_sight(
+        self, *, path: Sequence[GridRef], reverse: bool = False
+    ) -> list[GridRef]:
+        """Remove nodes that have line-of-sight from the first node, or last node if
+        `reversed` is `True`.
+        """
+        if not path or len(path) <= _MIN_PATH_NODES:
+            return list(path)
+
+        log_end = "goal"
+
+        if reverse:
+            path = list(reversed(path))
+            log_end = "start"
+
+        culled_path = [path[0]]
+        for i in range(len(path) - 1):
+            if not self._is_line_of_sight(culled_path[0], path[i + 1]):
+                culled_path.extend(path[i:])
+                break
+
+        log_msg = f"After culling from {log_end}: {len(culled_path)} points."
         logger.debug(log_msg)
-        return self._remove_collinear_nodes(path)
+
+        return culled_path
 
     @staticmethod
-    def _remove_collinear_nodes(path: list[GridRef]) -> list[GridRef]:
+    def cull_path_collinear_nodes(path: list[GridRef]) -> list[GridRef]:
+        """Remove adjacent collinear nodes from `path`."""
         if not path or len(path) <= _MIN_PATH_NODES:
             return list(path)
 
@@ -214,6 +243,10 @@ class Grid:
                 culled_path[-2], culled_path[-1], node
             ):
                 culled_path.append(node)
+
+        log_msg = f"After culling adjacent collinear: {len(culled_path)} points."
+        logger.debug(log_msg)
+
         return culled_path
 
     @staticmethod

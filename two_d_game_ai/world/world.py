@@ -105,8 +105,7 @@ class World:
             return []
 
         pos_route = [Grid.cell_centre_to_world_pos(cell, self) for cell in cell_route]
+        # always use actual points (not cell centre) for end waypoints:
+        pos_route[0] = from_pos
         pos_route[-1] = to_pos
-        # always use actual goal (not cell centre) for last waypoint
-        if len(pos_route) > 1:
-            del pos_route[0]
         return pos_route

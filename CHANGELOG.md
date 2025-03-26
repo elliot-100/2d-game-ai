@@ -14,7 +14,8 @@ Historic and pre-release versions aren't necessarily included.
 ### Added:
 
 - Bot and MovementBlock can be added after View is defined
-- Bot can follow another (naively - route is continuously recalculated )
+- Bot can follow another (naively - route is continuously recalculated)
+- Bot route simplified by culling using line of sight from each end
 - View: render Grid nodes instead of cells; anti-aliased circles
 
 ### Removed:
@@ -23,9 +24,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed:
 
-- API
 - View: most Bot debug decorations now only drawn on pause
-
 
 
 ## [0.6.2] - 2025-03-19
