@@ -22,6 +22,11 @@ Historic and pre-release versions aren't necessarily included.
 - World.random_location()
 - View: render Grid nodes instead of cells; anti-aliased circles
 
+### Fixed:
+
+- Bot oscillation while moving
+
+
 ### Removed:
 
 - Unused Observer pattern

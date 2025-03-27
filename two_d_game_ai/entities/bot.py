@@ -145,7 +145,7 @@ class Bot(GenericEntity):
             #  if Bot can complete rotation to face wp this step...
             if abs(waypoint_relative_bearing) <= self.max_rotation_step:
                 # face wp precisely
-                self.rotate(-waypoint_relative_bearing)
+                self.rotate(waypoint_relative_bearing)
                 # initiate move towards wp
                 self.velocity = self.heading.vector * self.max_speed
 
