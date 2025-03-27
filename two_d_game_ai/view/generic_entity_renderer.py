@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.view.world_renderer import WorldRenderer
 
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -28,7 +28,8 @@ class GenericEntityRenderer(ABC):
     """Display units."""
 
     entity: GenericEntity
-    world_renderer: WorldRenderer
+    parent: WorldRenderer
+    """Parent renderer."""
     is_selected: bool = field(init=False)
     clickable_radius: float = 0
     id: int = field(init=False)
@@ -36,11 +37,11 @@ class GenericEntityRenderer(ABC):
     font: Font = field(init=False)
 
     def __post_init__(self) -> None:
-        self.id = len(self.world_renderer.entity_renderers)
+        self.id = len(self.parent.entity_renderers)
         self.font = Font(size=FONT_SIZE)
         self.is_selected = False
         log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return self.id
@@ -48,7 +49,7 @@ class GenericEntityRenderer(ABC):
     @property
     def _pos_v(self) -> Vector2:
         """Get position in window coordinates."""
-        return self.world_renderer.to_local(self.entity.position)
+        return self.parent.to_local(self.entity.position)
 
     @abstractmethod
     def draw(self) -> None:
@@ -58,7 +59,7 @@ class GenericEntityRenderer(ABC):
             antialias=True,
             color=colors.WINDOW_TEXT,
         )
-        self.world_renderer.blit(
+        self.parent.blit(
             source=label,
             dest=self.entity.position,
             display_offset=Vector2(self.LABEL_OFFSET),

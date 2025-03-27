@@ -8,8 +8,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
+from pygame.math import lerp
 
-from two_d_game_ai.geometry import lerp
 from two_d_game_ai.world.grid_ref import GridRef
 from two_d_game_ai.world.priority_queue import PriorityQueue
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 _MIN_PATH_NODES: int = 3
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -119,7 +119,7 @@ class Grid:
             path_from_goal.append(current_cell)
 
         log_msg = f"Calculated path: {len(path_from_goal)} points."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
         simplified_path = self.cull_path_line_of_sight(path=path_from_goal)
         simplified_path = self.cull_path_line_of_sight(
@@ -227,7 +227,7 @@ class Grid:
                 break
 
         log_msg = f"After culling from {log_end}: {len(culled_path)} points."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
         return culled_path
 
@@ -245,7 +245,7 @@ class Grid:
                 culled_path.append(node)
 
         log_msg = f"After culling adjacent collinear: {len(culled_path)} points."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
         return culled_path
 

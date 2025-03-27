@@ -20,7 +20,7 @@ _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 _PAUSE_KEY = pygame.K_p
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)

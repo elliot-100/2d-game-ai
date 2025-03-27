@@ -13,7 +13,7 @@ from two_d_game_ai.world.grid import Grid
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -32,7 +32,7 @@ class MovementBlock(GenericEntity):
                 self.world.grid.untraversable_cells.add(cell)
 
         log_msg = f"MovementBlock '{self.name}' initialised."
-        logger.info(log_msg)
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return super().__hash__()

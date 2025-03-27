@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
     from two_d_game_ai.world.world import World
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -56,10 +56,10 @@ class WorldRenderer:
     def __post_init__(self) -> None:
         self.size = self.world.size * self.scale_factor
         self.surface = Surface((self.size, self.size))
-        self.base_grid_surface = self.base_grid(self.world.grid)
+        self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
         log_msg = f"WorldRenderer '{self.name}' initiated."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return hash(self.name)
@@ -96,7 +96,7 @@ class WorldRenderer:
             m.draw()
         self.render_axes()
 
-    def base_grid(self, grid: Grid) -> Surface:
+    def base_grid(self) -> Surface:
         """Pre-render grid to a static surface.
 
         Nodes aren't drawn if grid resolution < 4 display units.
@@ -105,36 +105,35 @@ class WorldRenderer:
         surface = Surface((self.size, self.size))
         surface.fill(colors.WORLD_FILL)
 
-        if self.world.grid_resolution >= min_resolution:
-            cell_size = self.world.grid_resolution
-            cell_offsets = [
-                cell_size * i - self.world.magnitude + cell_size / 2
-                for i in range(grid.size)
-            ]
-            for x, y in itertools.product(cell_offsets, cell_offsets):
-                self.draw_circle(
-                    surface=surface,
-                    color=colors.WORLD_GRID_LINE,
-                    center=Vector2(x, y),
-                    radius=1,
-                    scale_radius=False,
-                )
+        if self.world.grid_resolution < min_resolution:
+            return surface
+
+        cell_size = self.world.grid_resolution
+        cell_offsets = [
+            cell_size * i - self.world.magnitude + cell_size / 2
+            for i in range(self.world.grid.size)
+        ]
+        for x, y in itertools.product(cell_offsets, cell_offsets):
+            self.draw_circle(
+                surface=surface,
+                color=colors.WORLD_GRID_LINE,
+                center=Vector2(x, y),
+                radius=1,
+                scale_radius=False,
+            )
         return surface
 
     def ensure_renderers(self) -> None:
         """Update the set of entity renderers."""
-        for e in self.world.entities:
-            if e.id not in self.entity_renderers:
-                if isinstance(e, MovementBlock):
-                    self.entity_renderers[e.id] = MovementBlockRenderer(
-                        world_renderer=self, entity=e
-                    )
-                elif isinstance(e, Bot):
-                    self.entity_renderers[e.id] = BotRenderer(
-                        world_renderer=self, entity=e
-                    )
-                log_msg = f"{e.name} renderer added."
-                logger.debug(log_msg)
+        for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
+            if isinstance(e, MovementBlock):
+                self.entity_renderers[e.id] = MovementBlockRenderer(
+                    parent=self, entity=e
+                )
+            elif isinstance(e, Bot):
+                self.entity_renderers[e.id] = BotRenderer(parent=self, entity=e)
+            log_msg = f"{e.name} renderer added."
+            _logger.debug(log_msg)
 
     def to_local(self, world_pos: Vector2) -> Vector2:
         """Convert `World` coordinates to local coordinates.
@@ -214,7 +213,7 @@ class WorldRenderer:
         for renderer in self.clickables:
             if renderer.is_clicked(pos):
                 log_msg = f"{renderer.entity.name} clicked."
-                logger.debug(log_msg)
+                _logger.debug(log_msg)
                 return renderer
         return None
 
@@ -242,9 +241,8 @@ class WorldRenderer:
         start_pos: Vector2,
         end_pos: Vector2,
         width: int = 1,
-        anti_alias: bool = True,
     ) -> None:
-        """Draw a line in `World` units.
+        """Draw a line in `World` units on `self.surface`.
 
         `width`: display pixels.
         """
@@ -254,7 +252,6 @@ class WorldRenderer:
             start_pos=self.to_local(start_pos),
             end_pos=self.to_local(end_pos),
             width=width,
-            anti_alias=anti_alias,
         )
 
     def draw_rect(
@@ -264,7 +261,7 @@ class WorldRenderer:
         rect: Rect,
         width: int = 0,
     ) -> None:
-        """Draw a rectangle in `World` units.
+        """Draw a rectangle in `World` units on `self.surface`.
 
         `width`: display pixels.
 
@@ -294,7 +291,7 @@ class WorldRenderer:
         width: int = 0,
         scale_radius: bool = True,
     ) -> None:
-        """Draw a circle in `World` units on `self.surface`.
+        """Draw a circle in `World` units on a surface.
 
         Optionally supress radius scaling e.g. for icons whose size is independent
         of view scaling.
@@ -315,15 +312,41 @@ class WorldRenderer:
         self,
         *,
         color: Color,
-        closed: bool = False,
         points: Sequence[Vector2],
     ) -> None:
-        """Draw a closed polygon in `World` units on `self.surface`."""
+        """Draw a closed unfilled polygon in `World` units on `self.surface`."""
         draw_poly(
             surface=self.surface,
             color=color,
-            closed=closed,
             points=[self.to_local(p) for p in points],
+        )
+
+    def draw_pie(
+        self,
+        *,
+        color: Color,
+        center: Vector2,
+        radius: float,
+        central_angle: float,
+        theta: float,
+    ) -> None:
+        """Draw a closed unfilled pie wedge in `World` units on `self.surface`."""
+        angle_step_degrees = 5
+        draw_angles = [
+            *list(range(0, int(theta), angle_step_degrees)),
+            theta,  # so theta is always drawn, irrespective of step
+        ]
+        offsets = [
+            Vector2(0, radius).rotate(
+                theta / 2
+                - angle
+                - central_angle,  # Pygame rotates CCW, thus negative angle
+            )
+            for angle in draw_angles
+        ]
+        self.draw_poly(
+            color=color,
+            points=[center] + [center + offset for offset in offsets],
         )
 
     def blit(
