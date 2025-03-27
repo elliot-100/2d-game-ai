@@ -2,16 +2,17 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
-    from pygame import Vector2
-
     from two_d_game_ai.entities.generic_entity import GenericEntity
 
 
@@ -75,6 +76,22 @@ class World:
         Not currently used.
         """
         return abs(point.x) <= self.magnitude and abs(point.y) <= self.magnitude
+
+    def location_is_blocked(self, location: Vector2) -> bool:
+        """Return `True` if point is inside a blocked grid cell, else `False`."""
+        grid_ref = self.grid.grid_ref_from_world_pos(self, location)
+        return not self.grid.is_traversable(grid_ref)
+
+    def random_location(self) -> Vector2:
+        """Return random unblocked location."""
+        location = Vector2(
+            random.uniform(-self.magnitude, self.magnitude),
+            random.uniform(-self.magnitude, self.magnitude),
+        )
+        if self.location_is_blocked(location):
+            return self.random_location()
+
+        return location
 
     def route(
         self,
