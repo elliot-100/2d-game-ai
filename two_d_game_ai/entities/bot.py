@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
@@ -23,17 +23,23 @@ logger = logging.getLogger(__name__)
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
-    MAX_SPEED: ClassVar[float] = 60
+    DEFAULT_MAX_SPEED: ClassVar[float] = 6
     """`World` units / second."""
-    MAX_ROTATION_RATE: ClassVar[float] = 90
+    DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
     """Degrees / second."""
-    INITIAL_HEADING_DEGREES: ClassVar[float] = 0
+    DEFAULT_INITIAL_HEADING: ClassVar[float] = 0
+    """Degrees."""
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """`World` units."""
 
     leader: Bot | None = None
+    max_speed: float = DEFAULT_MAX_SPEED
+    """`World` units / second."""
+    max_rotation_rate: float = DEFAULT_MAX_ROTATION_RATE
+    initial_heading: InitVar[float] = DEFAULT_INITIAL_HEADING
+    """Initial direction the `Bot` is facing."""
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
@@ -46,9 +52,11 @@ class Bot(GenericEntity):
 
     _destination: Vector2 | None = field(init=False, default=None)
 
-    def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
+    def __post_init__(
+        self, position_from_sequence: Sequence[float], initial_heading: float
+    ) -> None:
         super().__post_init__(position_from_sequence)
-        self.heading: Bearing = Bearing(self.INITIAL_HEADING_DEGREES)
+        self.heading: Bearing = Bearing(initial_heading)
         self.velocity: Vector2 = Vector2(0, 0)
         self.destination = None
         log_msg = f"Bot '{self.name}' initialised."
@@ -60,7 +68,7 @@ class Bot(GenericEntity):
     @property
     def max_rotation_step(self) -> float:
         """Get maximum rotation, in degrees per simulation step."""
-        return self.MAX_ROTATION_RATE / SIMULATION_FPS
+        return self.max_rotation_rate / SIMULATION_FPS
 
     @property
     def destination(self) -> Vector2 | None:
@@ -131,7 +139,7 @@ class Bot(GenericEntity):
                 # face wp precisely
                 self.rotate(-waypoint_relative_bearing)
                 # initiate move towards wp
-                self.velocity = self.heading.vector * Bot.MAX_SPEED
+                self.velocity = self.heading.vector * self.max_speed
 
             else:
                 # turn towards wp
