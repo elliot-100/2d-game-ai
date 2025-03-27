@@ -91,6 +91,7 @@ class BotRenderer(GenericEntityRenderer):
 
         for i in range(len(self.entity.route)):
             self.world_renderer.draw_circle(
+                surface=self.world_renderer.surface,
                 color=colors.BOT_ROUTE_LINE,
                 center=self.entity.route[i],
                 radius=2,
@@ -151,6 +152,7 @@ class BotRenderer(GenericEntityRenderer):
             raise TypeError
         fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
         self.world_renderer.draw_circle(
+            surface=self.world_renderer.surface,
             color=fill_color,
             center=self.entity.position,
             radius=self.ICON_RADIUS,
