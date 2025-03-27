@@ -27,6 +27,7 @@ MovementBlock(world=the_world, name="mb0", position_from_sequence=(0, 0), radius
 view = View(
     world=the_world,
     scale_factor=2,
+    show_debug_while_unpaused=True,
 )
 MovementBlock(world=the_world, name="mb1", position_from_sequence=(100, 0), radius=20)
 MovementBlock(world=the_world, name="mb3", position_from_sequence=(50, 50), radius=40)

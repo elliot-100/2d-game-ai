@@ -37,6 +37,7 @@ class View:
     """Passed to `self.world_renderer`."""
     scale_factor: float = 1
     """Scale factor applied to the `World` render."""
+    show_debug_while_unpaused: bool = False
 
     running: bool = field(init=False)
     """Flag to control e.g. input handling."""
@@ -95,7 +96,10 @@ class View:
         # Limit update rate to save CPU:
         self.clock.tick(self.MAX_RENDER_FPS)
         self.window.fill(colors.WINDOW_FILL)
-        self.world_renderer.render(debug_render_mode=self.world.is_paused)
+        if self.world.is_paused or self.show_debug_while_unpaused:
+            self.world_renderer.render(debug_render_mode=True)
+        else:
+            self.world_renderer.render()
         self.window.blit(
             source=self.world_renderer.surface, dest=(self.MARGIN, self.MARGIN)
         )
