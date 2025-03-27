@@ -258,7 +258,7 @@ class Grid:
         return dx1 * dy2 == dy1 * dx2
 
     @staticmethod
-    def cell_from_world_pos(world: World, pos: Vector2) -> GridRef:
+    def grid_ref_from_world_pos(world: World, pos: Vector2) -> GridRef:
         """Return the `GridRef` of the cell containing `World` position."""
         return GridRef(
             int(pos.x // world.grid_resolution), int(pos.y // world.grid_resolution)

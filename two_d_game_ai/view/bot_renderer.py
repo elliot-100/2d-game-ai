@@ -41,12 +41,11 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
 
-        if self.entity.destination:
-            self._draw_destination()
+        if debug_render_mode:
+            if self.entity.destination:
+                self._draw_destination()
             if self.entity.route:
                 self._draw_route()
-
-        if debug_render_mode:
             self._draw_vision_cone()
             self._draw_lines_to_others(
                 self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 3

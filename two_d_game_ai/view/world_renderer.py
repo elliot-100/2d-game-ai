@@ -217,7 +217,7 @@ class WorldRenderer:
             raise TypeError
 
         world_pos = self.to_world(local_pos)
-        cell = Grid.cell_from_world_pos(world=self.world, pos=world_pos)
+        cell = Grid.grid_ref_from_world_pos(world=self.world, pos=world_pos)
 
         if not self.world.grid.is_traversable(cell):
             return None

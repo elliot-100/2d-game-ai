@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
@@ -23,17 +23,26 @@ logger = logging.getLogger(__name__)
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
-    MAX_SPEED: ClassVar[float] = 60
+    DEFAULT_MAX_SPEED: ClassVar[float] = 6
     """`World` units / second."""
-    MAX_ROTATION_RATE: ClassVar[float] = 90
+    DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
     """Degrees / second."""
-    INITIAL_HEADING_DEGREES: ClassVar[float] = 0
+    DEFAULT_INITIAL_HEADING: ClassVar[float] = 0
+    """Degrees."""
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """`World` units."""
 
     leader: Bot | None = None
+    max_speed: float = DEFAULT_MAX_SPEED
+    """`World` units / second."""
+    max_rotation_rate: float = DEFAULT_MAX_ROTATION_RATE
+    initial_heading: InitVar[float] = DEFAULT_INITIAL_HEADING
+    """Initial direction the `Bot` is facing."""
+    has_memory: bool = False
+    """Can remember peers."""
+
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
@@ -46,9 +55,11 @@ class Bot(GenericEntity):
 
     _destination: Vector2 | None = field(init=False, default=None)
 
-    def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
+    def __post_init__(
+        self, position_from_sequence: Sequence[float], initial_heading: float
+    ) -> None:
         super().__post_init__(position_from_sequence)
-        self.heading: Bearing = Bearing(self.INITIAL_HEADING_DEGREES)
+        self.heading: Bearing = Bearing(initial_heading)
         self.velocity: Vector2 = Vector2(0, 0)
         self.destination = None
         log_msg = f"Bot '{self.name}' initialised."
@@ -60,7 +71,7 @@ class Bot(GenericEntity):
     @property
     def max_rotation_step(self) -> float:
         """Get maximum rotation, in degrees per simulation step."""
-        return self.MAX_ROTATION_RATE / SIMULATION_FPS
+        return self.max_rotation_rate / SIMULATION_FPS
 
     @property
     def destination(self) -> Vector2 | None:
@@ -79,7 +90,7 @@ class Bot(GenericEntity):
         if (
             proposed_destination != self.position
             and not self.is_at(proposed_destination)
-            and self.world.point_is_inside_world_bounds(proposed_destination)
+            and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
             log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
             logger.info(log_msg)
@@ -99,7 +110,7 @@ class Bot(GenericEntity):
 
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
-        self._handle_sensing(b for b in self.world.bots if b is not self)
+        self.handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.leader and self.destination != self.leader.position:
             self.destination = self.leader.position.copy()
@@ -131,7 +142,7 @@ class Bot(GenericEntity):
                 # face wp precisely
                 self.rotate(-waypoint_relative_bearing)
                 # initiate move towards wp
-                self.velocity = self.heading.vector * Bot.MAX_SPEED
+                self.velocity = self.heading.vector * self.max_speed
 
             else:
                 # turn towards wp
@@ -171,14 +182,17 @@ class Bot(GenericEntity):
         """Change `Bot` position over 1 simulation step."""
         self.position += self.velocity / SIMULATION_FPS
 
-    def _handle_sensing(self, other_bots: Iterable[Bot]) -> None:
+    def handle_sensing(self, other_bots: Iterable[Bot]) -> None:
+        """Update knowledge of others."""
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
-        newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
 
-        self.visible_bots.update(newly_spotted_bots)
-        self.visible_bots.difference_update(newly_lost_bots)
-        self.remembered_bots.update(newly_lost_bots)
+        if self.has_memory:
+            self.remembered_bots.update(newly_lost_bots)
+        elif self.leader not in currently_visible_bots:
+            self.leader = None
+
+        self.visible_bots = currently_visible_bots
 
     def can_see(self, other_bot: Bot) -> bool:
         """Determine whether `Bot` can see another `Bot`.

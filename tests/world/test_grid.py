@@ -60,7 +60,7 @@ def test_cell_from_pos() -> None:
     w = World(size=100, grid_size=10)
     p = Vector2(15, 45)
     # act
-    gr = Grid.cell_from_world_pos(w, p)
+    gr = Grid.grid_ref_from_world_pos(w, p)
     # assert
     assert gr == GridRef(1, 4)
 

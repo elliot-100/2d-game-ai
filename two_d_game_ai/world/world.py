@@ -2,16 +2,17 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
-    from pygame import Vector2
-
     from two_d_game_ai.entities.generic_entity import GenericEntity
 
 
@@ -63,18 +64,34 @@ class World:
         return {e for e in self.entities if isinstance(e, MovementBlock)}
 
     def update(self) -> None:
-        """Only Bots currebtly need to be updated."""
+        """Only Bots currently need to be updated."""
         for e in self.entities:
             if isinstance(e, Bot):
                 e.update()
         self.step_counter += 1
 
-    def point_is_inside_world_bounds(self, point: Vector2) -> bool:
+    def location_is_inside_world_bounds(self, location: Vector2) -> bool:
         """Return `True` if point is inside the World bounds, else `False`.
 
         Not currently used.
         """
-        return abs(point.x) <= self.magnitude and abs(point.y) <= self.magnitude
+        return abs(location.x) <= self.magnitude and abs(location.y) <= self.magnitude
+
+    def location_is_blocked(self, location: Vector2) -> bool:
+        """Return `True` if point is inside a blocked grid cell, else `False`."""
+        grid_ref = self.grid.grid_ref_from_world_pos(self, location)
+        return not self.grid.is_traversable(grid_ref)
+
+    def random_location(self) -> Vector2:
+        """Return random unblocked location."""
+        location = Vector2(
+            random.uniform(-self.magnitude, self.magnitude),
+            random.uniform(-self.magnitude, self.magnitude),
+        )
+        if self.location_is_blocked(location):
+            return self.random_location()
+
+        return location
 
     def route(
         self,
@@ -93,8 +110,8 @@ class World:
             Points on the path, including `to_pos` itself.
             Empty if no path found.
         """
-        from_cell = Grid.cell_from_world_pos(self, from_pos)
-        to_cell = Grid.cell_from_world_pos(self, to_pos)
+        from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
+        to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
 
         if from_cell == to_cell:  # intra-cell route is always direct
             return [to_pos]
