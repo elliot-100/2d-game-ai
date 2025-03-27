@@ -40,5 +40,5 @@ def test_add_movement_block() -> None:
 def test_point_is_inside_world_bounds() -> None:
     """Test that points are inside/outside World."""
     w = World(10)
-    assert w.point_is_inside_world_bounds(Vector2(0, 0))
-    assert not w.point_is_inside_world_bounds(Vector2(-8, 8))
+    assert w.location_is_inside_world_bounds(Vector2(0, 0))
+    assert not w.location_is_inside_world_bounds(Vector2(-8, 8))

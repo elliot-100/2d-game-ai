@@ -64,18 +64,18 @@ class World:
         return {e for e in self.entities if isinstance(e, MovementBlock)}
 
     def update(self) -> None:
-        """Only Bots currebtly need to be updated."""
+        """Only Bots currently need to be updated."""
         for e in self.entities:
             if isinstance(e, Bot):
                 e.update()
         self.step_counter += 1
 
-    def point_is_inside_world_bounds(self, point: Vector2) -> bool:
+    def location_is_inside_world_bounds(self, location: Vector2) -> bool:
         """Return `True` if point is inside the World bounds, else `False`.
 
         Not currently used.
         """
-        return abs(point.x) <= self.magnitude and abs(point.y) <= self.magnitude
+        return abs(location.x) <= self.magnitude and abs(location.y) <= self.magnitude
 
     def location_is_blocked(self, location: Vector2) -> bool:
         """Return `True` if point is inside a blocked grid cell, else `False`."""
@@ -110,8 +110,8 @@ class World:
             Points on the path, including `to_pos` itself.
             Empty if no path found.
         """
-        from_cell = Grid.cell_from_world_pos(self, from_pos)
-        to_cell = Grid.cell_from_world_pos(self, to_pos)
+        from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
+        to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
 
         if from_cell == to_cell:  # intra-cell route is always direct
             return [to_pos]

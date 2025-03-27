@@ -87,7 +87,7 @@ class Bot(GenericEntity):
         if (
             proposed_destination != self.position
             and not self.is_at(proposed_destination)
-            and self.world.point_is_inside_world_bounds(proposed_destination)
+            and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
             log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
             logger.info(log_msg)
