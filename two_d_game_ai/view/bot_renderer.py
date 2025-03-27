@@ -110,7 +110,7 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
 
-        vision_limit_offset = Vector2(0, self.ICON_RADIUS * 2)
+        vision_limit_offset = Vector2(0, self.entity.vision_range)
 
         draw_angles = [
             *list(range(0, int(self.entity.VISION_CONE_ANGLE), angle_step_degrees)),

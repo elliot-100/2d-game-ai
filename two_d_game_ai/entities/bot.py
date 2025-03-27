@@ -31,6 +31,8 @@ class Bot(GenericEntity):
     """Degrees."""
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
+    DEFAULT_VISION_RANGE: ClassVar[float] = 100
+    """`World` units."""
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """`World` units."""
 
@@ -38,10 +40,13 @@ class Bot(GenericEntity):
     max_speed: float = DEFAULT_MAX_SPEED
     """`World` units / second."""
     max_rotation_rate: float = DEFAULT_MAX_ROTATION_RATE
+    """Degrees / second."""
     initial_heading: InitVar[float] = DEFAULT_INITIAL_HEADING
-    """Initial direction the `Bot` is facing."""
+    """Initial direction the `Bot` is facing. Degrees."""
     has_memory: bool = False
     """Can remember peers."""
+    vision_range: float = DEFAULT_VISION_RANGE
+    """`World` units."""
 
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
@@ -199,18 +204,22 @@ class Bot(GenericEntity):
 
         Considers only vision cone angle.
         """
-        return self.can_see_point(other_bot.position)
+        return self.can_see_location(other_bot.position)
 
-    def can_see_point(self, point: Vector2) -> bool:
-        """Determine whether `Bot` can see a point.
+    def can_see_location(self, location: Vector2) -> bool:
+        """Determine whether `Bot` can see `location`.
 
         Considers only vision cone angle.
         """
-        relative_bearing_to_point = self.heading.relative(
-            point - self.position
-        ).degrees_normalised
+        relative_vector = location - self.position
+        relative_bearing_magnitude = abs(
+            self.heading.relative(relative_vector).degrees_normalised
+        )
 
-        return abs(relative_bearing_to_point) <= Bot.VISION_CONE_ANGLE / 2
+        return (
+            relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
+            and relative_vector.magnitude() < self.vision_range
+        )
 
     def route_to(
         self,

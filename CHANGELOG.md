@@ -14,7 +14,7 @@ Historic and pre-release versions aren't necessarily included.
 ### Added:
 
 - Bot behaviour:
-  - can be given max speed, max rotation_rate, initial heading
+  - can be given max speed, max rotation_rate, initial heading, vision range
   - can follow another (naively - route is continuously recalculated)
   - by default, forget others (including leader) they can't see
 - Bot pathfinding: route simplified by culling using line of sight from each end

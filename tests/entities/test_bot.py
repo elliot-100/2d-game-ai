@@ -62,8 +62,8 @@ def test_can_see_point__in_range(
         position_from_sequence=(0, 0),
     )
     # assert
-    assert all(b.can_see_point(p) for p in visible_points)
-    assert not any(b.can_see_point(p) for p in not_visible_points)
+    assert all(b.can_see_location(p) for p in visible_points)
+    assert not any(b.can_see_location(p) for p in not_visible_points)
 
 
 def test_move() -> None:
