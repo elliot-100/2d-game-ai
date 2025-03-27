@@ -44,7 +44,8 @@ class WorldRenderer:
     scale_factor: float = 1
     """Scale factor applied to the render."""
     name: str = "UNNAMED WORLD_RENDERER"
-
+    size: float = field(init=False)
+    """Display units."""
     surface: Surface = field(init=False)
     """pygame `Surface`."""
     entity_renderers: dict[int, GenericEntityRenderer] = field(default_factory=dict)
@@ -53,8 +54,9 @@ class WorldRenderer:
     """Selected entity renderer."""
 
     def __post_init__(self) -> None:
-        scaled_world_size = self.world.size * self.scale_factor
-        self.surface = Surface((scaled_world_size, scaled_world_size))
+        self.size = self.world.size * self.scale_factor
+        self.surface = Surface((self.size, self.size))
+        self.base_grid_surface = self.base_grid(self.world.grid)
         self.selected_renderer = None
         log_msg = f"WorldRenderer '{self.name}' initiated."
         logger.debug(log_msg)
@@ -86,14 +88,38 @@ class WorldRenderer:
         """Render the `World` to `self.surface`."""
         self.ensure_renderers()
         # Drawn in order, bottom layer to top:
-        self.surface.fill(colors.WORLD_FILL)
-        self.render_base_grid(self.world.grid)
+        self.surface.blit(self.base_grid_surface)
         self.render_untraversable_cells(self.world.grid)
         for b in self.bot_renderers:
             b.draw(debug_render_mode=debug_render_mode)
         for m in self.movement_block_renderers:
             m.draw()
         self.render_axes()
+
+    def base_grid(self, grid: Grid) -> Surface:
+        """Pre-render grid to a static surface.
+
+        Nodes aren't drawn if grid resolution < 4 display units.
+        """
+        min_resolution = 4
+        surface = Surface((self.size, self.size))
+        surface.fill(colors.WORLD_FILL)
+
+        if self.world.grid_resolution >= min_resolution:
+            cell_size = self.world.grid_resolution
+            cell_offsets = [
+                cell_size * i - self.world.magnitude + cell_size / 2
+                for i in range(grid.size)
+            ]
+            for x, y in itertools.product(cell_offsets, cell_offsets):
+                self.draw_circle(
+                    surface=surface,
+                    color=colors.WORLD_GRID_LINE,
+                    center=Vector2(x, y),
+                    radius=1,
+                    scale_radius=False,
+                )
+        return surface
 
     def ensure_renderers(self) -> None:
         """Update the set of entity renderers."""
@@ -148,22 +174,6 @@ class WorldRenderer:
         offset = self.world.magnitude
         pos -= Vector2(offset, offset)
         return pos.elementwise() * Vector2(1, -1)
-
-    def render_base_grid(self, grid: Grid) -> None:
-        """Draw the `Grid` nodes."""
-        cell_size = self.world.grid_resolution
-        cell_offsets = [
-            cell_size * i - self.world.magnitude + cell_size / 2
-            for i in range(grid.size)
-        ]
-
-        for x, y in itertools.product(cell_offsets, cell_offsets):
-            self.draw_circle(
-                color=colors.WORLD_GRID_LINE,
-                center=Vector2(x, y),
-                radius=1,
-                scale_radius=False,
-            )
 
     def render_untraversable_cells(self, grid: Grid) -> None:
         """Draw the blocked cells."""
@@ -277,6 +287,7 @@ class WorldRenderer:
     def draw_circle(
         self,
         *,
+        surface: Surface,
         color: Color,
         center: Vector2,
         radius: float,
@@ -293,7 +304,7 @@ class WorldRenderer:
         if scale_radius:
             radius *= self.scale_factor
         draw_circle(
-            surface=self.surface,
+            surface=surface,
             color=color,
             center=self.to_local(center),
             radius=radius,
