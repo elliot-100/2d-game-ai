@@ -13,9 +13,13 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added:
 
+- Bot behaviour:
+  - can be given max speed, max rotation_rate, initial heading
+  - can follow another (naively - route is continuously recalculated)
+  - by default, forget others (including leader) they can't see
+- Bot pathfinding: route simplified by culling using line of sight from each end
 - Bot and MovementBlock can be added after View is defined
-- Bot can follow another (naively - route is continuously recalculated)
-- Bot route simplified by culling using line of sight from each end
+- World.random_location()
 - View: render Grid nodes instead of cells; anti-aliased circles
 
 ### Removed:
@@ -24,7 +28,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Changed:
 
-- View: most Bot debug decorations now only drawn on pause
+- View: by default, Bot debug decorations only drawn on pause
 
 
 ## [0.6.2] - 2025-03-19

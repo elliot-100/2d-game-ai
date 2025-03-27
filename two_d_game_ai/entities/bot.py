@@ -40,6 +40,9 @@ class Bot(GenericEntity):
     max_rotation_rate: float = DEFAULT_MAX_ROTATION_RATE
     initial_heading: InitVar[float] = DEFAULT_INITIAL_HEADING
     """Initial direction the `Bot` is facing."""
+    has_memory: bool = False
+    """Can remember peers."""
+
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
@@ -107,7 +110,7 @@ class Bot(GenericEntity):
 
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
-        self._handle_sensing(b for b in self.world.bots if b is not self)
+        self.handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.leader and self.destination != self.leader.position:
             self.destination = self.leader.position.copy()
@@ -179,14 +182,17 @@ class Bot(GenericEntity):
         """Change `Bot` position over 1 simulation step."""
         self.position += self.velocity / SIMULATION_FPS
 
-    def _handle_sensing(self, other_bots: Iterable[Bot]) -> None:
+    def handle_sensing(self, other_bots: Iterable[Bot]) -> None:
+        """Update knowledge of others."""
         currently_visible_bots = {bot for bot in other_bots if self.can_see(bot)}
-        newly_spotted_bots = currently_visible_bots - self.visible_bots
         newly_lost_bots = self.visible_bots - currently_visible_bots
 
-        self.visible_bots.update(newly_spotted_bots)
-        self.visible_bots.difference_update(newly_lost_bots)
-        self.remembered_bots.update(newly_lost_bots)
+        if self.has_memory:
+            self.remembered_bots.update(newly_lost_bots)
+        elif self.leader not in currently_visible_bots:
+            self.leader = None
+
+        self.visible_bots = currently_visible_bots
 
     def can_see(self, other_bot: Bot) -> bool:
         """Determine whether `Bot` can see another `Bot`.
