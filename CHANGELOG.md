@@ -13,6 +13,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added:
 
+- Zombies example
 - Bot behaviour:
   - can be given max speed, max rotation_rate, initial heading, vision range
   - can follow another (naively - route is continuously recalculated)
