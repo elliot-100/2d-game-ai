@@ -37,8 +37,8 @@ def fl(c: Any) -> None:
 def doc(c: Any, *, build: bool = False) -> None:
     """Start local pdoc server, or build docs."""
     if build:
-        print("Building docs at /docs/index.html...")
-        c.run("pdoc two_d_game_ai -d numpy -o docs")
+        print("🖊️ Building docs at /docs/index.html...")
+        c.run("pdoc two_d_game_ai -o docs -d numpy --mermaid")
     else:
-        print("Opening pdoc server at http://localhost:8080...")
-        c.run("pdoc two_d_game_ai -d numpy")
+        print("✏️ Opening pdoc server at http://localhost:8080...")
+        c.run("pdoc two_d_game_ai -d numpy --mermaid")
