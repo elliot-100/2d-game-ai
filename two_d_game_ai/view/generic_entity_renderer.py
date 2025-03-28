@@ -52,7 +52,7 @@ class GenericEntityRenderer(ABC):
         return self.parent.to_local(self.entity.position)
 
     @abstractmethod
-    def draw(self) -> None:
+    def render(self) -> None:
         """Draw the entity name label to surface."""
         label = self.font.render(
             text=str(self.entity.name),

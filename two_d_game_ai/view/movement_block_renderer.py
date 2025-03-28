@@ -27,9 +27,9 @@ class MovementBlockRenderer(GenericEntityRenderer):
         log_msg = f"BotRenderer initialised for {self.entity.name}"
         _logger.debug(log_msg)
 
-    def draw(self) -> None:
+    def render(self) -> None:
         """Draw the `MovementBlock`."""
-        super().draw()  # label only
+        super().render()  # label only
 
         if not isinstance(self.entity, MovementBlock):
             raise TypeError

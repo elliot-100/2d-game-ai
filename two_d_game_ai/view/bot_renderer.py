@@ -32,9 +32,9 @@ class BotRenderer(GenericEntityRenderer):
         log_msg = f"BotRenderer initialised for '{self.entity.name}'."
         _logger.debug(log_msg)
 
-    def draw(self, *, debug_render_mode: bool = False) -> None:
+    def render(self, *, debug_render_mode: bool = False) -> None:
         """Draws `Bot` and decorations."""
-        super().draw()
+        super().render()
         if not isinstance(self.entity, Bot):
             raise TypeError
 
@@ -57,8 +57,9 @@ class BotRenderer(GenericEntityRenderer):
         """Draw `Bot` destination icon, and line to it."""
         if not isinstance(self.entity, Bot):
             raise TypeError
+
         if not self.entity.destination:
-            return  # Guard clause
+            return
 
         # Destination marker (X)
         offset = self.ICON_RADIUS / self.parent.scale_factor
