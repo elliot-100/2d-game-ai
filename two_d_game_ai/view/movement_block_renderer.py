@@ -10,7 +10,7 @@ from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -25,7 +25,7 @@ class MovementBlockRenderer(GenericEntityRenderer):
         if isinstance(self.entity, MovementBlock):
             self.clickable_radius = self.entity.radius
         log_msg = f"BotRenderer initialised for {self.entity.name}"
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return super().__hash__()
@@ -38,8 +38,8 @@ class MovementBlockRenderer(GenericEntityRenderer):
             raise TypeError
 
         color = colors.DEBUG if self.is_selected else colors.MOVEMENT_BLOCK_LINE
-        self.world_renderer.draw_circle(
-            surface=self.world_renderer.surface,
+        self.parent.draw_circle(
+            surface=self.parent.surface,
             color=color,
             center=self.entity.position,
             radius=self.entity.radius,

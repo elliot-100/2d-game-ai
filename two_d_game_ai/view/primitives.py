@@ -12,10 +12,9 @@ def draw_line(
     start_pos: Vector2,
     end_pos: Vector2,
     width: int = 1,
-    anti_alias: bool = True,
 ) -> None:
-    """Draw a line."""
-    if anti_alias and width == 1:
+    """Draw a line. Anti-aliased if `width` is 1."""
+    if width == 1:
         draw.aaline(surface=surface, color=color, start_pos=start_pos, end_pos=end_pos)
 
     else:
@@ -48,7 +47,7 @@ def draw_circle(
     radius: float,
     width: int = 0,
 ) -> None:
-    """Draw a circle."""
+    """Draw an anti-aliased circle."""
     draw.aacircle(
         surface=surface, color=color, center=center, radius=radius, width=width
     )
@@ -58,11 +57,10 @@ def draw_poly(
     *,
     surface: Surface,
     color: Color,
-    closed: bool = False,
     points: Sequence[Vector2],
 ) -> None:
-    """Draw a closed polygon."""
-    draw.aalines(surface=surface, color=color, closed=closed, points=points)
+    """Draw a closed anti-aliased polygon."""
+    draw.aalines(surface=surface, color=color, closed=True, points=points)
 
 
 def blit(

@@ -24,16 +24,16 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Fixed:
 
+- Bot destination could be set on an untraversable cell
 - Bot oscillation while moving
-
-
-### Removed:
-
-- Unused Observer pattern
 
 ### Changed:
 
 - View: by default, Bot debug decorations only drawn on pause
+
+### Removed:
+
+- Unused Observer pattern
 
 
 ## [0.6.2] - 2025-03-19
@@ -42,7 +42,6 @@ Historic and pre-release versions aren't necessarily included.
 
 - Missing documentation
 - Deps: remove poetry, added in error
-
 
 ### Changed:
 
@@ -67,7 +66,7 @@ Historic and pre-release versions aren't necessarily included.
   - Simplify route by removing collinear points
 - Revise and explicitly declare API
 - View: anti-alias most graphics; other rendering improvements
-- Deps: require pygame-ce >=2.5.0
+- Dependency: require pygame-ce >=2.5.0
 
 
 ## [0.5.0] - 2024-09-26
@@ -75,28 +74,29 @@ Historic and pre-release versions aren't necessarily included.
 ### Added
 
 - Bot pathfinding:
-  - World grid of variable resolution
+  - World Grid of variable resolution
   - MovementBlocks
   - Bots plan all routes on the World grid and route around MovementBlocks
 - View: margin around rendered World; render Grid, MovementBlock, Bot waypoints
-- Dev dependency pdoc
 
 ### Changed
 
-- World is now square
-- Bot pathfinding: destination can't be set outside World limits
+- World is square again
+- Bot destination can't be set outside World limits
 - Colour palette
-- Simplify dependencies by using `=>` instead of `^`
+- Dependencies: Simplify by using `=>` instead of `^`
+- Dev dependencies: add pdoc
 
 
 ## [0.4.0] - 2024-05-14
 
 ### Added
 
-- View: user can select a Bot with primary mouse button; set destination with secondary mouse button
-- View: World is initially paused; user can toggle pause with P key
-- View: draw Bot vision cone indicator (doesn't reflect infinite vision range)
-- View: draw World origin
+- View:
+  - user can select a Bot with primary mouse button; set destination with secondary mouse button
+  - World is initially paused; user can toggle pause with P key
+  - draw Bot vision cone indicator (doesn't reflect infinite vision range)
+  - draw World origin
 - `Invoke` tasks for linting/formatting (ruff) and type checking (mypy)
 
 ### Fixed
@@ -108,14 +108,10 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed
 
 - Bot `.pos` and `.destination` take `tuple[float, float]` instead of `Vector2`
-- World is rectangular
+- World is now rectangular
 - CI: use ruff format instead of black + isort
-- Upgrade dev/test dependencies: pytest, ruff
-- Remove `poetry.lock` from repo for now
-
-### Removed
-
-- Dev/test/CI dependencies: black, isort
+- Dev/test dependencies: upgrade pytest, ruff; remove black, isort
+- Remove `poetry.lock` from repo
 
 
 ## [0.3.0] - 2024-01-08
@@ -137,9 +133,7 @@ Historic and pre-release versions aren't necessarily included.
 
 - Bots are now created in their own right, with reference to World, instead of World
   method: `Bot(the_world, ...)` instead of `World.add_bot(...)`
-- Upgrade dependency: pygame-ce to >=2.4.0
-- Upgrade dev/test dependencies: black, mypy, pytest, pre-commit, ruff
-- Upgrade CI dependencies: actions/setup-python
+- Dependency: upgrade pygame-ce to >=2.4.0
 
 
 ## [0.2.0] - 2023-09-06

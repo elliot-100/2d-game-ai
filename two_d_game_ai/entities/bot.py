@@ -11,12 +11,13 @@ from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.generic_entity import GenericEntity
-from two_d_game_ai.geometry import Bearing, point_in_or_on_circle
+from two_d_game_ai.geometry import point_in_or_on_circle
+from two_d_game_ai.geometry.bearing import Bearing
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -68,7 +69,7 @@ class Bot(GenericEntity):
         self.velocity: Vector2 = Vector2(0, 0)
         self.destination = None
         log_msg = f"Bot '{self.name}' initialised."
-        logger.info(log_msg)
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return super().__hash__()
@@ -88,7 +89,7 @@ class Bot(GenericEntity):
         """Set destination point."""
         if proposed_destination is None:
             log_msg = f"Bot '{self.name}': destination -> `None`."
-            logger.debug(log_msg)
+            _logger.debug(log_msg)
             self._destination = None
             return
 
@@ -98,12 +99,12 @@ class Bot(GenericEntity):
             and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
             log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
-            logger.info(log_msg)
+            _logger.info(log_msg)
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
             log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
-            logger.info(log_msg)
+            _logger.info(log_msg)
             if self.route and len(self.route) >= 2:  # noqa: PLR2004
                 del self.route[0]
                 # effectively suppress reporting arrival at first waypoint, which is
@@ -125,7 +126,7 @@ class Bot(GenericEntity):
                 raise TypeError
             if self.is_at(self.destination):
                 log_msg = f"Bot '{self.name}': arrived at destination."
-                logger.info(log_msg)
+                _logger.info(log_msg)
                 self.stop()
                 self.route = []
                 self.destination = None
@@ -133,7 +134,7 @@ class Bot(GenericEntity):
 
             if self.is_at(self.route[0]):
                 log_msg = f"Bot '{self.name}': arrived at waypoint."
-                logger.info(log_msg)
+                _logger.info(log_msg)
                 self.stop()
                 del self.route[0]
                 return

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
     from two_d_game_ai.world.world import World
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -38,7 +38,7 @@ class GenericEntity(ABC):
         self.world.entities.add(self)
         self.position = Vector2(position_from_sequence)
         log_msg = f"Entity '{self.name}' initialised."
-        logger.debug(log_msg)
+        _logger.debug(log_msg)
 
     def __hash__(self) -> int:
         return self.id
