@@ -87,11 +87,11 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
 
-        for i in range(len(self.entity.route)):
+        for waypoint in self.entity.route:
             self.parent.draw_circle(
                 surface=self.parent.surface,
                 color=colors.BOT_ROUTE_LINE,
-                center=self.entity.route[i],
+                center=waypoint,
                 radius=2,
                 width=1,
                 scale_radius=False,
