@@ -13,7 +13,7 @@ from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 _logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(kw_only=True, eq=False)
 class MovementBlockRenderer(GenericEntityRenderer):
     """Renders a `MovementBlock` to a `WorldRenderer`."""
 
@@ -26,9 +26,6 @@ class MovementBlockRenderer(GenericEntityRenderer):
             self.clickable_radius = self.entity.radius
         log_msg = f"BotRenderer initialised for {self.entity.name}"
         _logger.debug(log_msg)
-
-    def __hash__(self) -> int:
-        return super().__hash__()
 
     def draw(self) -> None:
         """Draw the `MovementBlock`."""

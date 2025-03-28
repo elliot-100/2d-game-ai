@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(kw_only=True, eq=False)
 class BotRenderer(GenericEntityRenderer):
     """Renders a `Bot` to a `WorldRenderer`."""
 
@@ -31,9 +31,6 @@ class BotRenderer(GenericEntityRenderer):
         super().__post_init__()
         log_msg = f"BotRenderer initialised for '{self.entity.name}'."
         _logger.debug(log_msg)
-
-    def __hash__(self) -> int:
-        return super().__hash__()
 
     def draw(self, *, debug_render_mode: bool = False) -> None:
         """Draws `Bot` and decorations."""

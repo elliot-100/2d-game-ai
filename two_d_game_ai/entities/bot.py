@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, eq=False)
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
@@ -70,9 +70,6 @@ class Bot(GenericEntity):
         self.destination = None
         log_msg = f"Bot '{self.name}' initialised."
         _logger.info(log_msg)
-
-    def __hash__(self) -> int:
-        return super().__hash__()
 
     @property
     def max_rotation_step(self) -> float:

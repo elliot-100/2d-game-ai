@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, eq=False)
 class MovementBlock(GenericEntity):
     """Circular entity that blocks movement."""
 
@@ -33,6 +33,3 @@ class MovementBlock(GenericEntity):
 
         log_msg = f"MovementBlock '{self.name}' initialised."
         _logger.info(log_msg)
-
-    def __hash__(self) -> int:
-        return super().__hash__()

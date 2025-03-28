@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, eq=False)
 class GenericEntity(ABC):
     """Generic circular entity."""
 
