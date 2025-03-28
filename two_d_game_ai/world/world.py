@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
 
 from pygame import Vector2
@@ -27,8 +27,7 @@ class World:
 
     size: int
     """`World` units per side."""
-    grid_size: int = 2
-    # TODO: should be InitVar and/or derived from Grid classvar
+    grid_size: InitVar[int] = 2
     grid_resolution: float = field(init=False)
     """Size of a `Grid` cell in `World` units."""
     grid: Grid = field(init=False)
@@ -40,11 +39,9 @@ class World:
     is_paused: bool = field(init=False)
     """Whether the `World` is paused."""
 
-    def __post_init__(
-        self,
-    ) -> None:
-        self.grid = Grid(size=self.grid_size)
-        self.grid_resolution = self.size / self.grid_size
+    def __post_init__(self, grid_size: int) -> None:
+        self.grid = Grid(size=grid_size)
+        self.grid_resolution = self.size / self.grid.size
         self.step_counter = 0
         self.is_paused = True
 

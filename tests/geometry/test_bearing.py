@@ -68,7 +68,9 @@ def test_relative() -> None:
     # relative bearings from NORTH:
     assert [Bearing(0).relative(v).degrees for v in vecs] == [0, 90, 180, 270]
     # relative bearings from SOUTH:
-    # TODO: fix fudging here?
-    assert [Bearing(180).relative(v).degrees for v in vecs] == pytest.approx(
-        [180, 270, 0, 90]
-    )
+    assert [Bearing(180).relative(v).degrees for v in vecs] == [
+        180,
+        270,
+        0,
+        pytest.approx(90),
+    ]

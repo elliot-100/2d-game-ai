@@ -55,10 +55,7 @@ ignore = [
 # Other:
 "D105",  # Missing docstring in magic method
 "D205",  # 1 blank line required between summary line and description
-"FIX002",  # Line contains TODO, consider resolving the issue
 "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
-"TD002",  # Missing author in TODO
-"TD003",  # Missing issue link on the line following this TODO
 ]
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:
@@ -84,10 +81,10 @@ extend-safe-fixes = [
 "two_d_game_ai/__init__.py" = [
     "D400",  # First line should end with a period
 ]
+# Non-packages:
 "examples/*" = [
     "INP001",  # ...part of an implicit namespace package. Add an `__init__.py`.
 ]
-
 
 [tool.ruff.lint.pylint]
 max-args = 7

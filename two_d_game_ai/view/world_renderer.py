@@ -5,13 +5,14 @@ from __future__ import annotations
 import itertools
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pygame import Color, Rect, Surface, Vector2
+from pygame import Color, Font, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.movement_block import MovementBlock
-from two_d_game_ai.view import colors
+from two_d_game_ai.view import FONT_DIR_RELATIVE, FONT_FILENAME, FONT_SIZE, colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
 from two_d_game_ai.view.primitives import (
@@ -52,8 +53,11 @@ class WorldRenderer:
     """Maps entity `id` to delegated renderer."""
     selected_renderer: GenericEntityRenderer | None = field(init=False)
     """Selected entity renderer."""
+    font: Font = field(init=False)
 
     def __post_init__(self) -> None:
+        font_filepath = Path(__file__).resolve().parent / FONT_DIR_RELATIVE
+        self.font = Font(font_filepath / FONT_FILENAME, FONT_SIZE)
         self.size = self.world.size * self.scale_factor
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
@@ -91,9 +95,9 @@ class WorldRenderer:
         self.surface.blit(self.base_grid_surface)
         self.render_untraversable_cells(self.world.grid)
         for b in self.bot_renderers:
-            b.draw(debug_render_mode=debug_render_mode)
+            b.render(debug_render_mode=debug_render_mode)
         for m in self.movement_block_renderers:
-            m.draw()
+            m.render()
         self.render_axes()
 
     def base_grid(self) -> Surface:
