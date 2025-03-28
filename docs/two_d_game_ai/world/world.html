@@ -40,16 +40,16 @@
                                 <a class="variable" href="#World.size">size</a>
                         </li>
                         <li>
-                                <a class="variable" href="#World.grid">grid</a>
+                                <a class="variable" href="#World.grid_size">grid_size</a>
                         </li>
                         <li>
                                 <a class="variable" href="#World.grid_resolution">grid_resolution</a>
                         </li>
                         <li>
-                                <a class="variable" href="#World.bots">bots</a>
+                                <a class="variable" href="#World.grid">grid</a>
                         </li>
                         <li>
-                                <a class="variable" href="#World.movement_blocks">movement_blocks</a>
+                                <a class="variable" href="#World.entities">entities</a>
                         </li>
                         <li>
                                 <a class="variable" href="#World.step_counter">step_counter</a>
@@ -58,10 +58,25 @@
                                 <a class="variable" href="#World.is_paused">is_paused</a>
                         </li>
                         <li>
+                                <a class="variable" href="#World.magnitude">magnitude</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#World.bots">bots</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#World.movement_blocks">movement_blocks</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#World.update">update</a>
                         </li>
                         <li>
-                                <a class="function" href="#World.point_is_inside_world_bounds">point_is_inside_world_bounds</a>
+                                <a class="function" href="#World.location_is_inside_world_bounds">location_is_inside_world_bounds</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#World.location_is_blocked">location_is_blocked</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#World.random_location">random_location</a>
                         </li>
                         <li>
                                 <a class="function" href="#World.route">route</a>
@@ -85,103 +100,141 @@
                     <h1 class="modulename">
 <a href="./../../two_d_game_ai.html">two_d_game_ai</a><wbr>.<a href="./../world.html">world</a><wbr>.world    </h1>
 
-                        <div class="docstring"><p>Module containing <code><a href="#World">World</a></code> class.</p>
+                        <div class="docstring"><p>Contains <code><a href="#World">World</a></code> class.</p>
 </div>
 
                         <input id="mod-world-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-world-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Module containing `World` class.&quot;&quot;&quot;</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.world.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector2</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.bot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bot</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.movement_block</span><span class="w"> </span><span class="kn">import</span> <span class="n">MovementBlock</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="k">class</span><span class="w"> </span><span class="nc">World</span><span class="p">:</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulated domain.</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">    Square.</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">    Has a `two_d_game_ai.world.grid.Grid`.</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`World` units per side.&quot;&quot;&quot;</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">grid_size</span><span class="p">)</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`Grid` instance.&quot;&quot;&quot;</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid_size</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Size of a `Grid` cell in `World` units.&quot;&quot;&quot;</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `Bot`s.&quot;&quot;&quot;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">movement_blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `MovementBlock`s.&quot;&quot;&quot;</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of update steps taken.&quot;&quot;&quot;</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the `World` is paused.&quot;&quot;&quot;</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Change all `Bot` positions over 1 simulation step.&quot;&quot;&quot;</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>            <span class="n">bot</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span> <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">bot</span><span class="p">})</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">point_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        Not currently used.</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">        Delegates to `Grid.route`.</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">        Intermediate points are cell centres.</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">        Returns</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        -------</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">        list[Vector2]</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="sd">            Empty if no path found.</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>            <span class="k">return</span> <span class="p">[]</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>        <span class="c1"># always use actual goal (not cell centre) for last waypoint</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_route</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>            <span class="k">del</span> <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="sd">&quot;&quot;&quot;Contains `World` class.&quot;&quot;&quot;</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector2</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.bot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bot</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.movement_block</span><span class="w"> </span><span class="kn">import</span> <span class="n">MovementBlock</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.world.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.generic_entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericEntity</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="nd">@dataclass</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="k">class</span><span class="w"> </span><span class="nc">World</span><span class="p">:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulated domain.</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">    Square.</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">    Has a `two_d_game_ai.world.grid.Grid`.</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;`World` units per side.&quot;&quot;&quot;</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>    <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>    <span class="c1"># TODO: should be InitVar and/or derived from Grid classvar</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>    <span class="n">grid_resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Size of a `Grid` cell in `World` units.&quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;`Grid` instance.&quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>    <span class="n">entities</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">GenericEntity</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;All entities.&quot;&quot;&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>    <span class="n">step_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of update steps taken.&quot;&quot;&quot;</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>    <span class="n">is_paused</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the `World` is paused.&quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>    <span class="nd">@property</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>    <span class="nd">@property</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">bots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]:</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">)}</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>    <span class="nd">@property</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">movement_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]:</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">)}</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Only Bots currently need to be updated.&quot;&quot;&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">):</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>                <span class="n">e</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        Not currently used.</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_blocked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside a blocked grid cell, else `False`.&quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>        <span class="n">grid_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_traversable</span><span class="p">(</span><span class="n">grid_ref</span><span class="p">)</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return random unblocked location.&quot;&quot;&quot;</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>        <span class="n">location</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>        <span class="p">)</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_is_blocked</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_location</span><span class="p">()</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="k">return</span> <span class="n">location</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        Delegates to `Grid.route`.</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        Intermediate points are cell centres.</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        Returns</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        -------</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="sd">        list[Vector2]</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">            Empty if no path found.</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>            <span class="k">return</span> <span class="p">[]</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>        <span class="c1"># always use actual points (not cell centre) for end waypoints:</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_pos</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
 </span></pre></div>
 
 
@@ -189,7 +242,8 @@
                 <section id="World">
                             <input id="World-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator decorator-dataclass">@dataclass</div>
+
     <span class="def">class</span>
     <span class="name">World</span>:
 
@@ -197,81 +251,116 @@
 
     </div>
     <a class="headerlink" href="#World"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="World-17"><a href="#World-17"><span class="linenos">17</span></a><span class="k">class</span><span class="w"> </span><span class="nc">World</span><span class="p">:</span>
-</span><span id="World-18"><a href="#World-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulated domain.</span>
-</span><span id="World-19"><a href="#World-19"><span class="linenos">19</span></a>
-</span><span id="World-20"><a href="#World-20"><span class="linenos">20</span></a><span class="sd">    Square.</span>
-</span><span id="World-21"><a href="#World-21"><span class="linenos">21</span></a>
-</span><span id="World-22"><a href="#World-22"><span class="linenos">22</span></a><span class="sd">    Has a `two_d_game_ai.world.grid.Grid`.</span>
-</span><span id="World-23"><a href="#World-23"><span class="linenos">23</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="World-24"><a href="#World-24"><span class="linenos">24</span></a>
-</span><span id="World-25"><a href="#World-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="World-26"><a href="#World-26"><span class="linenos">26</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="World-27"><a href="#World-27"><span class="linenos">27</span></a>        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="World-28"><a href="#World-28"><span class="linenos">28</span></a>        <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="World-29"><a href="#World-29"><span class="linenos">29</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="World-30"><a href="#World-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-</span><span id="World-31"><a href="#World-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`World` units per side.&quot;&quot;&quot;</span>
-</span><span id="World-32"><a href="#World-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">grid_size</span><span class="p">)</span>
-</span><span id="World-33"><a href="#World-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`Grid` instance.&quot;&quot;&quot;</span>
-</span><span id="World-34"><a href="#World-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid_size</span>
-</span><span id="World-35"><a href="#World-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Size of a `Grid` cell in `World` units.&quot;&quot;&quot;</span>
-</span><span id="World-36"><a href="#World-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-</span><span id="World-37"><a href="#World-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `Bot`s.&quot;&quot;&quot;</span>
-</span><span id="World-38"><a href="#World-38"><span class="linenos">38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">movement_blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="World-39"><a href="#World-39"><span class="linenos">39</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `MovementBlock`s.&quot;&quot;&quot;</span>
-</span><span id="World-40"><a href="#World-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="World-41"><a href="#World-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of update steps taken.&quot;&quot;&quot;</span>
-</span><span id="World-42"><a href="#World-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="World-43"><a href="#World-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the `World` is paused.&quot;&quot;&quot;</span>
-</span><span id="World-44"><a href="#World-44"><span class="linenos">44</span></a>
-</span><span id="World-45"><a href="#World-45"><span class="linenos">45</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="World-46"><a href="#World-46"><span class="linenos">46</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Change all `Bot` positions over 1 simulation step.&quot;&quot;&quot;</span>
-</span><span id="World-47"><a href="#World-47"><span class="linenos">47</span></a>        <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span>
-</span><span id="World-48"><a href="#World-48"><span class="linenos">48</span></a>            <span class="n">bot</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span> <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">bot</span><span class="p">})</span>
-</span><span id="World-49"><a href="#World-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="World-50"><a href="#World-50"><span class="linenos">50</span></a>
-</span><span id="World-51"><a href="#World-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">point_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="World-52"><a href="#World-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
-</span><span id="World-53"><a href="#World-53"><span class="linenos">53</span></a>
-</span><span id="World-54"><a href="#World-54"><span class="linenos">54</span></a><span class="sd">        Not currently used.</span>
-</span><span id="World-55"><a href="#World-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="World-56"><a href="#World-56"><span class="linenos">56</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
-</span><span id="World-57"><a href="#World-57"><span class="linenos">57</span></a>
-</span><span id="World-58"><a href="#World-58"><span class="linenos">58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
-</span><span id="World-59"><a href="#World-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="World-60"><a href="#World-60"><span class="linenos">60</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="World-61"><a href="#World-61"><span class="linenos">61</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="World-62"><a href="#World-62"><span class="linenos">62</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
-</span><span id="World-63"><a href="#World-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
-</span><span id="World-64"><a href="#World-64"><span class="linenos">64</span></a>
-</span><span id="World-65"><a href="#World-65"><span class="linenos">65</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
-</span><span id="World-66"><a href="#World-66"><span class="linenos">66</span></a><span class="sd">        Delegates to `Grid.route`.</span>
-</span><span id="World-67"><a href="#World-67"><span class="linenos">67</span></a><span class="sd">        Intermediate points are cell centres.</span>
-</span><span id="World-68"><a href="#World-68"><span class="linenos">68</span></a>
-</span><span id="World-69"><a href="#World-69"><span class="linenos">69</span></a><span class="sd">        Returns</span>
-</span><span id="World-70"><a href="#World-70"><span class="linenos">70</span></a><span class="sd">        -------</span>
-</span><span id="World-71"><a href="#World-71"><span class="linenos">71</span></a><span class="sd">        list[Vector2]</span>
-</span><span id="World-72"><a href="#World-72"><span class="linenos">72</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
-</span><span id="World-73"><a href="#World-73"><span class="linenos">73</span></a><span class="sd">            Empty if no path found.</span>
-</span><span id="World-74"><a href="#World-74"><span class="linenos">74</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="World-75"><a href="#World-75"><span class="linenos">75</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
-</span><span id="World-76"><a href="#World-76"><span class="linenos">76</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
-</span><span id="World-77"><a href="#World-77"><span class="linenos">77</span></a>
-</span><span id="World-78"><a href="#World-78"><span class="linenos">78</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
-</span><span id="World-79"><a href="#World-79"><span class="linenos">79</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
-</span><span id="World-80"><a href="#World-80"><span class="linenos">80</span></a>
-</span><span id="World-81"><a href="#World-81"><span class="linenos">81</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
-</span><span id="World-82"><a href="#World-82"><span class="linenos">82</span></a>
-</span><span id="World-83"><a href="#World-83"><span class="linenos">83</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
-</span><span id="World-84"><a href="#World-84"><span class="linenos">84</span></a>            <span class="k">return</span> <span class="p">[]</span>
-</span><span id="World-85"><a href="#World-85"><span class="linenos">85</span></a>
-</span><span id="World-86"><a href="#World-86"><span class="linenos">86</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
-</span><span id="World-87"><a href="#World-87"><span class="linenos">87</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
-</span><span id="World-88"><a href="#World-88"><span class="linenos">88</span></a>        <span class="c1"># always use actual goal (not cell centre) for last waypoint</span>
-</span><span id="World-89"><a href="#World-89"><span class="linenos">89</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_route</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="World-90"><a href="#World-90"><span class="linenos">90</span></a>            <span class="k">del</span> <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="World-91"><a href="#World-91"><span class="linenos">91</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World-20"><a href="#World-20"><span class="linenos"> 20</span></a><span class="nd">@dataclass</span>
+</span><span id="World-21"><a href="#World-21"><span class="linenos"> 21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">World</span><span class="p">:</span>
+</span><span id="World-22"><a href="#World-22"><span class="linenos"> 22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulated domain.</span>
+</span><span id="World-23"><a href="#World-23"><span class="linenos"> 23</span></a>
+</span><span id="World-24"><a href="#World-24"><span class="linenos"> 24</span></a><span class="sd">    Square.</span>
+</span><span id="World-25"><a href="#World-25"><span class="linenos"> 25</span></a>
+</span><span id="World-26"><a href="#World-26"><span class="linenos"> 26</span></a><span class="sd">    Has a `two_d_game_ai.world.grid.Grid`.</span>
+</span><span id="World-27"><a href="#World-27"><span class="linenos"> 27</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="World-28"><a href="#World-28"><span class="linenos"> 28</span></a>
+</span><span id="World-29"><a href="#World-29"><span class="linenos"> 29</span></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="World-30"><a href="#World-30"><span class="linenos"> 30</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;`World` units per side.&quot;&quot;&quot;</span>
+</span><span id="World-31"><a href="#World-31"><span class="linenos"> 31</span></a>    <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span id="World-32"><a href="#World-32"><span class="linenos"> 32</span></a>    <span class="c1"># TODO: should be InitVar and/or derived from Grid classvar</span>
+</span><span id="World-33"><a href="#World-33"><span class="linenos"> 33</span></a>    <span class="n">grid_resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="World-34"><a href="#World-34"><span class="linenos"> 34</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Size of a `Grid` cell in `World` units.&quot;&quot;&quot;</span>
+</span><span id="World-35"><a href="#World-35"><span class="linenos"> 35</span></a>    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="World-36"><a href="#World-36"><span class="linenos"> 36</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;`Grid` instance.&quot;&quot;&quot;</span>
+</span><span id="World-37"><a href="#World-37"><span class="linenos"> 37</span></a>    <span class="n">entities</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">GenericEntity</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+</span><span id="World-38"><a href="#World-38"><span class="linenos"> 38</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;All entities.&quot;&quot;&quot;</span>
+</span><span id="World-39"><a href="#World-39"><span class="linenos"> 39</span></a>    <span class="n">step_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="World-40"><a href="#World-40"><span class="linenos"> 40</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of update steps taken.&quot;&quot;&quot;</span>
+</span><span id="World-41"><a href="#World-41"><span class="linenos"> 41</span></a>    <span class="n">is_paused</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="World-42"><a href="#World-42"><span class="linenos"> 42</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the `World` is paused.&quot;&quot;&quot;</span>
+</span><span id="World-43"><a href="#World-43"><span class="linenos"> 43</span></a>
+</span><span id="World-44"><a href="#World-44"><span class="linenos"> 44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span>
+</span><span id="World-45"><a href="#World-45"><span class="linenos"> 45</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="World-46"><a href="#World-46"><span class="linenos"> 46</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="World-47"><a href="#World-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span>
+</span><span id="World-48"><a href="#World-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span>
+</span><span id="World-49"><a href="#World-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="World-50"><a href="#World-50"><span class="linenos"> 50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="World-51"><a href="#World-51"><span class="linenos"> 51</span></a>
+</span><span id="World-52"><a href="#World-52"><span class="linenos"> 52</span></a>    <span class="nd">@property</span>
+</span><span id="World-53"><a href="#World-53"><span class="linenos"> 53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="World-54"><a href="#World-54"><span class="linenos"> 54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World-55"><a href="#World-55"><span class="linenos"> 55</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="World-56"><a href="#World-56"><span class="linenos"> 56</span></a>
+</span><span id="World-57"><a href="#World-57"><span class="linenos"> 57</span></a>    <span class="nd">@property</span>
+</span><span id="World-58"><a href="#World-58"><span class="linenos"> 58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">bots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]:</span>
+</span><span id="World-59"><a href="#World-59"><span class="linenos"> 59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World-60"><a href="#World-60"><span class="linenos"> 60</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">)}</span>
+</span><span id="World-61"><a href="#World-61"><span class="linenos"> 61</span></a>
+</span><span id="World-62"><a href="#World-62"><span class="linenos"> 62</span></a>    <span class="nd">@property</span>
+</span><span id="World-63"><a href="#World-63"><span class="linenos"> 63</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">movement_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]:</span>
+</span><span id="World-64"><a href="#World-64"><span class="linenos"> 64</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World-65"><a href="#World-65"><span class="linenos"> 65</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">)}</span>
+</span><span id="World-66"><a href="#World-66"><span class="linenos"> 66</span></a>
+</span><span id="World-67"><a href="#World-67"><span class="linenos"> 67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="World-68"><a href="#World-68"><span class="linenos"> 68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Only Bots currently need to be updated.&quot;&quot;&quot;</span>
+</span><span id="World-69"><a href="#World-69"><span class="linenos"> 69</span></a>        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
+</span><span id="World-70"><a href="#World-70"><span class="linenos"> 70</span></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">):</span>
+</span><span id="World-71"><a href="#World-71"><span class="linenos"> 71</span></a>                <span class="n">e</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</span><span id="World-72"><a href="#World-72"><span class="linenos"> 72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="World-73"><a href="#World-73"><span class="linenos"> 73</span></a>
+</span><span id="World-74"><a href="#World-74"><span class="linenos"> 74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="World-75"><a href="#World-75"><span class="linenos"> 75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
+</span><span id="World-76"><a href="#World-76"><span class="linenos"> 76</span></a>
+</span><span id="World-77"><a href="#World-77"><span class="linenos"> 77</span></a><span class="sd">        Not currently used.</span>
+</span><span id="World-78"><a href="#World-78"><span class="linenos"> 78</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="World-79"><a href="#World-79"><span class="linenos"> 79</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span>
+</span><span id="World-80"><a href="#World-80"><span class="linenos"> 80</span></a>
+</span><span id="World-81"><a href="#World-81"><span class="linenos"> 81</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_blocked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="World-82"><a href="#World-82"><span class="linenos"> 82</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside a blocked grid cell, else `False`.&quot;&quot;&quot;</span>
+</span><span id="World-83"><a href="#World-83"><span class="linenos"> 83</span></a>        <span class="n">grid_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+</span><span id="World-84"><a href="#World-84"><span class="linenos"> 84</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_traversable</span><span class="p">(</span><span class="n">grid_ref</span><span class="p">)</span>
+</span><span id="World-85"><a href="#World-85"><span class="linenos"> 85</span></a>
+</span><span id="World-86"><a href="#World-86"><span class="linenos"> 86</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="World-87"><a href="#World-87"><span class="linenos"> 87</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return random unblocked location.&quot;&quot;&quot;</span>
+</span><span id="World-88"><a href="#World-88"><span class="linenos"> 88</span></a>        <span class="n">location</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span>
+</span><span id="World-89"><a href="#World-89"><span class="linenos"> 89</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="World-90"><a href="#World-90"><span class="linenos"> 90</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="World-91"><a href="#World-91"><span class="linenos"> 91</span></a>        <span class="p">)</span>
+</span><span id="World-92"><a href="#World-92"><span class="linenos"> 92</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_is_blocked</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+</span><span id="World-93"><a href="#World-93"><span class="linenos"> 93</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_location</span><span class="p">()</span>
+</span><span id="World-94"><a href="#World-94"><span class="linenos"> 94</span></a>
+</span><span id="World-95"><a href="#World-95"><span class="linenos"> 95</span></a>        <span class="k">return</span> <span class="n">location</span>
+</span><span id="World-96"><a href="#World-96"><span class="linenos"> 96</span></a>
+</span><span id="World-97"><a href="#World-97"><span class="linenos"> 97</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
+</span><span id="World-98"><a href="#World-98"><span class="linenos"> 98</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="World-99"><a href="#World-99"><span class="linenos"> 99</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="World-100"><a href="#World-100"><span class="linenos">100</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="World-101"><a href="#World-101"><span class="linenos">101</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
+</span><span id="World-102"><a href="#World-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
+</span><span id="World-103"><a href="#World-103"><span class="linenos">103</span></a>
+</span><span id="World-104"><a href="#World-104"><span class="linenos">104</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
+</span><span id="World-105"><a href="#World-105"><span class="linenos">105</span></a><span class="sd">        Delegates to `Grid.route`.</span>
+</span><span id="World-106"><a href="#World-106"><span class="linenos">106</span></a><span class="sd">        Intermediate points are cell centres.</span>
+</span><span id="World-107"><a href="#World-107"><span class="linenos">107</span></a>
+</span><span id="World-108"><a href="#World-108"><span class="linenos">108</span></a><span class="sd">        Returns</span>
+</span><span id="World-109"><a href="#World-109"><span class="linenos">109</span></a><span class="sd">        -------</span>
+</span><span id="World-110"><a href="#World-110"><span class="linenos">110</span></a><span class="sd">        list[Vector2]</span>
+</span><span id="World-111"><a href="#World-111"><span class="linenos">111</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
+</span><span id="World-112"><a href="#World-112"><span class="linenos">112</span></a><span class="sd">            Empty if no path found.</span>
+</span><span id="World-113"><a href="#World-113"><span class="linenos">113</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="World-114"><a href="#World-114"><span class="linenos">114</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
+</span><span id="World-115"><a href="#World-115"><span class="linenos">115</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
+</span><span id="World-116"><a href="#World-116"><span class="linenos">116</span></a>
+</span><span id="World-117"><a href="#World-117"><span class="linenos">117</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
+</span><span id="World-118"><a href="#World-118"><span class="linenos">118</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
+</span><span id="World-119"><a href="#World-119"><span class="linenos">119</span></a>
+</span><span id="World-120"><a href="#World-120"><span class="linenos">120</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
+</span><span id="World-121"><a href="#World-121"><span class="linenos">121</span></a>
+</span><span id="World-122"><a href="#World-122"><span class="linenos">122</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
+</span><span id="World-123"><a href="#World-123"><span class="linenos">123</span></a>            <span class="k">return</span> <span class="p">[]</span>
+</span><span id="World-124"><a href="#World-124"><span class="linenos">124</span></a>
+</span><span id="World-125"><a href="#World-125"><span class="linenos">125</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
+</span><span id="World-126"><a href="#World-126"><span class="linenos">126</span></a>        <span class="c1"># always use actual points (not cell centre) for end waypoints:</span>
+</span><span id="World-127"><a href="#World-127"><span class="linenos">127</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_pos</span>
+</span><span id="World-128"><a href="#World-128"><span class="linenos">128</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
+</span><span id="World-129"><a href="#World-129"><span class="linenos">129</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
 </span></pre></div>
 
 
@@ -284,101 +373,77 @@
 
 
                             <div id="World.__init__" class="classattr">
-                                        <input id="World.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
+                                <div class="attr function">
+
         <span class="name">World</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">size</span><span class="p">:</span> <span class="nb">int</span>, </span><span class="param"><span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></span>)</span>
 
-                <label class="view-source-button" for="World.__init__-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#World.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="World.__init__-25"><a href="#World.__init__-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="World.__init__-26"><a href="#World.__init__-26"><span class="linenos">26</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="World.__init__-27"><a href="#World.__init__-27"><span class="linenos">27</span></a>        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="World.__init__-28"><a href="#World.__init__-28"><span class="linenos">28</span></a>        <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="World.__init__-29"><a href="#World.__init__-29"><span class="linenos">29</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="World.__init__-30"><a href="#World.__init__-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-</span><span id="World.__init__-31"><a href="#World.__init__-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`World` units per side.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-32"><a href="#World.__init__-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">grid_size</span><span class="p">)</span>
-</span><span id="World.__init__-33"><a href="#World.__init__-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;`Grid` instance.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-34"><a href="#World.__init__-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grid_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid_size</span>
-</span><span id="World.__init__-35"><a href="#World.__init__-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Size of a `Grid` cell in `World` units.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-36"><a href="#World.__init__-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-</span><span id="World.__init__-37"><a href="#World.__init__-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `Bot`s.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-38"><a href="#World.__init__-38"><span class="linenos">38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">movement_blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="World.__init__-39"><a href="#World.__init__-39"><span class="linenos">39</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;All `MovementBlock`s.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-40"><a href="#World.__init__-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="World.__init__-41"><a href="#World.__init__-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of update steps taken.&quot;&quot;&quot;</span>
-</span><span id="World.__init__-42"><a href="#World.__init__-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="World.__init__-43"><a href="#World.__init__-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the `World` is paused.&quot;&quot;&quot;</span>
-</span></pre></div>
 
 
-    
 
                             </div>
                             <div id="World.size" class="classattr">
                                 <div class="attr variable">
-            <span class="name">size</span>
+            <span class="name">size</span><span class="annotation">: int</span>
 
-        
+
     </div>
     <a class="headerlink" href="#World.size"></a>
-    
+
             <div class="docstring"><p><code><a href="#World">World</a></code> units per side.</p>
+</div>
+
+
+                            </div>
+                            <div id="World.grid_size" class="classattr">
+                                <div class="attr variable">
+            <span class="name">grid_size</span><span class="annotation">: int</span>        =
+<span class="default_value">2</span>
+
+
+    </div>
+    <a class="headerlink" href="#World.grid_size"></a>
+
+
+
+                            </div>
+                            <div id="World.grid_resolution" class="classattr">
+                                <div class="attr variable">
+            <span class="name">grid_resolution</span><span class="annotation">: float</span>
+
+
+    </div>
+    <a class="headerlink" href="#World.grid_resolution"></a>
+
+            <div class="docstring"><p>Size of a <code>Grid</code> cell in <code><a href="#World">World</a></code> units.</p>
 </div>
 
 
                             </div>
                             <div id="World.grid" class="classattr">
                                 <div class="attr variable">
-            <span class="name">grid</span>
+            <span class="name">grid</span><span class="annotation">: <a href="grid.html#Grid">two_d_game_ai.world.grid.Grid</a></span>
 
-        
+
     </div>
     <a class="headerlink" href="#World.grid"></a>
-    
+
             <div class="docstring"><p><code>Grid</code> instance.</p>
 </div>
 
 
                             </div>
-                            <div id="World.grid_resolution" class="classattr">
+                            <div id="World.entities" class="classattr">
                                 <div class="attr variable">
-            <span class="name">grid_resolution</span>
+            <span class="name">entities</span><span class="annotation">: set[<a href="../entities/generic_entity.html#GenericEntity">two_d_game_ai.entities.generic_entity.GenericEntity</a>]</span>
 
-        
+
     </div>
-    <a class="headerlink" href="#World.grid_resolution"></a>
-    
-            <div class="docstring"><p>Size of a <code>Grid</code> cell in <code><a href="#World">World</a></code> units.</p>
-</div>
+    <a class="headerlink" href="#World.entities"></a>
 
-
-                            </div>
-                            <div id="World.bots" class="classattr">
-                                <div class="attr variable">
-            <span class="name">bots</span><span class="annotation">: set[<a href="../entities/bot.html#Bot">two_d_game_ai.entities.bot.Bot</a>]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#World.bots"></a>
-    
-            <div class="docstring"><p>All <code>Bot</code>s.</p>
-</div>
-
-
-                            </div>
-                            <div id="World.movement_blocks" class="classattr">
-                                <div class="attr variable">
-            <span class="name">movement_blocks</span><span class="annotation">: list[<a href="../entities/movement_block.html#MovementBlock">two_d_game_ai.entities.movement_block.MovementBlock</a>]</span>
-
-        
-    </div>
-    <a class="headerlink" href="#World.movement_blocks"></a>
-    
-            <div class="docstring"><p>All <code>MovementBlock</code>s.</p>
+            <div class="docstring"><p>All entities.</p>
 </div>
 
 
@@ -387,10 +452,10 @@
                                 <div class="attr variable">
             <span class="name">step_counter</span><span class="annotation">: int</span>
 
-        
+
     </div>
     <a class="headerlink" href="#World.step_counter"></a>
-    
+
             <div class="docstring"><p>Number of update steps taken.</p>
 </div>
 
@@ -400,11 +465,74 @@
                                 <div class="attr variable">
             <span class="name">is_paused</span><span class="annotation">: bool</span>
 
-        
+
     </div>
     <a class="headerlink" href="#World.is_paused"></a>
-    
+
             <div class="docstring"><p>Whether the <code><a href="#World">World</a></code> is paused.</p>
+</div>
+
+
+                            </div>
+                            <div id="World.magnitude" class="classattr">
+                                        <input id="World.magnitude-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr variable">
+            <span class="name">magnitude</span><span class="annotation">: float</span>
+
+                <label class="view-source-button" for="World.magnitude-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#World.magnitude"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.magnitude-52"><a href="#World.magnitude-52"><span class="linenos">52</span></a>    <span class="nd">@property</span>
+</span><span id="World.magnitude-53"><a href="#World.magnitude-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="World.magnitude-54"><a href="#World.magnitude-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World.magnitude-55"><a href="#World.magnitude-55"><span class="linenos">55</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>TO DO.</p>
+</div>
+
+
+                            </div>
+                            <div id="World.bots" class="classattr">
+                                        <input id="World.bots-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr variable">
+            <span class="name">bots</span><span class="annotation">: set[<a href="../entities/bot.html#Bot">two_d_game_ai.entities.bot.Bot</a>]</span>
+
+                <label class="view-source-button" for="World.bots-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#World.bots"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.bots-57"><a href="#World.bots-57"><span class="linenos">57</span></a>    <span class="nd">@property</span>
+</span><span id="World.bots-58"><a href="#World.bots-58"><span class="linenos">58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">bots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Bot</span><span class="p">]:</span>
+</span><span id="World.bots-59"><a href="#World.bots-59"><span class="linenos">59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World.bots-60"><a href="#World.bots-60"><span class="linenos">60</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">)}</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>TO DO.</p>
+</div>
+
+
+                            </div>
+                            <div id="World.movement_blocks" class="classattr">
+                                        <input id="World.movement_blocks-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr variable">
+            <span class="name">movement_blocks</span><span class="annotation">: set[<a href="../entities/movement_block.html#MovementBlock">two_d_game_ai.entities.movement_block.MovementBlock</a>]</span>
+
+                <label class="view-source-button" for="World.movement_blocks-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#World.movement_blocks"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.movement_blocks-62"><a href="#World.movement_blocks-62"><span class="linenos">62</span></a>    <span class="nd">@property</span>
+</span><span id="World.movement_blocks-63"><a href="#World.movement_blocks-63"><span class="linenos">63</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">movement_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">MovementBlock</span><span class="p">]:</span>
+</span><span id="World.movement_blocks-64"><a href="#World.movement_blocks-64"><span class="linenos">64</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;TO DO.&quot;&quot;&quot;</span>
+</span><span id="World.movement_blocks-65"><a href="#World.movement_blocks-65"><span class="linenos">65</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">)}</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>TO DO.</p>
 </div>
 
 
@@ -412,7 +540,7 @@
                             <div id="World.update" class="classattr">
                                         <input id="World.update-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">update</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -420,36 +548,37 @@
 
     </div>
     <a class="headerlink" href="#World.update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="World.update-45"><a href="#World.update-45"><span class="linenos">45</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="World.update-46"><a href="#World.update-46"><span class="linenos">46</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Change all `Bot` positions over 1 simulation step.&quot;&quot;&quot;</span>
-</span><span id="World.update-47"><a href="#World.update-47"><span class="linenos">47</span></a>        <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span><span class="p">:</span>
-</span><span id="World.update-48"><a href="#World.update-48"><span class="linenos">48</span></a>            <span class="n">bot</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bots</span> <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">bot</span><span class="p">})</span>
-</span><span id="World.update-49"><a href="#World.update-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.update-67"><a href="#World.update-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="World.update-68"><a href="#World.update-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Only Bots currently need to be updated.&quot;&quot;&quot;</span>
+</span><span id="World.update-69"><a href="#World.update-69"><span class="linenos">69</span></a>        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entities</span><span class="p">:</span>
+</span><span id="World.update-70"><a href="#World.update-70"><span class="linenos">70</span></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Bot</span><span class="p">):</span>
+</span><span id="World.update-71"><a href="#World.update-71"><span class="linenos">71</span></a>                <span class="n">e</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</span><span id="World.update-72"><a href="#World.update-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Change all <code>Bot</code> positions over 1 simulation step.</p>
+            <div class="docstring"><p>Only Bots currently need to be updated.</p>
 </div>
 
 
                             </div>
-                            <div id="World.point_is_inside_world_bounds" class="classattr">
-                                        <input id="World.point_is_inside_world_bounds-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                            <div id="World.location_is_inside_world_bounds" class="classattr">
+                                        <input id="World.location_is_inside_world_bounds-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">point_is_inside_world_bounds</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">point</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
-                <label class="view-source-button" for="World.point_is_inside_world_bounds-view-source"><span>View Source</span></label>
+        <span class="def">def</span>
+        <span class="name">location_is_inside_world_bounds</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">location</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+                <label class="view-source-button" for="World.location_is_inside_world_bounds-view-source"><span>View Source</span></label>
 
     </div>
-    <a class="headerlink" href="#World.point_is_inside_world_bounds"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="World.point_is_inside_world_bounds-51"><a href="#World.point_is_inside_world_bounds-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">point_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="World.point_is_inside_world_bounds-52"><a href="#World.point_is_inside_world_bounds-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
-</span><span id="World.point_is_inside_world_bounds-53"><a href="#World.point_is_inside_world_bounds-53"><span class="linenos">53</span></a>
-</span><span id="World.point_is_inside_world_bounds-54"><a href="#World.point_is_inside_world_bounds-54"><span class="linenos">54</span></a><span class="sd">        Not currently used.</span>
-</span><span id="World.point_is_inside_world_bounds-55"><a href="#World.point_is_inside_world_bounds-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="World.point_is_inside_world_bounds-56"><a href="#World.point_is_inside_world_bounds-56"><span class="linenos">56</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span>
+    <a class="headerlink" href="#World.location_is_inside_world_bounds"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.location_is_inside_world_bounds-74"><a href="#World.location_is_inside_world_bounds-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_inside_world_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="World.location_is_inside_world_bounds-75"><a href="#World.location_is_inside_world_bounds-75"><span class="linenos">75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside the World bounds, else `False`.</span>
+</span><span id="World.location_is_inside_world_bounds-76"><a href="#World.location_is_inside_world_bounds-76"><span class="linenos">76</span></a>
+</span><span id="World.location_is_inside_world_bounds-77"><a href="#World.location_is_inside_world_bounds-77"><span class="linenos">77</span></a><span class="sd">        Not currently used.</span>
+</span><span id="World.location_is_inside_world_bounds-78"><a href="#World.location_is_inside_world_bounds-78"><span class="linenos">78</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="World.location_is_inside_world_bounds-79"><a href="#World.location_is_inside_world_bounds-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span>
 </span></pre></div>
 
 
@@ -460,10 +589,62 @@
 
 
                             </div>
+                            <div id="World.location_is_blocked" class="classattr">
+                                        <input id="World.location_is_blocked-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+
+        <span class="def">def</span>
+        <span class="name">location_is_blocked</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">location</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+                <label class="view-source-button" for="World.location_is_blocked-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#World.location_is_blocked"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.location_is_blocked-81"><a href="#World.location_is_blocked-81"><span class="linenos">81</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">location_is_blocked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="World.location_is_blocked-82"><a href="#World.location_is_blocked-82"><span class="linenos">82</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `True` if point is inside a blocked grid cell, else `False`.&quot;&quot;&quot;</span>
+</span><span id="World.location_is_blocked-83"><a href="#World.location_is_blocked-83"><span class="linenos">83</span></a>        <span class="n">grid_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+</span><span id="World.location_is_blocked-84"><a href="#World.location_is_blocked-84"><span class="linenos">84</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_traversable</span><span class="p">(</span><span class="n">grid_ref</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Return <code>True</code> if point is inside a blocked grid cell, else <code>False</code>.</p>
+</div>
+
+
+                            </div>
+                            <div id="World.random_location" class="classattr">
+                                        <input id="World.random_location-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+
+        <span class="def">def</span>
+        <span class="name">random_location</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span>:</span></span>
+
+                <label class="view-source-button" for="World.random_location-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#World.random_location"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.random_location-86"><a href="#World.random_location-86"><span class="linenos">86</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vector2</span><span class="p">:</span>
+</span><span id="World.random_location-87"><a href="#World.random_location-87"><span class="linenos">87</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return random unblocked location.&quot;&quot;&quot;</span>
+</span><span id="World.random_location-88"><a href="#World.random_location-88"><span class="linenos">88</span></a>        <span class="n">location</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span>
+</span><span id="World.random_location-89"><a href="#World.random_location-89"><span class="linenos">89</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="World.random_location-90"><a href="#World.random_location-90"><span class="linenos">90</span></a>            <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">),</span>
+</span><span id="World.random_location-91"><a href="#World.random_location-91"><span class="linenos">91</span></a>        <span class="p">)</span>
+</span><span id="World.random_location-92"><a href="#World.random_location-92"><span class="linenos">92</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_is_blocked</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+</span><span id="World.random_location-93"><a href="#World.random_location-93"><span class="linenos">93</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_location</span><span class="p">()</span>
+</span><span id="World.random_location-94"><a href="#World.random_location-94"><span class="linenos">94</span></a>
+</span><span id="World.random_location-95"><a href="#World.random_location-95"><span class="linenos">95</span></a>        <span class="k">return</span> <span class="n">location</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Return random unblocked location.</p>
+</div>
+
+
+                            </div>
                             <div id="World.route" class="classattr">
                                         <input id="World.route-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">route</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">from_pos</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span>,</span><span class="param">	<span class="n">to_pos</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span><span class="p">]</span>:</span></span>
 
@@ -471,40 +652,39 @@
 
     </div>
     <a class="headerlink" href="#World.route"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="World.route-58"><a href="#World.route-58"><span class="linenos">58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
-</span><span id="World.route-59"><a href="#World.route-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="World.route-60"><a href="#World.route-60"><span class="linenos">60</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="World.route-61"><a href="#World.route-61"><span class="linenos">61</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="World.route-62"><a href="#World.route-62"><span class="linenos">62</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
-</span><span id="World.route-63"><a href="#World.route-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
-</span><span id="World.route-64"><a href="#World.route-64"><span class="linenos">64</span></a>
-</span><span id="World.route-65"><a href="#World.route-65"><span class="linenos">65</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
-</span><span id="World.route-66"><a href="#World.route-66"><span class="linenos">66</span></a><span class="sd">        Delegates to `Grid.route`.</span>
-</span><span id="World.route-67"><a href="#World.route-67"><span class="linenos">67</span></a><span class="sd">        Intermediate points are cell centres.</span>
-</span><span id="World.route-68"><a href="#World.route-68"><span class="linenos">68</span></a>
-</span><span id="World.route-69"><a href="#World.route-69"><span class="linenos">69</span></a><span class="sd">        Returns</span>
-</span><span id="World.route-70"><a href="#World.route-70"><span class="linenos">70</span></a><span class="sd">        -------</span>
-</span><span id="World.route-71"><a href="#World.route-71"><span class="linenos">71</span></a><span class="sd">        list[Vector2]</span>
-</span><span id="World.route-72"><a href="#World.route-72"><span class="linenos">72</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
-</span><span id="World.route-73"><a href="#World.route-73"><span class="linenos">73</span></a><span class="sd">            Empty if no path found.</span>
-</span><span id="World.route-74"><a href="#World.route-74"><span class="linenos">74</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="World.route-75"><a href="#World.route-75"><span class="linenos">75</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
-</span><span id="World.route-76"><a href="#World.route-76"><span class="linenos">76</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
-</span><span id="World.route-77"><a href="#World.route-77"><span class="linenos">77</span></a>
-</span><span id="World.route-78"><a href="#World.route-78"><span class="linenos">78</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
-</span><span id="World.route-79"><a href="#World.route-79"><span class="linenos">79</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
-</span><span id="World.route-80"><a href="#World.route-80"><span class="linenos">80</span></a>
-</span><span id="World.route-81"><a href="#World.route-81"><span class="linenos">81</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
-</span><span id="World.route-82"><a href="#World.route-82"><span class="linenos">82</span></a>
-</span><span id="World.route-83"><a href="#World.route-83"><span class="linenos">83</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
-</span><span id="World.route-84"><a href="#World.route-84"><span class="linenos">84</span></a>            <span class="k">return</span> <span class="p">[]</span>
-</span><span id="World.route-85"><a href="#World.route-85"><span class="linenos">85</span></a>
-</span><span id="World.route-86"><a href="#World.route-86"><span class="linenos">86</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
-</span><span id="World.route-87"><a href="#World.route-87"><span class="linenos">87</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
-</span><span id="World.route-88"><a href="#World.route-88"><span class="linenos">88</span></a>        <span class="c1"># always use actual goal (not cell centre) for last waypoint</span>
-</span><span id="World.route-89"><a href="#World.route-89"><span class="linenos">89</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_route</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="World.route-90"><a href="#World.route-90"><span class="linenos">90</span></a>            <span class="k">del</span> <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="World.route-91"><a href="#World.route-91"><span class="linenos">91</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="World.route-97"><a href="#World.route-97"><span class="linenos"> 97</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span>
+</span><span id="World.route-98"><a href="#World.route-98"><span class="linenos"> 98</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="World.route-99"><a href="#World.route-99"><span class="linenos"> 99</span></a>        <span class="n">from_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="World.route-100"><a href="#World.route-100"><span class="linenos">100</span></a>        <span class="n">to_pos</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="World.route-101"><a href="#World.route-101"><span class="linenos">101</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Vector2</span><span class="p">]:</span>
+</span><span id="World.route-102"><a href="#World.route-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return route.</span>
+</span><span id="World.route-103"><a href="#World.route-103"><span class="linenos">103</span></a>
+</span><span id="World.route-104"><a href="#World.route-104"><span class="linenos">104</span></a><span class="sd">        Uses uniform cost search, a variation of Dijkstra&#39;s algorithm.</span>
+</span><span id="World.route-105"><a href="#World.route-105"><span class="linenos">105</span></a><span class="sd">        Delegates to `Grid.route`.</span>
+</span><span id="World.route-106"><a href="#World.route-106"><span class="linenos">106</span></a><span class="sd">        Intermediate points are cell centres.</span>
+</span><span id="World.route-107"><a href="#World.route-107"><span class="linenos">107</span></a>
+</span><span id="World.route-108"><a href="#World.route-108"><span class="linenos">108</span></a><span class="sd">        Returns</span>
+</span><span id="World.route-109"><a href="#World.route-109"><span class="linenos">109</span></a><span class="sd">        -------</span>
+</span><span id="World.route-110"><a href="#World.route-110"><span class="linenos">110</span></a><span class="sd">        list[Vector2]</span>
+</span><span id="World.route-111"><a href="#World.route-111"><span class="linenos">111</span></a><span class="sd">            Points on the path, including `to_pos` itself.</span>
+</span><span id="World.route-112"><a href="#World.route-112"><span class="linenos">112</span></a><span class="sd">            Empty if no path found.</span>
+</span><span id="World.route-113"><a href="#World.route-113"><span class="linenos">113</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="World.route-114"><a href="#World.route-114"><span class="linenos">114</span></a>        <span class="n">from_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_pos</span><span class="p">)</span>
+</span><span id="World.route-115"><a href="#World.route-115"><span class="linenos">115</span></a>        <span class="n">to_cell</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">grid_ref_from_world_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_pos</span><span class="p">)</span>
+</span><span id="World.route-116"><a href="#World.route-116"><span class="linenos">116</span></a>
+</span><span id="World.route-117"><a href="#World.route-117"><span class="linenos">117</span></a>        <span class="k">if</span> <span class="n">from_cell</span> <span class="o">==</span> <span class="n">to_cell</span><span class="p">:</span>  <span class="c1"># intra-cell route is always direct</span>
+</span><span id="World.route-118"><a href="#World.route-118"><span class="linenos">118</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">to_pos</span><span class="p">]</span>
+</span><span id="World.route-119"><a href="#World.route-119"><span class="linenos">119</span></a>
+</span><span id="World.route-120"><a href="#World.route-120"><span class="linenos">120</span></a>        <span class="n">cell_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">from_cell</span><span class="p">,</span> <span class="n">to_cell</span><span class="p">)</span>
+</span><span id="World.route-121"><a href="#World.route-121"><span class="linenos">121</span></a>
+</span><span id="World.route-122"><a href="#World.route-122"><span class="linenos">122</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_route</span><span class="p">:</span>
+</span><span id="World.route-123"><a href="#World.route-123"><span class="linenos">123</span></a>            <span class="k">return</span> <span class="p">[]</span>
+</span><span id="World.route-124"><a href="#World.route-124"><span class="linenos">124</span></a>
+</span><span id="World.route-125"><a href="#World.route-125"><span class="linenos">125</span></a>        <span class="n">pos_route</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_route</span><span class="p">]</span>
+</span><span id="World.route-126"><a href="#World.route-126"><span class="linenos">126</span></a>        <span class="c1"># always use actual points (not cell centre) for end waypoints:</span>
+</span><span id="World.route-127"><a href="#World.route-127"><span class="linenos">127</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_pos</span>
+</span><span id="World.route-128"><a href="#World.route-128"><span class="linenos">128</span></a>        <span class="n">pos_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_pos</span>
+</span><span id="World.route-129"><a href="#World.route-129"><span class="linenos">129</span></a>        <span class="k">return</span> <span class="n">pos_route</span>
 </span></pre></div>
 
 

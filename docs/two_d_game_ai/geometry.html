@@ -27,32 +27,15 @@
                    pattern=".+" required>
 
 
+            <h2>Submodules</h2>
+            <ul>
+                    <li><a href="geometry/bearing.html">bearing</a></li>
+            </ul>
 
             <h2>API Documentation</h2>
                 <ul class="memberlist">
             <li>
-                    <a class="variable" href="#CIRCLE_DEGREES">CIRCLE_DEGREES</a>
-            </li>
-            <li>
-                    <a class="class" href="#Bearing">Bearing</a>
-                            <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#Bearing.__init__">Bearing</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Bearing.vector">vector</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Bearing.degrees">degrees</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Bearing.degrees_normalised">degrees_normalised</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Bearing.relative">relative</a>
-                        </li>
-                </ul>
-
+                    <a class="function" href="#point_in_or_on_circle">point_in_or_on_circle</a>
             </li>
     </ul>
 
@@ -79,250 +62,45 @@
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Package containing geometric classes and functions.&quot;&quot;&quot;</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">radians</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector2</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector2</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.bearing</span><span class="w"> </span><span class="kn">import</span> <span class="n">CIRCLE_DEGREES</span><span class="p">,</span> <span class="n">Bearing</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;CIRCLE_DEGREES&quot;</span><span class="p">,</span> <span class="s2">&quot;Bearing&quot;</span><span class="p">)</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">def</span><span class="w"> </span><span class="nf">point_in_or_on_circle</span><span class="p">(</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="n">circle_centre</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="n">circle_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if the point is (inside or on) the circle, else False.&quot;&quot;&quot;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="k">return</span> <span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">circle_centre</span><span class="p">)</span><span class="o">.</span><span class="n">length</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">circle_radius</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">def</span><span class="w"> </span><span class="nf">to_display_radians</span><span class="p">(</span><span class="n">bearing_deg</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert bearing (degrees) to Pygame-compatible angle (radians).</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    For use in e.g. calls to `pygame.draw.arc`.</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    Parameters</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">    ----------</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">    bearing_deg</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        Conventional bearing angle in degrees CCW from North</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    Returns</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    -------</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">    float</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        Pygame-compatible angle in radians CW from East</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="n">bearing_deg</span> <span class="o">+</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="k">def</span><span class="w"> </span><span class="nf">lerp</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation between two values.&quot;&quot;&quot;</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">return</span> <span class="n">start</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">end</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="k">def</span><span class="w"> </span><span class="nf">point_in_or_on_circle</span><span class="p">(</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>    <span class="n">circle_centre</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="n">circle_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return `True` if `point` is (inside or on) the circle, else `False`.&quot;&quot;&quot;</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">return</span> <span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">circle_centre</span><span class="p">)</span><span class="o">.</span><span class="n">length</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">circle_radius</span>
 </span></pre></div>
 
 
             </section>
-                <section id="CIRCLE_DEGREES">
-                    <div class="attr variable">
-            <span class="name">CIRCLE_DEGREES</span>        =
-<span class="default_value">360</span>
-
-        
-    </div>
-    <a class="headerlink" href="#CIRCLE_DEGREES"></a>
-    
-    
-
-                </section>
-                <section id="Bearing">
-                            <input id="Bearing-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr class">
-                    <div class="decorator decorator-dataclass">@dataclass</div>
-
-    <span class="def">class</span>
-    <span class="name">Bearing</span>:
-
-                <label class="view-source-button" for="Bearing-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Bearing"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Bearing-13"><a href="#Bearing-13"><span class="linenos">13</span></a><span class="nd">@dataclass</span>
-</span><span id="Bearing-14"><a href="#Bearing-14"><span class="linenos">14</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Bearing</span><span class="p">:</span>
-</span><span id="Bearing-15"><a href="#Bearing-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a conventional bearing (aka azimuthal angle).</span>
-</span><span id="Bearing-16"><a href="#Bearing-16"><span class="linenos">16</span></a>
-</span><span id="Bearing-17"><a href="#Bearing-17"><span class="linenos">17</span></a><span class="sd">    Stored as a unit vector, based on Pygame&#39;s Vector2 class.</span>
-</span><span id="Bearing-18"><a href="#Bearing-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="Bearing-19"><a href="#Bearing-19"><span class="linenos">19</span></a>
-</span><span id="Bearing-20"><a href="#Bearing-20"><span class="linenos">20</span></a>    <span class="n">vector</span><span class="p">:</span> <span class="n">Vector2</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Vector2</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="Bearing-21"><a href="#Bearing-21"><span class="linenos">21</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.</span>
-</span><span id="Bearing-22"><a href="#Bearing-22"><span class="linenos">22</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="Bearing-23"><a href="#Bearing-23"><span class="linenos">23</span></a>    <span class="n">_degrees</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="Bearing-24"><a href="#Bearing-24"><span class="linenos">24</span></a>
-</span><span id="Bearing-25"><a href="#Bearing-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="Bearing-26"><a href="#Bearing-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct vector from bearing angle.&quot;&quot;&quot;</span>
-</span><span id="Bearing-27"><a href="#Bearing-27"><span class="linenos">27</span></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">()</span>
-</span><span id="Bearing-28"><a href="#Bearing-28"><span class="linenos">28</span></a>        <span class="n">v</span><span class="o">.</span><span class="n">from_polar</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_degrees</span> <span class="o">-</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span>
-</span><span id="Bearing-29"><a href="#Bearing-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">_flip_vector_y</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-</span><span id="Bearing-30"><a href="#Bearing-30"><span class="linenos">30</span></a>
-</span><span id="Bearing-31"><a href="#Bearing-31"><span class="linenos">31</span></a>    <span class="nd">@property</span>
-</span><span id="Bearing-32"><a href="#Bearing-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Bearing-33"><a href="#Bearing-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get bearing in degrees, positive clockwise from zero at North.</span>
-</span><span id="Bearing-34"><a href="#Bearing-34"><span class="linenos">34</span></a>
-</span><span id="Bearing-35"><a href="#Bearing-35"><span class="linenos">35</span></a><span class="sd">        0 &lt;= degrees &lt; 360.</span>
-</span><span id="Bearing-36"><a href="#Bearing-36"><span class="linenos">36</span></a>
-</span><span id="Bearing-37"><a href="#Bearing-37"><span class="linenos">37</span></a><span class="sd">        Intended for absolute bearings, where North is 0, East is 90, etc.</span>
-</span><span id="Bearing-38"><a href="#Bearing-38"><span class="linenos">38</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Bearing-39"><a href="#Bearing-39"><span class="linenos">39</span></a>        <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">as_polar</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">4</span>
-</span><span id="Bearing-40"><a href="#Bearing-40"><span class="linenos">40</span></a>        <span class="k">if</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="Bearing-41"><a href="#Bearing-41"><span class="linenos">41</span></a>            <span class="n">angle</span> <span class="o">+=</span> <span class="n">CIRCLE_DEGREES</span>
-</span><span id="Bearing-42"><a href="#Bearing-42"><span class="linenos">42</span></a>        <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">CIRCLE_DEGREES</span><span class="p">:</span>
-</span><span id="Bearing-43"><a href="#Bearing-43"><span class="linenos">43</span></a>            <span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="Bearing-44"><a href="#Bearing-44"><span class="linenos">44</span></a>        <span class="k">return</span> <span class="n">angle</span>
-</span><span id="Bearing-45"><a href="#Bearing-45"><span class="linenos">45</span></a>
-</span><span id="Bearing-46"><a href="#Bearing-46"><span class="linenos">46</span></a>    <span class="nd">@property</span>
-</span><span id="Bearing-47"><a href="#Bearing-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">degrees_normalised</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Bearing-48"><a href="#Bearing-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get bearing in degrees, positive clockwise from zero at North.</span>
-</span><span id="Bearing-49"><a href="#Bearing-49"><span class="linenos">49</span></a>
-</span><span id="Bearing-50"><a href="#Bearing-50"><span class="linenos">50</span></a><span class="sd">        -180 &lt;= degrees &lt; 180, so due south is -180.</span>
-</span><span id="Bearing-51"><a href="#Bearing-51"><span class="linenos">51</span></a>
-</span><span id="Bearing-52"><a href="#Bearing-52"><span class="linenos">52</span></a><span class="sd">        Intended for relative bearings, where negative value is to left/port; positive</span>
-</span><span id="Bearing-53"><a href="#Bearing-53"><span class="linenos">53</span></a><span class="sd">        is to right/starboard.</span>
-</span><span id="Bearing-54"><a href="#Bearing-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Bearing-55"><a href="#Bearing-55"><span class="linenos">55</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="o">&gt;=</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
-</span><span id="Bearing-56"><a href="#Bearing-56"><span class="linenos">56</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="o">-</span> <span class="n">CIRCLE_DEGREES</span>
-</span><span id="Bearing-57"><a href="#Bearing-57"><span class="linenos">57</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span>
-</span><span id="Bearing-58"><a href="#Bearing-58"><span class="linenos">58</span></a>
-</span><span id="Bearing-59"><a href="#Bearing-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">relative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_vector</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bearing</span><span class="p">:</span>
-</span><span id="Bearing-60"><a href="#Bearing-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return new `Bearing` representing relative bearing to vector.&quot;&quot;&quot;</span>
-</span><span id="Bearing-61"><a href="#Bearing-61"><span class="linenos">61</span></a>        <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">angle_to</span><span class="p">(</span><span class="n">other_vector</span><span class="p">)</span>
-</span><span id="Bearing-62"><a href="#Bearing-62"><span class="linenos">62</span></a>        <span class="k">return</span> <span class="n">Bearing</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Represents a conventional bearing (aka azimuthal angle).</p>
-
-<p>Stored as a unit vector, based on Pygame's Vector2 class.</p>
-</div>
-
-
-                            <div id="Bearing.__init__" class="classattr">
-                                <div class="attr function">
-            
-        <span class="name">Bearing</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">_degrees</span><span class="p">:</span> <span class="nb">float</span></span>)</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Bearing.__init__"></a>
-    
-    
-
-                            </div>
-                            <div id="Bearing.vector" class="classattr">
-                                <div class="attr variable">
-            <span class="name">vector</span><span class="annotation">: pygame.math.Vector2</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Bearing.vector"></a>
-    
-            <div class="docstring"><p>The bearing as a standard (positive, right-handed, y-axis up) coordinate vector.</p>
-</div>
-
-
-                            </div>
-                            <div id="Bearing.degrees" class="classattr">
-                                        <input id="Bearing.degrees-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr variable">
-            <span class="name">degrees</span><span class="annotation">: float</span>
-
-                <label class="view-source-button" for="Bearing.degrees-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Bearing.degrees"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Bearing.degrees-31"><a href="#Bearing.degrees-31"><span class="linenos">31</span></a>    <span class="nd">@property</span>
-</span><span id="Bearing.degrees-32"><a href="#Bearing.degrees-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Bearing.degrees-33"><a href="#Bearing.degrees-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get bearing in degrees, positive clockwise from zero at North.</span>
-</span><span id="Bearing.degrees-34"><a href="#Bearing.degrees-34"><span class="linenos">34</span></a>
-</span><span id="Bearing.degrees-35"><a href="#Bearing.degrees-35"><span class="linenos">35</span></a><span class="sd">        0 &lt;= degrees &lt; 360.</span>
-</span><span id="Bearing.degrees-36"><a href="#Bearing.degrees-36"><span class="linenos">36</span></a>
-</span><span id="Bearing.degrees-37"><a href="#Bearing.degrees-37"><span class="linenos">37</span></a><span class="sd">        Intended for absolute bearings, where North is 0, East is 90, etc.</span>
-</span><span id="Bearing.degrees-38"><a href="#Bearing.degrees-38"><span class="linenos">38</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Bearing.degrees-39"><a href="#Bearing.degrees-39"><span class="linenos">39</span></a>        <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">as_polar</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">4</span>
-</span><span id="Bearing.degrees-40"><a href="#Bearing.degrees-40"><span class="linenos">40</span></a>        <span class="k">if</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="Bearing.degrees-41"><a href="#Bearing.degrees-41"><span class="linenos">41</span></a>            <span class="n">angle</span> <span class="o">+=</span> <span class="n">CIRCLE_DEGREES</span>
-</span><span id="Bearing.degrees-42"><a href="#Bearing.degrees-42"><span class="linenos">42</span></a>        <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">CIRCLE_DEGREES</span><span class="p">:</span>
-</span><span id="Bearing.degrees-43"><a href="#Bearing.degrees-43"><span class="linenos">43</span></a>            <span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="Bearing.degrees-44"><a href="#Bearing.degrees-44"><span class="linenos">44</span></a>        <span class="k">return</span> <span class="n">angle</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Get bearing in degrees, positive clockwise from zero at North.</p>
-
-<p>0 &lt;= degrees &lt; 360.</p>
-
-<p>Intended for absolute bearings, where North is 0, East is 90, etc.</p>
-</div>
-
-
-                            </div>
-                            <div id="Bearing.degrees_normalised" class="classattr">
-                                        <input id="Bearing.degrees_normalised-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr variable">
-            <span class="name">degrees_normalised</span><span class="annotation">: float</span>
-
-                <label class="view-source-button" for="Bearing.degrees_normalised-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Bearing.degrees_normalised"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Bearing.degrees_normalised-46"><a href="#Bearing.degrees_normalised-46"><span class="linenos">46</span></a>    <span class="nd">@property</span>
-</span><span id="Bearing.degrees_normalised-47"><a href="#Bearing.degrees_normalised-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">degrees_normalised</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Bearing.degrees_normalised-48"><a href="#Bearing.degrees_normalised-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get bearing in degrees, positive clockwise from zero at North.</span>
-</span><span id="Bearing.degrees_normalised-49"><a href="#Bearing.degrees_normalised-49"><span class="linenos">49</span></a>
-</span><span id="Bearing.degrees_normalised-50"><a href="#Bearing.degrees_normalised-50"><span class="linenos">50</span></a><span class="sd">        -180 &lt;= degrees &lt; 180, so due south is -180.</span>
-</span><span id="Bearing.degrees_normalised-51"><a href="#Bearing.degrees_normalised-51"><span class="linenos">51</span></a>
-</span><span id="Bearing.degrees_normalised-52"><a href="#Bearing.degrees_normalised-52"><span class="linenos">52</span></a><span class="sd">        Intended for relative bearings, where negative value is to left/port; positive</span>
-</span><span id="Bearing.degrees_normalised-53"><a href="#Bearing.degrees_normalised-53"><span class="linenos">53</span></a><span class="sd">        is to right/starboard.</span>
-</span><span id="Bearing.degrees_normalised-54"><a href="#Bearing.degrees_normalised-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Bearing.degrees_normalised-55"><a href="#Bearing.degrees_normalised-55"><span class="linenos">55</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="o">&gt;=</span> <span class="n">CIRCLE_DEGREES</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
-</span><span id="Bearing.degrees_normalised-56"><a href="#Bearing.degrees_normalised-56"><span class="linenos">56</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="o">-</span> <span class="n">CIRCLE_DEGREES</span>
-</span><span id="Bearing.degrees_normalised-57"><a href="#Bearing.degrees_normalised-57"><span class="linenos">57</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Get bearing in degrees, positive clockwise from zero at North.</p>
-
-<p>-180 &lt;= degrees &lt; 180, so due south is -180.</p>
-
-<p>Intended for relative bearings, where negative value is to left/port; positive
-is to right/starboard.</p>
-</div>
-
-
-                            </div>
-                            <div id="Bearing.relative" class="classattr">
-                                        <input id="Bearing.relative-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                <section id="point_in_or_on_circle">
+                            <input id="point_in_or_on_circle-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">relative</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">other_vector</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span></span><span class="return-annotation">) -> <span class="n"><a href="#Bearing">Bearing</a></span>:</span></span>
 
-                <label class="view-source-button" for="Bearing.relative-view-source"><span>View Source</span></label>
+        <span class="def">def</span>
+        <span class="name">point_in_or_on_circle</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">point</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span>,</span><span class="param">	<span class="n">circle_centre</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span>,</span><span class="param">	<span class="n">circle_radius</span><span class="p">:</span> <span class="nb">float</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+                <label class="view-source-button" for="point_in_or_on_circle-view-source"><span>View Source</span></label>
 
     </div>
-    <a class="headerlink" href="#Bearing.relative"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Bearing.relative-59"><a href="#Bearing.relative-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">relative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_vector</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bearing</span><span class="p">:</span>
-</span><span id="Bearing.relative-60"><a href="#Bearing.relative-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return new `Bearing` representing relative bearing to vector.&quot;&quot;&quot;</span>
-</span><span id="Bearing.relative-61"><a href="#Bearing.relative-61"><span class="linenos">61</span></a>        <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">angle_to</span><span class="p">(</span><span class="n">other_vector</span><span class="p">)</span>
-</span><span id="Bearing.relative-62"><a href="#Bearing.relative-62"><span class="linenos">62</span></a>        <span class="k">return</span> <span class="n">Bearing</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <a class="headerlink" href="#point_in_or_on_circle"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="point_in_or_on_circle-7"><a href="#point_in_or_on_circle-7"><span class="linenos"> 7</span></a><span class="k">def</span><span class="w"> </span><span class="nf">point_in_or_on_circle</span><span class="p">(</span>
+</span><span id="point_in_or_on_circle-8"><a href="#point_in_or_on_circle-8"><span class="linenos"> 8</span></a>    <span class="n">point</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="point_in_or_on_circle-9"><a href="#point_in_or_on_circle-9"><span class="linenos"> 9</span></a>    <span class="n">circle_centre</span><span class="p">:</span> <span class="n">Vector2</span><span class="p">,</span>
+</span><span id="point_in_or_on_circle-10"><a href="#point_in_or_on_circle-10"><span class="linenos">10</span></a>    <span class="n">circle_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="point_in_or_on_circle-11"><a href="#point_in_or_on_circle-11"><span class="linenos">11</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="point_in_or_on_circle-12"><a href="#point_in_or_on_circle-12"><span class="linenos">12</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return `True` if `point` is (inside or on) the circle, else `False`.&quot;&quot;&quot;</span>
+</span><span id="point_in_or_on_circle-13"><a href="#point_in_or_on_circle-13"><span class="linenos">13</span></a>    <span class="k">return</span> <span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">circle_centre</span><span class="p">)</span><span class="o">.</span><span class="n">length</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">circle_radius</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Return new <code><a href="#Bearing">Bearing</a></code> representing relative bearing to vector.</p>
+            <div class="docstring"><p>Return <code>True</code> if <code>point</code> is (inside or on) the circle, else <code>False</code>.</p>
 </div>
 
 
-                            </div>
                 </section>
     </main>
 <script>

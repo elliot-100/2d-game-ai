@@ -61,59 +61,60 @@
                     <h1 class="modulename">
 <a href="./../../two_d_game_ai.html">two_d_game_ai</a><wbr>.<a href="./../view.html">view</a><wbr>.movement_block_renderer    </h1>
 
-                        <div class="docstring"><p>Module containing <code><a href="#MovementBlockRenderer">MovementBlockRenderer</a></code> class.</p>
+                        <div class="docstring"><p>Contains <code><a href="#MovementBlockRenderer">MovementBlockRenderer</a></code> class.</p>
 </div>
 
                         <input id="mod-movement_block_renderer-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-movement_block_renderer-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Module containing `MovementBlockRenderer` class.&quot;&quot;&quot;</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Contains `MovementBlockRenderer` class.&quot;&quot;&quot;</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.movement_block</span><span class="w"> </span><span class="kn">import</span> <span class="n">MovementBlock</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.view</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.view.generic_entity_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericEntityRenderer</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Font</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.view.view</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.movement_block</span><span class="w"> </span><span class="kn">import</span> <span class="n">MovementBlock</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.view</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.view.generic_entity_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericEntityRenderer</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="nd">@dataclass</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">GenericEntityRenderer</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a Block to a Surface.&quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a `MovementBlock` to a `WorldRenderer`.&quot;&quot;&quot;</span>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">LABEL_OFFSET</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">LABEL_OFFSET</span><span class="p">:</span> <span class="n">ClassVar</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Display units.&quot;&quot;&quot;</span>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>        <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="n">entity</span><span class="p">:</span> <span class="n">MovementBlock</span><span class="p">,</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="n">font</span><span class="p">:</span> <span class="n">Font</span><span class="p">,</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BotRenderer initialised for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draws the MovementBlock to the surface.&quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the `MovementBlock`.&quot;&quot;&quot;</span>
 </span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># label only</span>
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
 </span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span>
 </span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
 </span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_selected</span> <span class="k">else</span> <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_LINE</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="p">)</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="n">surface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 
@@ -121,7 +122,8 @@
                 <section id="MovementBlockRenderer">
                             <input id="MovementBlockRenderer-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator decorator-dataclass">@dataclass</div>
+
     <span class="def">class</span>
     <span class="name">MovementBlockRenderer</span><wbr>(<span class="base"><a href="generic_entity_renderer.html#GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer.GenericEntityRenderer</a></span>):
 
@@ -129,77 +131,66 @@
 
     </div>
     <a class="headerlink" href="#MovementBlockRenderer"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer-18"><a href="#MovementBlockRenderer-18"><span class="linenos">18</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">GenericEntityRenderer</span><span class="p">):</span>
-</span><span id="MovementBlockRenderer-19"><a href="#MovementBlockRenderer-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a Block to a Surface.&quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer-17"><a href="#MovementBlockRenderer-17"><span class="linenos">17</span></a><span class="nd">@dataclass</span>
+</span><span id="MovementBlockRenderer-18"><a href="#MovementBlockRenderer-18"><span class="linenos">18</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlockRenderer</span><span class="p">(</span><span class="n">GenericEntityRenderer</span><span class="p">):</span>
+</span><span id="MovementBlockRenderer-19"><a href="#MovementBlockRenderer-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders a `MovementBlock` to a `WorldRenderer`.&quot;&quot;&quot;</span>
 </span><span id="MovementBlockRenderer-20"><a href="#MovementBlockRenderer-20"><span class="linenos">20</span></a>
-</span><span id="MovementBlockRenderer-21"><a href="#MovementBlockRenderer-21"><span class="linenos">21</span></a>    <span class="n">LABEL_OFFSET</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="MovementBlockRenderer-21"><a href="#MovementBlockRenderer-21"><span class="linenos">21</span></a>    <span class="n">LABEL_OFFSET</span><span class="p">:</span> <span class="n">ClassVar</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </span><span id="MovementBlockRenderer-22"><a href="#MovementBlockRenderer-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Display units.&quot;&quot;&quot;</span>
 </span><span id="MovementBlockRenderer-23"><a href="#MovementBlockRenderer-23"><span class="linenos">23</span></a>
-</span><span id="MovementBlockRenderer-24"><a href="#MovementBlockRenderer-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="MovementBlockRenderer-25"><a href="#MovementBlockRenderer-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-26"><a href="#MovementBlockRenderer-26"><span class="linenos">26</span></a>        <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-27"><a href="#MovementBlockRenderer-27"><span class="linenos">27</span></a>        <span class="n">entity</span><span class="p">:</span> <span class="n">MovementBlock</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-28"><a href="#MovementBlockRenderer-28"><span class="linenos">28</span></a>        <span class="n">font</span><span class="p">:</span> <span class="n">Font</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-29"><a href="#MovementBlockRenderer-29"><span class="linenos">29</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlockRenderer-30"><a href="#MovementBlockRenderer-30"><span class="linenos">30</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
-</span><span id="MovementBlockRenderer-31"><a href="#MovementBlockRenderer-31"><span class="linenos">31</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
-</span><span id="MovementBlockRenderer-32"><a href="#MovementBlockRenderer-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span>
+</span><span id="MovementBlockRenderer-24"><a href="#MovementBlockRenderer-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="MovementBlockRenderer-25"><a href="#MovementBlockRenderer-25"><span class="linenos">25</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+</span><span id="MovementBlockRenderer-26"><a href="#MovementBlockRenderer-26"><span class="linenos">26</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
+</span><span id="MovementBlockRenderer-27"><a href="#MovementBlockRenderer-27"><span class="linenos">27</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span>
+</span><span id="MovementBlockRenderer-28"><a href="#MovementBlockRenderer-28"><span class="linenos">28</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BotRenderer initialised for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="MovementBlockRenderer-29"><a href="#MovementBlockRenderer-29"><span class="linenos">29</span></a>        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+</span><span id="MovementBlockRenderer-30"><a href="#MovementBlockRenderer-30"><span class="linenos">30</span></a>
+</span><span id="MovementBlockRenderer-31"><a href="#MovementBlockRenderer-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="MovementBlockRenderer-32"><a href="#MovementBlockRenderer-32"><span class="linenos">32</span></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
 </span><span id="MovementBlockRenderer-33"><a href="#MovementBlockRenderer-33"><span class="linenos">33</span></a>
 </span><span id="MovementBlockRenderer-34"><a href="#MovementBlockRenderer-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlockRenderer-35"><a href="#MovementBlockRenderer-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draws the MovementBlock to the surface.&quot;&quot;&quot;</span>
+</span><span id="MovementBlockRenderer-35"><a href="#MovementBlockRenderer-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the `MovementBlock`.&quot;&quot;&quot;</span>
 </span><span id="MovementBlockRenderer-36"><a href="#MovementBlockRenderer-36"><span class="linenos">36</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># label only</span>
 </span><span id="MovementBlockRenderer-37"><a href="#MovementBlockRenderer-37"><span class="linenos">37</span></a>
 </span><span id="MovementBlockRenderer-38"><a href="#MovementBlockRenderer-38"><span class="linenos">38</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
 </span><span id="MovementBlockRenderer-39"><a href="#MovementBlockRenderer-39"><span class="linenos">39</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span>
 </span><span id="MovementBlockRenderer-40"><a href="#MovementBlockRenderer-40"><span class="linenos">40</span></a>
 </span><span id="MovementBlockRenderer-41"><a href="#MovementBlockRenderer-41"><span class="linenos">41</span></a>        <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_selected</span> <span class="k">else</span> <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_LINE</span>
-</span><span id="MovementBlockRenderer-42"><a href="#MovementBlockRenderer-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
-</span><span id="MovementBlockRenderer-43"><a href="#MovementBlockRenderer-43"><span class="linenos">43</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-44"><a href="#MovementBlockRenderer-44"><span class="linenos">44</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-45"><a href="#MovementBlockRenderer-45"><span class="linenos">45</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-46"><a href="#MovementBlockRenderer-46"><span class="linenos">46</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer-47"><a href="#MovementBlockRenderer-47"><span class="linenos">47</span></a>        <span class="p">)</span>
+</span><span id="MovementBlockRenderer-42"><a href="#MovementBlockRenderer-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
+</span><span id="MovementBlockRenderer-43"><a href="#MovementBlockRenderer-43"><span class="linenos">43</span></a>            <span class="n">surface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer-44"><a href="#MovementBlockRenderer-44"><span class="linenos">44</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer-45"><a href="#MovementBlockRenderer-45"><span class="linenos">45</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer-46"><a href="#MovementBlockRenderer-46"><span class="linenos">46</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer-47"><a href="#MovementBlockRenderer-47"><span class="linenos">47</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer-48"><a href="#MovementBlockRenderer-48"><span class="linenos">48</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Renders a Block to a Surface.</p>
+            <div class="docstring"><p>Renders a <code>MovementBlock</code> to a <code>WorldRenderer</code>.</p>
 </div>
 
 
                             <div id="MovementBlockRenderer.__init__" class="classattr">
-                                        <input id="MovementBlockRenderer.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="name">MovementBlockRenderer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">view</span><span class="p">:</span> <span class="n"><a href="view.html#View">two_d_game_ai.view.view.View</a></span>,</span><span class="param">	<span class="n">entity</span><span class="p">:</span> <span class="n"><a href="../entities/movement_block.html#MovementBlock">two_d_game_ai.entities.movement_block.MovementBlock</a></span>,</span><span class="param">	<span class="n">font</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span></span>)</span>
+                                <div class="attr function">
 
-                <label class="view-source-button" for="MovementBlockRenderer.__init__-view-source"><span>View Source</span></label>
+        <span class="name">MovementBlockRenderer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">entity</span><span class="p">:</span> <span class="s1">&#39;GenericEntity&#39;</span>,</span><span class="param">	<span class="n">parent</span><span class="p">:</span> <span class="s1">&#39;WorldRenderer&#39;</span>,</span><span class="param">	<span class="n">clickable_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span></span>)</span>
+
 
     </div>
     <a class="headerlink" href="#MovementBlockRenderer.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer.__init__-24"><a href="#MovementBlockRenderer.__init__-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="MovementBlockRenderer.__init__-25"><a href="#MovementBlockRenderer.__init__-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.__init__-26"><a href="#MovementBlockRenderer.__init__-26"><span class="linenos">26</span></a>        <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.__init__-27"><a href="#MovementBlockRenderer.__init__-27"><span class="linenos">27</span></a>        <span class="n">entity</span><span class="p">:</span> <span class="n">MovementBlock</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.__init__-28"><a href="#MovementBlockRenderer.__init__-28"><span class="linenos">28</span></a>        <span class="n">font</span><span class="p">:</span> <span class="n">Font</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.__init__-29"><a href="#MovementBlockRenderer.__init__-29"><span class="linenos">29</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlockRenderer.__init__-30"><a href="#MovementBlockRenderer.__init__-30"><span class="linenos">30</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
-</span><span id="MovementBlockRenderer.__init__-31"><a href="#MovementBlockRenderer.__init__-31"><span class="linenos">31</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
-</span><span id="MovementBlockRenderer.__init__-32"><a href="#MovementBlockRenderer.__init__-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">clickable_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span>
-</span></pre></div>
 
 
-    
 
                             </div>
                             <div id="MovementBlockRenderer.LABEL_OFFSET" class="classattr">
                                 <div class="attr variable">
-            <span class="name">LABEL_OFFSET</span>        =
+            <span class="name">LABEL_OFFSET</span><span class="annotation">: ClassVar</span>        =
 <span class="default_value">(0, 0)</span>
 
-        
+
     </div>
     <a class="headerlink" href="#MovementBlockRenderer.LABEL_OFFSET"></a>
-    
+
             <div class="docstring"><p>Display units.</p>
 </div>
 
@@ -208,7 +199,7 @@
                             <div id="MovementBlockRenderer.draw" class="classattr">
                                         <input id="MovementBlockRenderer.draw-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+
         <span class="def">def</span>
         <span class="name">draw</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
@@ -217,23 +208,24 @@
     </div>
     <a class="headerlink" href="#MovementBlockRenderer.draw"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlockRenderer.draw-34"><a href="#MovementBlockRenderer.draw-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlockRenderer.draw-35"><a href="#MovementBlockRenderer.draw-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draws the MovementBlock to the surface.&quot;&quot;&quot;</span>
+</span><span id="MovementBlockRenderer.draw-35"><a href="#MovementBlockRenderer.draw-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the `MovementBlock`.&quot;&quot;&quot;</span>
 </span><span id="MovementBlockRenderer.draw-36"><a href="#MovementBlockRenderer.draw-36"><span class="linenos">36</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># label only</span>
 </span><span id="MovementBlockRenderer.draw-37"><a href="#MovementBlockRenderer.draw-37"><span class="linenos">37</span></a>
 </span><span id="MovementBlockRenderer.draw-38"><a href="#MovementBlockRenderer.draw-38"><span class="linenos">38</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span> <span class="n">MovementBlock</span><span class="p">):</span>
 </span><span id="MovementBlockRenderer.draw-39"><a href="#MovementBlockRenderer.draw-39"><span class="linenos">39</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span>
 </span><span id="MovementBlockRenderer.draw-40"><a href="#MovementBlockRenderer.draw-40"><span class="linenos">40</span></a>
 </span><span id="MovementBlockRenderer.draw-41"><a href="#MovementBlockRenderer.draw-41"><span class="linenos">41</span></a>        <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_selected</span> <span class="k">else</span> <span class="n">colors</span><span class="o">.</span><span class="n">MOVEMENT_BLOCK_LINE</span>
-</span><span id="MovementBlockRenderer.draw-42"><a href="#MovementBlockRenderer.draw-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
-</span><span id="MovementBlockRenderer.draw-43"><a href="#MovementBlockRenderer.draw-43"><span class="linenos">43</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.draw-44"><a href="#MovementBlockRenderer.draw-44"><span class="linenos">44</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.draw-45"><a href="#MovementBlockRenderer.draw-45"><span class="linenos">45</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.draw-46"><a href="#MovementBlockRenderer.draw-46"><span class="linenos">46</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="MovementBlockRenderer.draw-47"><a href="#MovementBlockRenderer.draw-47"><span class="linenos">47</span></a>        <span class="p">)</span>
+</span><span id="MovementBlockRenderer.draw-42"><a href="#MovementBlockRenderer.draw-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">draw_circle</span><span class="p">(</span>
+</span><span id="MovementBlockRenderer.draw-43"><a href="#MovementBlockRenderer.draw-43"><span class="linenos">43</span></a>            <span class="n">surface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer.draw-44"><a href="#MovementBlockRenderer.draw-44"><span class="linenos">44</span></a>            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer.draw-45"><a href="#MovementBlockRenderer.draw-45"><span class="linenos">45</span></a>            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer.draw-46"><a href="#MovementBlockRenderer.draw-46"><span class="linenos">46</span></a>            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer.draw-47"><a href="#MovementBlockRenderer.draw-47"><span class="linenos">47</span></a>            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="MovementBlockRenderer.draw-48"><a href="#MovementBlockRenderer.draw-48"><span class="linenos">48</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Draws the MovementBlock to the surface.</p>
+            <div class="docstring"><p>Draw the <code>MovementBlock</code>.</p>
 </div>
 
 
@@ -242,11 +234,12 @@
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="generic_entity_renderer.html#GenericEntityRenderer">two_d_game_ai.view.generic_entity_renderer.GenericEntityRenderer</a></dt>
-                                <dd id="MovementBlockRenderer.view" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.view">view</a></dd>
-                <dd id="MovementBlockRenderer.entity" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.entity">entity</a></dd>
-                <dd id="MovementBlockRenderer.font" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.font">font</a></dd>
+                                <dd id="MovementBlockRenderer.entity" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.entity">entity</a></dd>
+                <dd id="MovementBlockRenderer.parent" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.parent">parent</a></dd>
                 <dd id="MovementBlockRenderer.is_selected" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.is_selected">is_selected</a></dd>
                 <dd id="MovementBlockRenderer.clickable_radius" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.clickable_radius">clickable_radius</a></dd>
+                <dd id="MovementBlockRenderer.id" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.id">id</a></dd>
+                <dd id="MovementBlockRenderer.font" class="variable"><a href="generic_entity_renderer.html#GenericEntityRenderer.font">font</a></dd>
                 <dd id="MovementBlockRenderer.is_clicked" class="function"><a href="generic_entity_renderer.html#GenericEntityRenderer.is_clicked">is_clicked</a></dd>
 
             </div>

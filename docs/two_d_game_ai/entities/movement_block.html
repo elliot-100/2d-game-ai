@@ -55,56 +55,51 @@
                     <h1 class="modulename">
 <a href="./../../two_d_game_ai.html">two_d_game_ai</a><wbr>.<a href="./../entities.html">entities</a><wbr>.movement_block    </h1>
 
-                        <div class="docstring"><p>Package containing <code><a href="#MovementBlock">MovementBlock</a></code> class.</p>
+                        <div class="docstring"><p>Contains <code><a href="#MovementBlock">MovementBlock</a></code> class.</p>
 </div>
 
                         <input id="mod-movement_block-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-movement_block-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Package containing `MovementBlock` class.&quot;&quot;&quot;</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Contains `MovementBlock` class.&quot;&quot;&quot;</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pygame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector2</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.generic_entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericEntity</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_in_or_on_circle</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.world.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.world.world</span><span class="w"> </span><span class="kn">import</span> <span class="n">World</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.entities.generic_entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericEntity</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_in_or_on_circle</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">two_d_game_ai.world.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlock</span><span class="p">(</span><span class="n">GenericEntity</span><span class="p">):</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Circular entity that blocks movement.&quot;&quot;&quot;</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="n">world</span><span class="p">:</span> <span class="n">World</span><span class="p">,</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>        <span class="n">pos</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>            <span class="k">if</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>                <span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>                    <span class="n">cell</span><span class="p">,</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>                <span class="p">),</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>                <span class="n">radius</span><span class="p">,</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>            <span class="p">):</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>                <span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">movement_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MovementBlock &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; created.&quot;</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlock</span><span class="p">(</span><span class="n">GenericEntity</span><span class="p">):</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Circular entity that blocks movement.&quot;&quot;&quot;</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position_from_sequence</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">(</span><span class="n">position_from_sequence</span><span class="p">)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>            <span class="n">cell_centre</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>            <span class="k">if</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>                <span class="n">cell_centre</span><span class="p">,</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>            <span class="p">):</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MovementBlock &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; initialised.&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -112,7 +107,8 @@
                 <section id="MovementBlock">
                             <input id="MovementBlock-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator decorator-dataclass">@dataclass(kw_only=True)</div>
+
     <span class="def">class</span>
     <span class="name">MovementBlock</span><wbr>(<span class="base"><a href="generic_entity.html#GenericEntity">two_d_game_ai.entities.generic_entity.GenericEntity</a></span>):
 
@@ -120,32 +116,26 @@
 
     </div>
     <a class="headerlink" href="#MovementBlock"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlock-19"><a href="#MovementBlock-19"><span class="linenos">19</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlock</span><span class="p">(</span><span class="n">GenericEntity</span><span class="p">):</span>
-</span><span id="MovementBlock-20"><a href="#MovementBlock-20"><span class="linenos">20</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Circular entity that blocks movement.&quot;&quot;&quot;</span>
-</span><span id="MovementBlock-21"><a href="#MovementBlock-21"><span class="linenos">21</span></a>
-</span><span id="MovementBlock-22"><a href="#MovementBlock-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="MovementBlock-23"><a href="#MovementBlock-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="MovementBlock-24"><a href="#MovementBlock-24"><span class="linenos">24</span></a>        <span class="n">world</span><span class="p">:</span> <span class="n">World</span><span class="p">,</span>
-</span><span id="MovementBlock-25"><a href="#MovementBlock-25"><span class="linenos">25</span></a>        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="MovementBlock-26"><a href="#MovementBlock-26"><span class="linenos">26</span></a>        <span class="n">pos</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-</span><span id="MovementBlock-27"><a href="#MovementBlock-27"><span class="linenos">27</span></a>        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="MovementBlock-28"><a href="#MovementBlock-28"><span class="linenos">28</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlock-29"><a href="#MovementBlock-29"><span class="linenos">29</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
-</span><span id="MovementBlock-30"><a href="#MovementBlock-30"><span class="linenos">30</span></a>
-</span><span id="MovementBlock-31"><a href="#MovementBlock-31"><span class="linenos">31</span></a>        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
-</span><span id="MovementBlock-32"><a href="#MovementBlock-32"><span class="linenos">32</span></a>            <span class="k">if</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span>
-</span><span id="MovementBlock-33"><a href="#MovementBlock-33"><span class="linenos">33</span></a>                <span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span>
-</span><span id="MovementBlock-34"><a href="#MovementBlock-34"><span class="linenos">34</span></a>                    <span class="n">cell</span><span class="p">,</span>
-</span><span id="MovementBlock-35"><a href="#MovementBlock-35"><span class="linenos">35</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span>
-</span><span id="MovementBlock-36"><a href="#MovementBlock-36"><span class="linenos">36</span></a>                <span class="p">),</span>
-</span><span id="MovementBlock-37"><a href="#MovementBlock-37"><span class="linenos">37</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span>
-</span><span id="MovementBlock-38"><a href="#MovementBlock-38"><span class="linenos">38</span></a>                <span class="n">radius</span><span class="p">,</span>
-</span><span id="MovementBlock-39"><a href="#MovementBlock-39"><span class="linenos">39</span></a>            <span class="p">):</span>
-</span><span id="MovementBlock-40"><a href="#MovementBlock-40"><span class="linenos">40</span></a>                <span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
-</span><span id="MovementBlock-41"><a href="#MovementBlock-41"><span class="linenos">41</span></a>
-</span><span id="MovementBlock-42"><a href="#MovementBlock-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">movement_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="MovementBlock-43"><a href="#MovementBlock-43"><span class="linenos">43</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MovementBlock &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; created.&quot;</span>
-</span><span id="MovementBlock-44"><a href="#MovementBlock-44"><span class="linenos">44</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlock-20"><a href="#MovementBlock-20"><span class="linenos">20</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="MovementBlock-21"><a href="#MovementBlock-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">MovementBlock</span><span class="p">(</span><span class="n">GenericEntity</span><span class="p">):</span>
+</span><span id="MovementBlock-22"><a href="#MovementBlock-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Circular entity that blocks movement.&quot;&quot;&quot;</span>
+</span><span id="MovementBlock-23"><a href="#MovementBlock-23"><span class="linenos">23</span></a>
+</span><span id="MovementBlock-24"><a href="#MovementBlock-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position_from_sequence</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="MovementBlock-25"><a href="#MovementBlock-25"><span class="linenos">25</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">(</span><span class="n">position_from_sequence</span><span class="p">)</span>
+</span><span id="MovementBlock-26"><a href="#MovementBlock-26"><span class="linenos">26</span></a>        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+</span><span id="MovementBlock-27"><a href="#MovementBlock-27"><span class="linenos">27</span></a>            <span class="n">cell_centre</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span>
+</span><span id="MovementBlock-28"><a href="#MovementBlock-28"><span class="linenos">28</span></a>            <span class="k">if</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span>
+</span><span id="MovementBlock-29"><a href="#MovementBlock-29"><span class="linenos">29</span></a>                <span class="n">cell_centre</span><span class="p">,</span>
+</span><span id="MovementBlock-30"><a href="#MovementBlock-30"><span class="linenos">30</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+</span><span id="MovementBlock-31"><a href="#MovementBlock-31"><span class="linenos">31</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+</span><span id="MovementBlock-32"><a href="#MovementBlock-32"><span class="linenos">32</span></a>            <span class="p">):</span>
+</span><span id="MovementBlock-33"><a href="#MovementBlock-33"><span class="linenos">33</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+</span><span id="MovementBlock-34"><a href="#MovementBlock-34"><span class="linenos">34</span></a>
+</span><span id="MovementBlock-35"><a href="#MovementBlock-35"><span class="linenos">35</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MovementBlock &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; initialised.&quot;</span>
+</span><span id="MovementBlock-36"><a href="#MovementBlock-36"><span class="linenos">36</span></a>        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
+</span><span id="MovementBlock-37"><a href="#MovementBlock-37"><span class="linenos">37</span></a>
+</span><span id="MovementBlock-38"><a href="#MovementBlock-38"><span class="linenos">38</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="MovementBlock-39"><a href="#MovementBlock-39"><span class="linenos">39</span></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -154,42 +144,15 @@
 
 
                             <div id="MovementBlock.__init__" class="classattr">
-                                        <input id="MovementBlock.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="name">MovementBlock</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">world</span><span class="p">:</span> <span class="n"><a href="../world/world.html#World">two_d_game_ai.world.world.World</a></span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">pos</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>,</span><span class="param">	<span class="n">radius</span><span class="p">:</span> <span class="nb">float</span></span>)</span>
+                                <div class="attr function">
 
-                <label class="view-source-button" for="MovementBlock.__init__-view-source"><span>View Source</span></label>
+        <span class="name">MovementBlock</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="o">*</span>,</span><span class="param">	<span class="n">world</span><span class="p">:</span> <span class="s1">&#39;World&#39;</span>,</span><span class="param">	<span class="n">position_from_sequence</span><span class="p">:</span> <span class="s1">&#39;InitVar[Sequence[float]]&#39;</span>,</span><span class="param">	<span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>,</span><span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;GenericEntity&#39;</span></span>)</span>
+
 
     </div>
     <a class="headerlink" href="#MovementBlock.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MovementBlock.__init__-22"><a href="#MovementBlock.__init__-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="MovementBlock.__init__-23"><a href="#MovementBlock.__init__-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-24"><a href="#MovementBlock.__init__-24"><span class="linenos">24</span></a>        <span class="n">world</span><span class="p">:</span> <span class="n">World</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-25"><a href="#MovementBlock.__init__-25"><span class="linenos">25</span></a>        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-26"><a href="#MovementBlock.__init__-26"><span class="linenos">26</span></a>        <span class="n">pos</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-</span><span id="MovementBlock.__init__-27"><a href="#MovementBlock.__init__-27"><span class="linenos">27</span></a>        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-28"><a href="#MovementBlock.__init__-28"><span class="linenos">28</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MovementBlock.__init__-29"><a href="#MovementBlock.__init__-29"><span class="linenos">29</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
-</span><span id="MovementBlock.__init__-30"><a href="#MovementBlock.__init__-30"><span class="linenos">30</span></a>
-</span><span id="MovementBlock.__init__-31"><a href="#MovementBlock.__init__-31"><span class="linenos">31</span></a>        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
-</span><span id="MovementBlock.__init__-32"><a href="#MovementBlock.__init__-32"><span class="linenos">32</span></a>            <span class="k">if</span> <span class="n">point_in_or_on_circle</span><span class="p">(</span>
-</span><span id="MovementBlock.__init__-33"><a href="#MovementBlock.__init__-33"><span class="linenos">33</span></a>                <span class="n">Grid</span><span class="o">.</span><span class="n">cell_centre_to_world_pos</span><span class="p">(</span>
-</span><span id="MovementBlock.__init__-34"><a href="#MovementBlock.__init__-34"><span class="linenos">34</span></a>                    <span class="n">cell</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-35"><a href="#MovementBlock.__init__-35"><span class="linenos">35</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-36"><a href="#MovementBlock.__init__-36"><span class="linenos">36</span></a>                <span class="p">),</span>
-</span><span id="MovementBlock.__init__-37"><a href="#MovementBlock.__init__-37"><span class="linenos">37</span></a>                <span class="n">Vector2</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span>
-</span><span id="MovementBlock.__init__-38"><a href="#MovementBlock.__init__-38"><span class="linenos">38</span></a>                <span class="n">radius</span><span class="p">,</span>
-</span><span id="MovementBlock.__init__-39"><a href="#MovementBlock.__init__-39"><span class="linenos">39</span></a>            <span class="p">):</span>
-</span><span id="MovementBlock.__init__-40"><a href="#MovementBlock.__init__-40"><span class="linenos">40</span></a>                <span class="n">world</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">untraversable_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
-</span><span id="MovementBlock.__init__-41"><a href="#MovementBlock.__init__-41"><span class="linenos">41</span></a>
-</span><span id="MovementBlock.__init__-42"><a href="#MovementBlock.__init__-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">movement_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="MovementBlock.__init__-43"><a href="#MovementBlock.__init__-43"><span class="linenos">43</span></a>        <span class="n">log_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MovementBlock &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; created.&quot;</span>
-</span><span id="MovementBlock.__init__-44"><a href="#MovementBlock.__init__-44"><span class="linenos">44</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span>
-</span></pre></div>
 
 
-    
 
                             </div>
                             <div class="inherited">
@@ -197,16 +160,11 @@
                                 <dl>
                                     <div><dt><a href="generic_entity.html#GenericEntity">two_d_game_ai.entities.generic_entity.GenericEntity</a></dt>
                                 <dd id="MovementBlock.world" class="variable"><a href="generic_entity.html#GenericEntity.world">world</a></dd>
-                <dd id="MovementBlock.pos" class="variable"><a href="generic_entity.html#GenericEntity.pos">pos</a></dd>
+                <dd id="MovementBlock.position_from_sequence" class="variable"><a href="generic_entity.html#GenericEntity.position_from_sequence">position_from_sequence</a></dd>
+                <dd id="MovementBlock.position" class="variable"><a href="generic_entity.html#GenericEntity.position">position</a></dd>
                 <dd id="MovementBlock.radius" class="variable"><a href="generic_entity.html#GenericEntity.radius">radius</a></dd>
-
-            </div>
-            <div><dt><a href="observer_pattern.html#Subject">two_d_game_ai.entities.observer_pattern.Subject</a></dt>
-                                <dd id="MovementBlock.name" class="variable"><a href="observer_pattern.html#Subject.name">name</a></dd>
-                <dd id="MovementBlock.observers" class="variable"><a href="observer_pattern.html#Subject.observers">observers</a></dd>
-                <dd id="MovementBlock.register_observer" class="function"><a href="observer_pattern.html#Subject.register_observer">register_observer</a></dd>
-                <dd id="MovementBlock.unregister_observer" class="function"><a href="observer_pattern.html#Subject.unregister_observer">unregister_observer</a></dd>
-                <dd id="MovementBlock.notify_observers" class="function"><a href="observer_pattern.html#Subject.notify_observers">notify_observers</a></dd>
+                <dd id="MovementBlock.name" class="variable"><a href="generic_entity.html#GenericEntity.name">name</a></dd>
+                <dd id="MovementBlock.id" class="variable"><a href="generic_entity.html#GenericEntity.id">id</a></dd>
 
             </div>
                                 </dl>
