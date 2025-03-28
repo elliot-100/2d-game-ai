@@ -13,16 +13,16 @@ from invoke import task
 @task
 def fmt(c: Any) -> None:
     """Format project with Ruff."""
-    print("Formatting with Ruff...")
+    print("🖌️ Formatting with Ruff...")
     c.run("ruff format")
 
 
 @task
 def lint(c: Any) -> None:
     """Lint and autofix project with Ruff; typecheck project with Mypy."""
-    print("Linting and auto-fixing with Ruff...")
-    c.run("ruff check --fix")
-    print("Type checking with Mypy...")
+    print("🩺️ Linting and auto-fixing with Ruff...")
+    c.run("ruff check --fix --output-format=concise")
+    print("🔬 Type checking with Mypy...")
     c.run("mypy .")
 
 

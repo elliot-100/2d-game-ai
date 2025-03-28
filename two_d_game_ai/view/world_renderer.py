@@ -91,9 +91,9 @@ class WorldRenderer:
         self.surface.blit(self.base_grid_surface)
         self.render_untraversable_cells(self.world.grid)
         for b in self.bot_renderers:
-            b.draw(debug_render_mode=debug_render_mode)
+            b.render(debug_render_mode=debug_render_mode)
         for m in self.movement_block_renderers:
-            m.draw()
+            m.render()
         self.render_axes()
 
     def base_grid(self) -> Surface:

@@ -63,9 +63,6 @@ class View:
         self.clock = Clock()
         self.running = True
 
-    def __hash__(self) -> int:
-        return super().__hash__()
-
     def handle_inputs(self) -> None:
         """Handle user inputs."""
         for event in pygame.event.get():
