@@ -7,10 +7,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
-from pygame import Font, Vector2
+from pygame import Vector2
 
 from two_d_game_ai.geometry import point_in_or_on_circle
-from two_d_game_ai.view import FONT_SIZE, colors
+from two_d_game_ai.view import colors
 
 if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entity import GenericEntity
@@ -34,11 +34,9 @@ class GenericEntityRenderer(ABC):
     clickable_radius: float = 0
     id: int = field(init=False)
     """Used as hash value."""
-    font: Font = field(init=False)
 
     def __post_init__(self) -> None:
         self.id = len(self.parent.entity_renderers)
-        self.font = Font(size=FONT_SIZE)
         self.is_selected = False
         log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
         _logger.debug(log_msg)
@@ -54,7 +52,7 @@ class GenericEntityRenderer(ABC):
     @abstractmethod
     def render(self) -> None:
         """Draw the entity name label to surface."""
-        label = self.font.render(
+        label = self.parent.font.render(
             text=str(self.entity.name),
             antialias=True,
             color=colors.WINDOW_TEXT,
