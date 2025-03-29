@@ -7,6 +7,7 @@ import logging
 import random
 
 from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
@@ -22,8 +23,25 @@ ZOMBIES_COUNT = 5
 # Create a World
 the_world = World(100)
 
+wall = Obstacle(
+    world=the_world, name="wall", position_from_sequence=(20, 20), radius=10
+)
+smoke = Obstacle(
+    world=the_world,
+    name="smoke",
+    position_from_sequence=(-20, -20),
+    radius=10,
+    blocks_movement=False,
+)
+glass = Obstacle(
+    world=the_world,
+    name="glass",
+    position_from_sequence=(-20, 20),
+    radius=10,
+    blocks_vision=False,
+)
 # Add a regular human to the World
-human = Bot(world=the_world, name="h", max_speed=10, position_from_sequence=(0, 0))
+human = Bot(world=the_world, name="H", max_speed=10, position_from_sequence=(0, 0))
 
 # Add zombies with varying speeds and vision ranges, and set destination for some
 zombies = set()

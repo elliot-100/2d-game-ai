@@ -7,7 +7,7 @@ from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # Create a World
 the_world = World(
