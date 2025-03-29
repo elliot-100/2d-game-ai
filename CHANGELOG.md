@@ -9,6 +9,13 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## [UNRELEASED] - TBC
+
+### Added:
+
+- Build: PEP621-compatible `pyproject.toml`
+
+
 ## [0.7.0] - 2025-03-28
 
 ### Added:
