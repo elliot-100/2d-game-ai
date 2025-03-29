@@ -177,7 +177,15 @@ class WorldRenderer:
     def render_movement_blocking_cells(self, grid: Grid) -> None:
         """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
-        for cell_ref in grid.movement_blocking_cells:
+
+        for cell_ref in grid.movement_blocking_cells | grid.vision_blocking_cells:
+            if cell_ref not in grid.vision_blocking_cells:
+                fill_color = colors.MOVEMENT_BLOCK_FILL
+            elif cell_ref not in grid.movement_blocking_cells:
+                fill_color = colors.VISION_BLOCK_FILL
+            else:
+                fill_color = colors.MOVEMENT_AND_VISION_BLOCK_FILL
+
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
             )
@@ -185,7 +193,7 @@ class WorldRenderer:
             grid_rect = grid_rect.move(-0.5, -0.5)
             grid_rect.width += 1
             grid_rect.height += 1
-            self.draw_rect(color=colors.OBSTACLE_FILL, rect=Rect(grid_rect), width=0)
+            self.draw_rect(color=fill_color, rect=Rect(grid_rect), width=0)
 
     def render_axes(self) -> None:
         """Draw axes."""

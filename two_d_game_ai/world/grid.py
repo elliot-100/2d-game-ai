@@ -44,6 +44,7 @@ class Grid:
     """`Grid` units per side."""
     offset: GridRef = field(init=False)
     movement_blocking_cells: set[GridRef] = field(init=False, default_factory=set)
+    vision_blocking_cells: set[GridRef] = field(init=False, default_factory=set)
 
     def __post_init__(self) -> None:
         _offset = -self.size // 2
@@ -105,7 +106,7 @@ class Grid:
             return None
         if from_cell == to_cell:
             return [to_cell]
-        if self._is_line_of_sight(from_cell, to_cell):
+        if self.is_line_of_movement(from_cell, to_cell):
             return [from_cell, to_cell]
 
         came_from = self._uniform_cost_search(from_cell, to_cell)
@@ -168,8 +169,17 @@ class Grid:
         y_dist = abs(from_cell.y - to_cell.y)
         return math.sqrt(x_dist**2 + y_dist**2)
 
-    def _is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
-        """Determine whether there is line-of-sight between two cells."""
+    def is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
+        """Determine whether there is line-of-sight (i.e. no vision-blocking cells)
+        between two cells.
+        """
+        cells = self._cells_on_line(cell_0, cell_1)
+        return all(cell not in self.vision_blocking_cells for cell in cells)
+
+    def is_line_of_movement(self, cell_0: GridRef, cell_1: GridRef) -> bool:
+        """Determine whether there is line-of-movement (i.e. no movement-blocking cells)
+        between two cells.
+        """
         cells = self._cells_on_line(cell_0, cell_1)
         return all(cell not in self.movement_blocking_cells for cell in cells)
 

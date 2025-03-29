@@ -214,22 +214,26 @@ class Bot(GenericEntityCircle):
     def can_see(self, other_bot: Bot) -> bool:
         """Determine whether `Bot` can see another `Bot`.
 
-        Considers only vision cone angle.
+        Dependent on vision cone angle, vision range and vision-blocking obstacles.
         """
         return self.can_see_location(other_bot.position)
 
     def can_see_location(self, location: Vector2) -> bool:
         """Determine whether `Bot` can see `location`.
 
-        Considers only vision cone angle and vision range.
+        Dependent on vision cone angle, vision range and vision-blocking obstacles.
         """
+        if not self.world:
+            err_msg = f"Can't check if {self!s} can see location. Add to World first."
+            raise ValueError(err_msg)
+
         relative_vector = location - self.position
         relative_bearing_magnitude = abs(
             self.heading.relative(relative_vector).degrees_normalised
         )
-
         return (
-            relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
+            self.world.is_line_of_sight(self.position, location)
+            and relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
             and relative_vector.magnitude() < self.vision_range
         )
 

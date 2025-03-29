@@ -26,7 +26,8 @@ class ObstacleRenderer(GenericEntityRenderer):
         """Draw the outline of the obstacle."""
         super().render()  # label only
 
-        color = colors.DEBUG if self.is_selected else colors.OBSTACLE_LINE
+        color = colors.DEBUG if self.is_selected else colors.WINDOW_FILL
+
         if isinstance(self.entity, ObstacleCircle):
             self.parent.draw_circle(
                 surface=self.parent.surface,

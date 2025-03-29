@@ -104,6 +104,15 @@ class World:
 
         return location
 
+    def is_line_of_sight(self, location_0: Vector2, location_1: Vector2) -> bool:
+        """Determine whether there is line-of-sight (i.e. no vision-blocking cells)
+        between two locations.
+        """
+        return self.grid.is_line_of_sight(
+            Grid.grid_ref_from_world_pos(self, location_0),
+            Grid.grid_ref_from_world_pos(self, location_1),
+        )
+
     def route(
         self,
         *,

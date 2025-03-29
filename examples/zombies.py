@@ -7,6 +7,7 @@ import random
 
 from examples.logging_config import configure_logger
 from two_d_game_ai.entities.bot import Bot
+from two_d_game_ai.entities.obstacles import ObstacleCircle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
@@ -21,6 +22,25 @@ ZOMBIES_COUNT = 5
 # Create a World
 the_world = World(20)
 
+the_world.add_entity(
+    ObstacleCircle(name="wall", position_from_sequence=(20, 20), radius=10)
+)
+the_world.add_entity(
+    ObstacleCircle(
+        name="smoke",
+        position_from_sequence=(-20, -20),
+        radius=10,
+        blocks_movement=False,
+    )
+)
+the_world.add_entity(
+    ObstacleCircle(
+        name="glass",
+        position_from_sequence=(-20, 20),
+        radius=10,
+        blocks_vision=False,
+    )
+)
 # Add a regular human to the World
 human = Bot(name="human", position_from_sequence=(0, 0))
 the_world.add_entity(human)

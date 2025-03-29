@@ -28,6 +28,9 @@ def is_obstacle(obj: GenericEntity) -> bool:
 class ObstacleCircle(GenericEntityCircle):
     """Circular entity that blocks movement."""
 
+    blocks_vision: bool = True
+    blocks_movement: bool = True
+
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
         super().__post_init__(position_from_sequence)
 
@@ -50,6 +53,9 @@ class ObstacleCircle(GenericEntityCircle):
 @dataclass(kw_only=True, eq=False)
 class ObstacleRectangle(GenericEntityRectangle):
     """Rectangular entity that blocks movement."""
+
+    blocks_vision: bool = True
+    blocks_movement: bool = True
 
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
         super().__post_init__(position_from_sequence)
