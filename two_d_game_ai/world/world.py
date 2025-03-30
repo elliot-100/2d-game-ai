@@ -30,7 +30,7 @@ class World:
 
     size: int
     """`World` units per side."""
-    grid_size: InitVar[int] = 2
+    grid_size: InitVar[int] = 16
     grid_resolution: float = field(init=False)
     """Size of a `Grid` cell in `World` units."""
     grid: Grid = field(init=False)
