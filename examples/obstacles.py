@@ -3,7 +3,7 @@
 import logging
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
@@ -20,8 +20,8 @@ bot = Bot(
     name="bt0",
     position_from_sequence=(-100, 0),
 )
-# Add a MovementBlock between Bot and destination
-MovementBlock(world=the_world, name="mb0", position_from_sequence=(0, 0), radius=50)
+# Add an Obstacle between Bot and destination
+Obstacle(world=the_world, name="mb0", position_from_sequence=(0, 0), radius=50)
 
 # Create a View of the World
 view = View(
@@ -29,10 +29,10 @@ view = View(
     scale_factor=2,
     show_debug_while_unpaused=True,
 )
-MovementBlock(world=the_world, name="mb1", position_from_sequence=(100, 0), radius=20)
-MovementBlock(world=the_world, name="mb3", position_from_sequence=(50, 50), radius=40)
-MovementBlock(world=the_world, name="mb4", position_from_sequence=(-60, 70), radius=40)
-MovementBlock(world=the_world, name="mb2", position_from_sequence=(-30, 50), radius=35)
+Obstacle(world=the_world, name="mb1", position_from_sequence=(100, 0), radius=20)
+Obstacle(world=the_world, name="mb3", position_from_sequence=(50, 50), radius=40)
+Obstacle(world=the_world, name="mb4", position_from_sequence=(-60, 70), radius=40)
+Obstacle(world=the_world, name="mb2", position_from_sequence=(-30, 50), radius=35)
 
 bot.destination_from_sequence((125, 5))
 

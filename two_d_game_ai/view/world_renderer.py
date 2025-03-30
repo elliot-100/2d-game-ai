@@ -11,10 +11,10 @@ from typing import TYPE_CHECKING
 from pygame import Color, Font, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.view import FONT_DIR_RELATIVE, FONT_FILENAME, FONT_SIZE, colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
-from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
+from two_d_game_ai.view.obstacle_renderer import ObstacleRenderer
 from two_d_game_ai.view.primitives import (
     blit,
     draw_circle,
@@ -22,12 +22,12 @@ from two_d_game_ai.view.primitives import (
     draw_poly,
     draw_rect,
 )
-from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
+    from two_d_game_ai.world.grid import Grid
     from two_d_game_ai.world.world import World
 
 _logger = logging.getLogger(__name__)
@@ -78,12 +78,10 @@ class WorldRenderer:
         return {r for r in self.entity_renderers.values() if isinstance(r, BotRenderer)}
 
     @property
-    def movement_block_renderers(self) -> set[MovementBlockRenderer]:
+    def obstacle_renderers(self) -> set[ObstacleRenderer]:
         """TO DO."""
         return {
-            r
-            for r in self.entity_renderers.values()
-            if isinstance(r, MovementBlockRenderer)
+            r for r in self.entity_renderers.values() if isinstance(r, ObstacleRenderer)
         }
 
     @property
@@ -96,10 +94,10 @@ class WorldRenderer:
         self.ensure_renderers()
         # Drawn in order, bottom layer to top:
         self.surface.blit(self.base_grid_surface)
-        self.render_untraversable_cells(self.world.grid)
+        self.render_movement_blocking_cells(self.world.grid)
         for b in self.bot_renderers:
             b.render(debug_render_mode=debug_render_mode)
-        for m in self.movement_block_renderers:
+        for m in self.obstacle_renderers:
             m.render()
         self.render_axes()
 
@@ -133,10 +131,8 @@ class WorldRenderer:
     def ensure_renderers(self) -> None:
         """Update the set of entity renderers."""
         for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
-            if isinstance(e, MovementBlock):
-                self.entity_renderers[e.id] = MovementBlockRenderer(
-                    parent=self, entity=e
-                )
+            if isinstance(e, Obstacle):
+                self.entity_renderers[e.id] = ObstacleRenderer(parent=self, entity=e)
             elif isinstance(e, Bot):
                 self.entity_renderers[e.id] = BotRenderer(parent=self, entity=e)
             log_msg = f"{e.name} renderer added."
@@ -181,10 +177,10 @@ class WorldRenderer:
         pos -= Vector2(offset, offset)
         return pos.elementwise() * Vector2(1, -1)
 
-    def render_untraversable_cells(self, grid: Grid) -> None:
-        """Draw the blocked cells."""
+    def render_movement_blocking_cells(self, grid: Grid) -> None:
+        """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
-        for cell_ref in grid.untraversable_cells:
+        for cell_ref in grid.movement_blocking_cells:
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
             )
@@ -233,9 +229,7 @@ class WorldRenderer:
             raise TypeError
 
         world_pos = self.to_world(local_pos)
-        cell = Grid.grid_ref_from_world_pos(world=self.world, pos=world_pos)
-
-        if not self.world.grid.is_traversable(cell):
+        if self.world.location_is_movement_blocked(world_pos):
             return None
 
         self.selected_renderer.entity.destination = world_pos

@@ -94,7 +94,10 @@ class Bot(GenericEntity):
             _logger.info(log_msg)
             self.stop()
             self._destination = proposed_destination
-            self.route = self.route_to(self.destination)
+            if self.destination:
+                self.route = self.world.route(
+                    from_pos=self.position, to_pos=self.destination
+                )
 
             if self.route:
                 log_msg = f"{self} routed: {len(self.route)} waypoints."
@@ -216,17 +219,3 @@ class Bot(GenericEntity):
             relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
             and relative_vector.magnitude() < self.vision_range
         )
-
-    def route_to(
-        self,
-        goal: Vector2 | None,
-    ) -> list[Vector2] | None:
-        """Determine route to `goal`.
-
-        Returns
-        -------
-        list[Vector2]
-            Locations on the path to `goal`, including `goal` itself.
-            Empty if no path found.
-        """
-        return None if goal is None else self.world.route(self.position, goal)

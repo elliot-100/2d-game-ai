@@ -4,7 +4,7 @@ import itertools
 import logging
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
@@ -38,7 +38,7 @@ for i in range(1, 4):
     Bot(world=the_world, name=f"B-{i}", position_from_sequence=(x, y), leader=leader_b)
 
 
-MovementBlock(world=the_world, name="mb0", position_from_sequence=(20, -15), radius=20)
+Obstacle(world=the_world, name="mb0", position_from_sequence=(20, -15), radius=20)
 
 # Create a View of the World
 view = View(world=the_world, scale_factor=2)

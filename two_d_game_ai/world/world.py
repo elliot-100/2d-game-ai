@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
@@ -64,9 +64,9 @@ class World:
         return {e for e in self.entities if isinstance(e, Bot)}
 
     @property
-    def movement_blocks(self) -> set[MovementBlock]:
+    def obstacles(self) -> set[Obstacle]:
         """TO DO."""
-        return {e for e in self.entities if isinstance(e, MovementBlock)}
+        return {e for e in self.entities if isinstance(e, Obstacle)}
 
     def update(self) -> None:
         """Only Bots currently need to be updated."""
@@ -82,24 +82,27 @@ class World:
         """
         return abs(location.x) <= self.magnitude and abs(location.y) <= self.magnitude
 
-    def location_is_blocked(self, location: Vector2) -> bool:
-        """Return `True` if point is inside a blocked grid cell, else `False`."""
+    def location_is_movement_blocked(self, location: Vector2) -> bool:
+        """Return `True` if `location` is inside a movement-blocked grid cell,
+        else `False`.
+        """
         grid_ref = self.grid.grid_ref_from_world_pos(self, location)
-        return not self.grid.is_traversable(grid_ref)
+        return grid_ref in self.grid.movement_blocking_cells
 
     def random_location(self) -> Vector2:
-        """Return random unblocked location."""
+        """Return random location, not movement-blocked."""
         location = Vector2(
             random.uniform(-self.magnitude, self.magnitude),
             random.uniform(-self.magnitude, self.magnitude),
         )
-        if self.location_is_blocked(location):
+        if self.location_is_movement_blocked(location):
             return self.random_location()
 
         return location
 
     def route(
         self,
+        *,
         from_pos: Vector2,
         to_pos: Vector2,
     ) -> list[Vector2] | None:

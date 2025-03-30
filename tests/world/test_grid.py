@@ -65,17 +65,6 @@ def test_cell_from_pos() -> None:
     assert gr == GridRef(1, 4)
 
 
-def test_cell_to_world_pos() -> None:
-    """Test that world pos of the cell is calculated correctly."""
-    # arrange
-    w = World(size=100, grid_size=10)
-    gr = GridRef(3, -7)
-    # act
-    p = Grid._cell_to_world_pos(gr, w)
-    # assert
-    assert p == Vector2(30, -70)
-
-
 def test_cell_centre_to_world_pos() -> None:
     """Test that world pos of the centre of the cell is calculated correctly."""
     # arrange

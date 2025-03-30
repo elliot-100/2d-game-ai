@@ -1,8 +1,7 @@
-"""Contains `MovementBlock` class."""
+"""Contains `Obstacle` class."""
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -13,11 +12,9 @@ from two_d_game_ai.world.grid import Grid
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-_logger = logging.getLogger(__name__)
-
 
 @dataclass(kw_only=True, eq=False)
-class MovementBlock(GenericEntity):
+class Obstacle(GenericEntity):
     """Circular entity that blocks movement."""
 
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
@@ -29,7 +26,4 @@ class MovementBlock(GenericEntity):
                 self.position,
                 self.radius,
             ):
-                self.world.grid.untraversable_cells.add(cell)
-
-        log_msg = f"MovementBlock '{self.name}' initialised."
-        _logger.info(log_msg)
+                self.world.grid.movement_blocking_cells.add(cell)

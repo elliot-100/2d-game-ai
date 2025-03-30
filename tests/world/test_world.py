@@ -3,7 +3,7 @@
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacle import Obstacle
 from two_d_game_ai.world.world import World
 
 
@@ -28,13 +28,13 @@ def test_add_bot() -> None:
 def test_add_movement_block() -> None:
     """Test adding a Bot to the World."""
     w = World(10)
-    m = MovementBlock(
+    o = Obstacle(
         world=w,
         name="m0",
         position_from_sequence=(0, 0),
     )
-    assert w.entities == {m}
-    assert w.movement_blocks == {m}
+    assert w.entities == {o}
+    assert w.obstacles == {o}
 
 
 def test_point_is_inside_world_bounds() -> None:
