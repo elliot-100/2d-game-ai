@@ -53,6 +53,11 @@ class Grid:
     def __post_init__(self) -> None:
         _offset = -self.size // 2
         self.offset = GridRef(_offset, _offset)
+        log_msg = f"{self} initialised."
+        _logger.info(log_msg)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.size=})"
 
     @property
     def cells(self) -> set[GridRef]:

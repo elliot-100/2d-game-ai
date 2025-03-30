@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, ClassVar
 
@@ -17,8 +16,6 @@ if TYPE_CHECKING:
 
     from pygame import Color
 
-_logger = logging.getLogger(__name__)
-
 
 @dataclass(kw_only=True, eq=False)
 class BotRenderer(GenericEntityRenderer):
@@ -29,8 +26,6 @@ class BotRenderer(GenericEntityRenderer):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        log_msg = f"BotRenderer initialised for '{self.entity.name}'."
-        _logger.debug(log_msg)
 
     def render(self, *, debug_render_mode: bool = False) -> None:
         """Draws `Bot` and decorations."""

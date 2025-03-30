@@ -37,8 +37,11 @@ class GenericEntity(ABC):
         self.id = len(self.world.entities)
         self.world.entities.add(self)
         self.position = Vector2(position_from_sequence)
-        log_msg = f"Entity '{self.name}' initialised."
-        _logger.debug(log_msg)
+        log_msg = f"{self} initialised."
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return self.id
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}('{self.name}')"

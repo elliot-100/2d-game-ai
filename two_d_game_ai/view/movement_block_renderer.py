@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import ClassVar
 
 from two_d_game_ai.entities.movement_block import MovementBlock
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True, eq=False)
@@ -24,8 +21,6 @@ class MovementBlockRenderer(GenericEntityRenderer):
         super().__post_init__()
         if isinstance(self.entity, MovementBlock):
             self.clickable_radius = self.entity.radius
-        log_msg = f"BotRenderer initialised for {self.entity.name}"
-        _logger.debug(log_msg)
 
     def render(self) -> None:
         """Draw the `MovementBlock`."""

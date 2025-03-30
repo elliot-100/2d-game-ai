@@ -62,12 +62,15 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        log_msg = f"WorldRenderer '{self.name}' initiated."
-        _logger.debug(log_msg)
+        log_msg = f"{self} initialised for {self.world}."
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return hash(self.name)
         # TO DO: fragile!
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.size=})"
 
     @property
     def bot_renderers(self) -> set[BotRenderer]:

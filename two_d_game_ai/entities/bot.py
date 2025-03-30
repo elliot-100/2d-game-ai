@@ -67,9 +67,6 @@ class Bot(GenericEntity):
         super().__post_init__(position_from_sequence)
         self.heading: Bearing = Bearing(initial_heading)
         self.velocity: Vector2 = Vector2(0, 0)
-        self.destination = None
-        log_msg = f"Bot '{self.name}' initialised."
-        _logger.info(log_msg)
 
     @property
     def max_rotation_step(self) -> float:
@@ -85,8 +82,6 @@ class Bot(GenericEntity):
     def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
         if proposed_destination is None:
-            log_msg = f"Bot '{self.name}': destination -> `None`."
-            _logger.debug(log_msg)
             self._destination = None
             return
 
@@ -95,14 +90,14 @@ class Bot(GenericEntity):
             and not self.is_at(proposed_destination)
             and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
-            log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
+            log_msg = f"{self} destination -> `{proposed_destination}`."
             _logger.info(log_msg)
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
 
             if self.route:
-                log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
+                log_msg = f"{self} routed: {len(self.route)} waypoints."
                 _logger.info(log_msg)
 
                 if len(self.route) >= 2:  # noqa: PLR2004
@@ -125,7 +120,7 @@ class Bot(GenericEntity):
             if self.destination is None:
                 raise TypeError
             if self.is_at(self.destination):
-                log_msg = f"Bot '{self.name}': arrived at destination."
+                log_msg = f"{self} arrived at destination."
                 _logger.info(log_msg)
                 self.stop()
                 self.route = []
@@ -133,8 +128,8 @@ class Bot(GenericEntity):
                 return
 
             if self.is_at(self.route[0]):
-                log_msg = f"Bot '{self.name}': arrived at waypoint."
-                _logger.info(log_msg)
+                log_msg = f"{self} arrived at waypoint."
+                _logger.debug(log_msg)
                 self.stop()
                 del self.route[0]
                 return
@@ -210,7 +205,7 @@ class Bot(GenericEntity):
     def can_see_location(self, location: Vector2) -> bool:
         """Determine whether `Bot` can see `location`.
 
-        Considers only vision cone angle.
+        Considers only vision cone angle and vision range.
         """
         relative_vector = location - self.position
         relative_bearing_magnitude = abs(

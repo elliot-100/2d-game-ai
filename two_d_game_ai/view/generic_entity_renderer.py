@@ -38,11 +38,14 @@ class GenericEntityRenderer(ABC):
     def __post_init__(self) -> None:
         self.id = len(self.parent.entity_renderers)
         self.is_selected = False
-        log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
-        _logger.debug(log_msg)
+        log_msg = f"{self} initialised for {self.entity}."
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return self.id
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.id})"
 
     @property
     def _pos_v(self) -> Vector2:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import random
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
@@ -14,6 +15,8 @@ from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entity import GenericEntity
+
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -44,6 +47,11 @@ class World:
         self.grid_resolution = self.size / self.grid.size
         self.step_counter = 0
         self.is_paused = True
+        log_msg = f"{self} initialised."
+        _logger.info(log_msg)
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.size=})"
 
     @property
     def magnitude(self) -> float:
