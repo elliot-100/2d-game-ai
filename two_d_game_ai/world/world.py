@@ -94,7 +94,7 @@ class World:
         self,
         from_pos: Vector2,
         to_pos: Vector2,
-    ) -> list[Vector2]:
+    ) -> list[Vector2] | None:
         """Return route.
 
         Uses uniform cost search, a variation of Dijkstra's algorithm.
@@ -103,20 +103,19 @@ class World:
 
         Returns
         -------
-        list[Vector2]
+        `list[Vector2]`
             Points on the path, including `to_pos` itself.
             Empty if no path found.
+
+        `None`
+            if no path found.
         """
         from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
         to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
-
-        if from_cell == to_cell:  # intra-cell route is always direct
-            return [to_pos]
-
         cell_route = self.grid.route(from_cell, to_cell)
 
-        if not cell_route:
-            return []
+        if not isinstance(cell_route, list):
+            return None
 
         pos_route = [Grid.cell_centre_to_world_pos(cell, self) for cell in cell_route]
         # always use actual points (not cell centre) for end waypoints:

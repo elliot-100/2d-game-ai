@@ -88,18 +88,19 @@ class Grid:
         self,
         from_cell: GridRef,
         to_cell: GridRef,
-    ) -> list[GridRef]:
+    ) -> list[GridRef] | None:
         """Determine a cell-based route between two cells.
 
         Returns
         -------
-        list[GridRef]
+        `list[GridRef]`
             Cells on the path to `to_cell`, including `to_cell` itself.
-            Empty if no path found.
+        `None`
+            if no path found.
         """
         # Early return cases:
         if from_cell in self.untraversable_cells or to_cell in self.untraversable_cells:
-            return []
+            return None
         if from_cell == to_cell:
             return [to_cell]
         if self._is_line_of_sight(from_cell, to_cell):
@@ -114,7 +115,9 @@ class Grid:
         while current_cell != from_cell:
             came_from_location = came_from.get(current_cell)
             if came_from_location is None:
-                return []
+                log_msg = "No route!"
+                _logger.debug(log_msg)
+                return None
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
@@ -154,6 +157,7 @@ class Grid:
                     cost_so_far[new_cell] = new_cost
                     frontier.put(priority=new_cost, location=new_cell)
                     came_from[new_cell] = current_cell
+
         return came_from
 
     @staticmethod

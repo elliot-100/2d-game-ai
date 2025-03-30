@@ -52,7 +52,7 @@ class Bot(GenericEntity):
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
-    route: list[Vector2] = field(init=False, default_factory=list)
+    route: list[Vector2] | None = None
     """Waypoints to be visited, in order."""
     visible_bots: set[Bot] = field(init=False, default_factory=set)
     """Peers which are currently in sight."""
@@ -100,12 +100,15 @@ class Bot(GenericEntity):
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
-            log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
-            _logger.info(log_msg)
-            if self.route and len(self.route) >= 2:  # noqa: PLR2004
-                del self.route[0]
-                # effectively suppress reporting arrival at first waypoint, which is
-                # always own position
+
+            if self.route:
+                log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
+                _logger.info(log_msg)
+
+                if len(self.route) >= 2:  # noqa: PLR2004
+                    del self.route[0]
+                    # effectively suppress reporting arrival at first waypoint, which is
+                    # always own position
 
     def destination_from_sequence(self, position: Sequence[float]) -> None:
         """Set destination point."""
@@ -222,7 +225,7 @@ class Bot(GenericEntity):
     def route_to(
         self,
         goal: Vector2 | None,
-    ) -> list[Vector2]:
+    ) -> list[Vector2] | None:
         """Determine route to `goal`.
 
         Returns
@@ -231,4 +234,4 @@ class Bot(GenericEntity):
             Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
-        return [] if goal is None else self.world.route(self.position, goal)
+        return None if goal is None else self.world.route(self.position, goal)
