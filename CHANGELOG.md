@@ -13,6 +13,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added:
 
+- Improved text rendering
 - Build: PEP621-compatible `pyproject.toml`
 
 
@@ -27,7 +28,7 @@ Historic and pre-release versions aren't necessarily included.
   - by default, forget others (including leader) they can't see
 - Bot pathfinding: route simplified by culling using line of sight from each end
 - Bot and MovementBlock can be added after View is defined
-- World.random_location()
+- `World.random_location()`
 - View: render Grid nodes instead of cells; anti-aliased circles
 
 ### Fixed:
