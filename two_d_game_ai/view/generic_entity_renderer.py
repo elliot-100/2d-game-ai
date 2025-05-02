@@ -30,12 +30,13 @@ class GenericEntityRenderer(ABC):
     entity: GenericEntity
     parent: WorldRenderer
     """Parent renderer."""
+    radius: float = field(init=False)
     is_selected: bool = field(init=False)
-    clickable_radius: float = 0
     id: int = field(init=False)
     """Used as hash value."""
 
     def __post_init__(self) -> None:
+        self.radius = self.entity.radius
         self.id = len(self.parent.entity_renderers)
         self.is_selected = False
         log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
@@ -76,4 +77,4 @@ class GenericEntityRenderer(ABC):
         bool
             True if the click position is within or on the clickable radius.
         """
-        return point_in_or_on_circle(click_pos, self._pos_v, self.clickable_radius)
+        return point_in_or_on_circle(click_pos, self._pos_v, self.radius)

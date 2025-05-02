@@ -24,6 +24,8 @@ _logger = logging.getLogger(__name__)
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
+    DEFAULT_RADIUS: ClassVar[float] = 10
+    """`World` units."""
     DEFAULT_MAX_SPEED: ClassVar[float] = 6
     """`World` units / second."""
     DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
@@ -37,6 +39,7 @@ class Bot(GenericEntity):
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
     """`World` units."""
 
+    radius: float = DEFAULT_RADIUS
     leader: Bot | None = None
     max_speed: float = DEFAULT_MAX_SPEED
     """`World` units / second."""
