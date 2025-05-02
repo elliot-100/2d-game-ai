@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import random
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
@@ -14,6 +15,8 @@ from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entity import GenericEntity
+
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -123,3 +126,17 @@ class World:
         pos_route[0] = from_pos
         pos_route[-1] = to_pos
         return pos_route
+
+    def add_entity(self, entity: GenericEntity) -> None:
+        """Add an entity to `World`."""
+        entity.id = len(self.entities)
+        self.entities.add(entity)
+        entity.world = self
+        if isinstance(entity, MovementBlock):
+            entity.add_to_grid()  # TODO: separation of concerns - pass Grid?
+        log_msg = f"{type(entity).__name__} '{entity.name}' added to World."
+        _logger.info(log_msg)
+
+        if not self.location_is_inside_world_bounds(entity.position):
+            log_msg = f"{type(entity).__name__} '{entity.name}' outside World bounds."
+            _logger.warning(log_msg)

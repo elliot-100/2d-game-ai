@@ -16,6 +16,7 @@ def test_to_local() -> None:
     # act
     local_origin = wr.to_local(world_origin)
     local_max = wr.to_local(world_max)
+    # assert
     assert local_origin == Vector2(100, 100)
     assert local_max == Vector2(200, 0)
 
@@ -30,6 +31,7 @@ def test_to_local_with_scale_factor() -> None:
     # act
     local_origin = wr.to_local(world_origin)
     local_max = wr.to_local(world_max)
+    # assert
     assert local_origin == Vector2(200, 200)
     assert local_max == Vector2(400, 0)
 
@@ -44,6 +46,7 @@ def test_to_world() -> None:
     # act
     world_origin = wr.to_world(local_origin)
     world_max = wr.to_world(local_max)
+    # assert
     assert world_origin == Vector2(-100, 100)
     assert world_max == Vector2(100, -100)
 
@@ -55,6 +58,8 @@ def test_from_display_with_scale_factor() -> None:
     wr = WorldRenderer(world=w, scale_factor=2)
     window_origin = Vector2(0, 0)
     window_point = Vector2(400, 400)
+    local_origin = wr.to_world(window_origin)
+    local_point = wr.to_world(window_point)
     # act
-    assert wr.to_world(window_origin) == Vector2(-100, 100)
-    assert wr.to_world(window_point) == Vector2(100, -100)
+    assert local_origin == Vector2(-100, 100)
+    assert local_point == Vector2(100, -100)

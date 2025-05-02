@@ -67,9 +67,6 @@ class Bot(GenericEntity):
         super().__post_init__(position_from_sequence)
         self.heading: Bearing = Bearing(initial_heading)
         self.velocity: Vector2 = Vector2(0, 0)
-        self.destination = None
-        log_msg = f"Bot '{self.name}' initialised."
-        _logger.info(log_msg)
 
     @property
     def max_rotation_step(self) -> float:
@@ -84,13 +81,16 @@ class Bot(GenericEntity):
     @destination.setter
     def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
+        if self.world is None:
+            # TypeGuard
+            err_msg = f"Can't set Bot '{self.name}' destination. Add to World first."
+            raise TypeError(err_msg)
+
         if proposed_destination is None:
             log_msg = f"Bot '{self.name}': destination -> `None`."
             _logger.debug(log_msg)
             self._destination = None
-            return
-
-        if (
+        elif (
             proposed_destination != self.position
             and not self.is_at(proposed_destination)
             and self.world.location_is_inside_world_bounds(proposed_destination)
@@ -113,6 +113,10 @@ class Bot(GenericEntity):
 
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
+        if self.world is None:
+            # TypeGuard
+            err_msg = "Bot needs to be added to World first."
+            raise TypeError(err_msg)
         self.handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.leader and self.destination != self.leader.position:
@@ -231,4 +235,8 @@ class Bot(GenericEntity):
             Locations on the path to `goal`, including `goal` itself.
             Empty if no path found.
         """
+        if self.world is None:
+            # TypeGuard
+            err_msg = "Bot needs to be added to World first."
+            raise TypeError(err_msg)
         return [] if goal is None else self.world.route(self.position, goal)
