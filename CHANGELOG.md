@@ -13,7 +13,7 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added:
 
-- Improved text rendering
+- View: improved colours and text rendering
 - Build: PEP621-compatible `pyproject.toml`
 
 

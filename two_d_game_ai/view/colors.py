@@ -2,12 +2,11 @@
 
 from pygame import Color
 
-WINDOW_FILL = Color("grey10")
+WINDOW_FILL = Color("grey15")
 WINDOW_TEXT = Color("grey80")
 
-WORLD_FILL = Color("grey15")
-WORLD_AXES_LINE = Color("grey35")
-WORLD_GRID_LINE = Color("grey25")
+WORLD_FILL = Color("grey25")
+WORLD_AXES_LINE = WORLD_GRID_LINE = Color("grey40")
 
 MOVEMENT_BLOCK_FILL = WINDOW_FILL
 MOVEMENT_BLOCK_LINE = Color("black")
