@@ -1,7 +1,6 @@
 """Demonstrate implemented features using renderer."""
 
-from logging_config import configure_logger
-
+from examples.logging_config import configure_logger
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World

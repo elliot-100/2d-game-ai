@@ -22,12 +22,12 @@ from two_d_game_ai.view.primitives import (
     draw_poly,
     draw_rect,
 )
-from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
+    from two_d_game_ai.world.grid import Grid
     from two_d_game_ai.world.world import World
 
 
@@ -63,11 +63,15 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        logger.info(f"WorldRenderer (name={self.name}, size={self.size}) initialized.")
+        logger.info(f"WorldRenderer(size={self.size}) initialized.")
 
     def __hash__(self) -> int:
         return hash(self.name)
         # TO DO: fragile!
+
+    def __str__(self) -> str:
+        """Human-readable description."""
+        return f"{type(self).__name__}"
 
     @property
     def bot_renderers(self) -> set[BotRenderer]:
@@ -91,7 +95,7 @@ class WorldRenderer:
         self.ensure_renderers()
         # Drawn in order, bottom layer to top:
         self.surface.blit(self.base_grid_surface)
-        self.render_untraversable_cells(self.world.grid)
+        self.render_movement_blocking_cells(self.world.grid)
         for b in self.bot_renderers:
             b.render(debug_render_mode=debug_render_mode)
         for m in self.obstacle_renderers:
@@ -170,10 +174,10 @@ class WorldRenderer:
         pos -= Vector2(offset, offset)
         return pos.elementwise() * Vector2(1, -1)
 
-    def render_untraversable_cells(self, grid: Grid) -> None:
-        """Draw the blocked cells."""
+    def render_movement_blocking_cells(self, grid: Grid) -> None:
+        """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
-        for cell_ref in grid.untraversable_cells:
+        for cell_ref in grid.movement_blocking_cells:
             grid_rect = Rect(
                 (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
             )
@@ -219,9 +223,7 @@ class WorldRenderer:
             raise TypeError
 
         world_pos = self.to_world(local_pos)
-        cell = Grid.grid_ref_from_world_pos(world=self.world, pos=world_pos)
-
-        if not self.world.grid.is_traversable(cell):
+        if self.world.location_is_movement_blocked(world_pos):
             return None
 
         self.selected_renderer.entity.destination = world_pos

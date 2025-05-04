@@ -50,7 +50,7 @@ class World:
         self.grid_resolution = self.size / self.grid.size
         self.step_counter = 0
         self.is_paused = True
-        logger.info(f"{self} (size={self.size}) initialized.")
+        logger.info(f"{self!s}(size={self.size}) initialized.")
 
     def __str__(self) -> str:
         """Human-readable description."""
@@ -86,49 +86,51 @@ class World:
             rect_size=Vector2(self.size, self.size),
         )
 
-    def location_is_blocked(self, location: Vector2) -> bool:
-        """Return `True` if point is inside a blocked grid cell, else `False`."""
+    def location_is_movement_blocked(self, location: Vector2) -> bool:
+        """Return `True` if `location` is inside a movement-blocked grid cell,
+        else `False`.
+        """
         grid_ref = self.grid.grid_ref_from_world_pos(self, location)
-        return not self.grid.is_traversable(grid_ref)
+        return grid_ref in self.grid.movement_blocking_cells
 
     def random_location(self) -> Vector2:
-        """Return random unblocked location."""
+        """Return random location, not movement-blocked."""
         location = Vector2(
             random.uniform(-self.magnitude, self.magnitude),
             random.uniform(-self.magnitude, self.magnitude),
         )
-        if self.location_is_blocked(location):
+        if self.location_is_movement_blocked(location):
             return self.random_location()
 
         return location
 
     def route(
         self,
+        *,
         from_pos: Vector2,
         to_pos: Vector2,
-    ) -> list[Vector2]:
-        """Return route.
+    ) -> list[Vector2] | None:
+        """Determine a route between two locations.
 
-        Uses uniform cost search, a variation of Dijkstra's algorithm.
-        Delegates to `Grid.route`.
-        Intermediate points are cell centres.
+        Parameters
+        ----------
+        from_pos
+            A point in `World` coordinates.
+        to_pos
+            A point in `World` coordinates.
 
         Returns
         -------
         list[Vector2]
             Points on the path, including `to_pos` itself.
-            Empty if no path found.
+            Empty if no route was found.
         """
         from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
         to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
-
-        if from_cell == to_cell:  # intra-cell route is always direct
-            return [to_pos]
-
         cell_route = self.grid.route(from_cell, to_cell)
 
-        if not cell_route:
-            return []
+        if not isinstance(cell_route, list):
+            return None
 
         pos_route = [Grid.cell_centre_to_world_pos(cell, self) for cell in cell_route]
         # always use actual points (not cell centre) for end waypoints:

@@ -77,25 +77,26 @@ class BotRenderer(GenericEntityRenderer):
         )
 
     def _draw_route(self) -> None:
-        min_path_nodes: int = 2
-
         if not isinstance(self.entity, Bot):
             raise TypeError
 
-        for waypoint in self.entity.route:
-            self.parent.draw_circle(
-                surface=self.parent.surface,
-                color=colors.BOT_ROUTE_LINE,
-                center=waypoint,
-                radius=2,
-                width=1,
-                scale_radius=False,
-            )
-        if len(self.entity.route) >= min_path_nodes:
-            self.parent.draw_poly(
-                color=colors.BOT_ROUTE_LINE,
-                points=[self.entity.position, *self.entity.route],
-            )
+        if self.entity.route:
+            for waypoint in self.entity.route:
+                self.parent.draw_circle(
+                    surface=self.parent.surface,
+                    color=colors.BOT_ROUTE_LINE,
+                    center=waypoint,
+                    radius=2,
+                    width=1,
+                    scale_radius=False,
+                )
+
+            min_path_nodes: int = 2
+            if len(self.entity.route) >= min_path_nodes:
+                self.parent.draw_poly(
+                    color=colors.BOT_ROUTE_LINE,
+                    points=[self.entity.position, *self.entity.route],
+                )
 
     def _draw_vision_cone(self) -> None:
         """Draw `Bot` vision cone."""

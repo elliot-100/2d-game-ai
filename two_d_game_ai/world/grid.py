@@ -43,8 +43,7 @@ class Grid:
     size: int = DEFAULT_SIZE
     """`Grid` units per side."""
     offset: GridRef = field(init=False)
-    untraversable_cells: set[GridRef] = field(init=False, default_factory=set)
-    """Untraversable cells."""
+    movement_blocking_cells: set[GridRef] = field(init=False, default_factory=set)
 
     def __post_init__(self) -> None:
         _offset = -self.size // 2
@@ -64,38 +63,46 @@ class Grid:
         return abs(cell.x) <= self.size and abs(cell.y) <= self.size
 
     def reachable_neighbours(self, cell: GridRef) -> set[GridRef]:
-        """Return a cell's reachable neighbours."""
+        """Return a cell's reachable (by movement) neighbours."""
         reachable_neighbours: set[GridRef] = set()
 
-        if cell in self.untraversable_cells:
-            return reachable_neighbours
-
+        if cell in self.movement_blocking_cells:
+            return set()
         for dir_ in self._DIRECTIONS:
             neighbour = GridRef(cell.x + dir_[0], cell.y + dir_[1])
-            if self._cell_is_in_bounds(neighbour) and self.is_traversable(neighbour):
+            if (
+                self._cell_is_in_bounds(neighbour)
+                and neighbour not in self.movement_blocking_cells
+            ):
                 reachable_neighbours.add(neighbour)
-        return reachable_neighbours
 
-    def is_traversable(self, cell: GridRef) -> bool:
-        """Determine whether a cell is traversable."""
-        return cell not in self.untraversable_cells
+        return reachable_neighbours
 
     def route(
         self,
         from_cell: GridRef,
         to_cell: GridRef,
-    ) -> list[GridRef]:
-        """Determine a cell-based route between two cells.
+    ) -> list[GridRef] | None:
+        """Determine a cell-based route between two cells using uniform cost search.
+
+        Parameters
+        ----------
+        from_cell
+        to_cell
 
         Returns
         -------
-        list[GridRef]
-            Cells on the path to `to_cell`, including `to_cell` itself.
-            Empty if no path found.
+        `list[GridRef]`
+            Cells on the route to `to_cell`, including `to_cell`.
+        `None`
+            if no route was found.
         """
         # Early return cases:
-        if from_cell in self.untraversable_cells or to_cell in self.untraversable_cells:
-            return []
+        if (
+            from_cell in self.movement_blocking_cells
+            or to_cell in self.movement_blocking_cells
+        ):
+            return None
         if from_cell == to_cell:
             return [to_cell]
         if self._is_line_of_sight(from_cell, to_cell):
@@ -110,7 +117,8 @@ class Grid:
         while current_cell != from_cell:
             came_from_location = came_from.get(current_cell)
             if came_from_location is None:
-                return []
+                return None
+
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
@@ -144,6 +152,7 @@ class Grid:
                     cost_so_far[new_cell] = new_cost
                     frontier.put(priority=new_cost, location=new_cell)
                     came_from[new_cell] = current_cell
+
         return came_from
 
     @staticmethod
@@ -162,7 +171,7 @@ class Grid:
     def _is_line_of_sight(self, cell_0: GridRef, cell_1: GridRef) -> bool:
         """Determine whether there is line-of-sight between two cells."""
         cells = self._cells_on_line(cell_0, cell_1)
-        return all(cell not in self.untraversable_cells for cell in cells)
+        return all(cell not in self.movement_blocking_cells for cell in cells)
 
     def _cells_on_line(self, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
         """Return cells on the line between two cells, including end cells."""
@@ -213,16 +222,7 @@ class Grid:
     @staticmethod
     def cell_centre_to_world_pos(grid_ref: GridRef, world: World) -> Vector2:
         """Return the `World` position of the centre of the cell."""
-        return Grid._cell_to_world_pos(grid_ref, world) + Vector2(
-            world.grid_resolution / 2
-        )
-
-    @staticmethod
-    def _cell_to_world_pos(grid_ref: GridRef, world: World) -> Vector2:
-        """Return the `World` reference position of the cell, i.e. its min X, Y
-        corner.
-        """
         return Vector2(
             grid_ref.x * world.grid_resolution,
             grid_ref.y * world.grid_resolution,
-        )
+        ) + Vector2(world.grid_resolution / 2)

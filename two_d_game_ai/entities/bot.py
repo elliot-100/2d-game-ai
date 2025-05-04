@@ -53,7 +53,7 @@ class Bot(GenericEntityCircle):
     heading: Bearing = field(init=False)
     """Direction the `Bot` is facing."""
     velocity: Vector2 = field(init=False)
-    route: list[Vector2] = field(init=False, default_factory=list)
+    route: list[Vector2] | None = None
     """Waypoints to be visited, in order."""
     visible_bots: set[Bot] = field(init=False, default_factory=set)
     """Peers which are currently in sight."""
@@ -96,15 +96,21 @@ class Bot(GenericEntityCircle):
             and not self.is_at(proposed_destination)
             and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
-            logger.info(f"{self!s}: destination -> `{proposed_destination}`.")
+            logger.info(f"{self!s}: destination -> {proposed_destination}.")
             self.stop()
             self._destination = proposed_destination
-            self.route = self.route_to(self.destination)
-            logger.info(f"{self!s}: routed: {len(self.route)} waypoints.")
-            if self.route and len(self.route) >= 2:  # noqa: PLR2004
-                del self.route[0]
-                # effectively suppress reporting arrival at first waypoint, which is
-                # always own position
+
+            if self.destination:
+                self.route = self.world.route(
+                    from_pos=self.position, to_pos=self.destination
+                )
+            if self.route:
+                logger.info(f"{self!s}: routed: {len(self.route)} waypoints.")
+
+                if len(self.route) >= 2:  # noqa: PLR2004
+                    del self.route[0]
+                    # effectively suppress reporting arrival at first waypoint, which is
+                    # always own position
 
     def destination_from_sequence(self, position: Sequence[float]) -> None:
         """Set destination point."""
@@ -118,6 +124,7 @@ class Bot(GenericEntityCircle):
         if not self.world:
             err_msg = f"Can't update {self!s}. Add to World first."
             raise ValueError(err_msg)
+
         self.handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.leader and self.destination != self.leader.position:
@@ -125,7 +132,9 @@ class Bot(GenericEntityCircle):
 
         if self.route:
             if not self.destination:
-                raise ValueError
+                err_msg = f"{self!s} has a route but no destination!"
+                raise ValueError(err_msg)
+
             if self.is_at(self.destination):
                 logger.info(f"{self!s}: arrived at destination.")
                 self.stop()
@@ -134,7 +143,7 @@ class Bot(GenericEntityCircle):
                 return
 
             if self.is_at(self.route[0]):
-                logger.info(f"{self!s}': arrived at waypoint.")
+                logger.info(f"{self!s}: arrived at waypoint.")
                 self.stop()
                 del self.route[0]
                 return
@@ -210,7 +219,7 @@ class Bot(GenericEntityCircle):
     def can_see_location(self, location: Vector2) -> bool:
         """Determine whether `Bot` can see `location`.
 
-        Considers only vision cone angle.
+        Considers only vision cone angle and vision range.
         """
         relative_vector = location - self.position
         relative_bearing_magnitude = abs(
@@ -221,20 +230,3 @@ class Bot(GenericEntityCircle):
             relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
             and relative_vector.magnitude() < self.vision_range
         )
-
-    def route_to(
-        self,
-        goal: Vector2 | None,
-    ) -> list[Vector2]:
-        """Determine route to `goal`.
-
-        Returns
-        -------
-        list[Vector2]
-            Locations on the path to `goal`, including `goal` itself.
-            Empty if no path found.
-        """
-        if self.world is None:
-            err_msg = f"Can't route {self!s}. Add to World first."
-            raise ValueError(err_msg)
-        return [] if goal is None else self.world.route(self.position, goal)

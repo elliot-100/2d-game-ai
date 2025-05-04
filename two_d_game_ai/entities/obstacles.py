@@ -32,7 +32,7 @@ class ObstacleCircle(GenericEntityCircle):
         super().__post_init__(position_from_sequence)
 
     def add_to_grid(self) -> None:
-        """Set obscured grid cells to untraversable."""
+        """Set relevant grid cells to untraversable."""
         if not self.world:
             err_msg = f"Can't add {self!s} to grid. Add to World first."
             raise ValueError(err_msg)
@@ -44,7 +44,7 @@ class ObstacleCircle(GenericEntityCircle):
                 circle_centre=self.position,
                 circle_radius=self.radius,
             ):
-                self.world.grid.untraversable_cells.add(cell)
+                self.world.grid.movement_blocking_cells.add(cell)
 
 
 @dataclass(kw_only=True, eq=False)
@@ -55,7 +55,7 @@ class ObstacleRectangle(GenericEntityRectangle):
         super().__post_init__(position_from_sequence)
 
     def add_to_grid(self) -> None:
-        """Set obscured grid cells to untraversable."""
+        """Set relevant grid cells."""
         if not self.world:
             err_msg = f"Can't add {self!s} to grid. Add to World first."
             raise ValueError(err_msg)
@@ -67,4 +67,4 @@ class ObstacleRectangle(GenericEntityRectangle):
                 rect_min=self.position,
                 rect_size=Vector2(self.size),
             ):
-                self.world.grid.untraversable_cells.add(cell)
+                self.world.grid.movement_blocking_cells.add(cell)
