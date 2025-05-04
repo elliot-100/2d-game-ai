@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, ClassVar
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
-from two_d_game_ai.entities.generic_entity import GenericEntity
+from two_d_game_ai.entities.generic_entities import GenericEntityCircle
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.geometry.bearing import Bearing
 
@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True, eq=False)
-class Bot(GenericEntity):
+class Bot(GenericEntityCircle):
     """Simulated agent/vehicle."""
 
     DEFAULT_RADIUS: ClassVar[float] = 10
@@ -84,13 +84,12 @@ class Bot(GenericEntity):
     @destination.setter
     def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
-        if self.world is None:
-            # TypeGuard
-            err_msg = f"Can't set Bot '{self.name}' destination. Add to World first."
-            raise TypeError(err_msg)
+        if not self.world:
+            err_msg = f"Can't set {self.description} destination. Add to World first."
+            raise ValueError(err_msg)
 
         if proposed_destination is None:
-            log_msg = f"Bot '{self.name}': destination -> `None`."
+            log_msg = f"{self.description}: destination -> `None`."
             _logger.debug(log_msg)
             self._destination = None
         elif (
@@ -98,12 +97,12 @@ class Bot(GenericEntity):
             and not self.is_at(proposed_destination)
             and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
-            log_msg = f"Bot '{self.name}': destination -> `{proposed_destination}`."
+            log_msg = f"{self.description}: destination -> `{proposed_destination}`."
             _logger.info(log_msg)
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
-            log_msg = f"Bot '{self.name}': routed: {len(self.route)} waypoints."
+            log_msg = f"{self.description}: routed: {len(self.route)} waypoints."
             _logger.info(log_msg)
             if self.route and len(self.route) >= 2:  # noqa: PLR2004
                 del self.route[0]
@@ -114,22 +113,24 @@ class Bot(GenericEntity):
         """Set destination point."""
         self.destination = Vector2(position)
 
+    def add_to_grid(self) -> None:
+        """Not implemented for `Bot`."""
+
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
-        if self.world is None:
-            # TypeGuard
-            err_msg = "Bot needs to be added to World first."
-            raise TypeError(err_msg)
+        if not self.world:
+            err_msg = f"Can't update {self.description}. Add to World first."
+            raise ValueError(err_msg)
         self.handle_sensing(b for b in self.world.bots if b is not self)
 
         if self.leader and self.destination != self.leader.position:
             self.destination = self.leader.position.copy()
 
         if self.route:
-            if self.destination is None:
-                raise TypeError
+            if not self.destination:
+                raise ValueError
             if self.is_at(self.destination):
-                log_msg = f"Bot '{self.name}': arrived at destination."
+                log_msg = f"{self.description}: arrived at destination."
                 _logger.info(log_msg)
                 self.stop()
                 self.route = []
@@ -137,7 +138,7 @@ class Bot(GenericEntity):
                 return
 
             if self.is_at(self.route[0]):
-                log_msg = f"Bot '{self.name}': arrived at waypoint."
+                log_msg = f"{self.description}': arrived at waypoint."
                 _logger.info(log_msg)
                 self.stop()
                 del self.route[0]
@@ -167,9 +168,9 @@ class Bot(GenericEntity):
     def is_at(self, location: Vector2) -> bool:
         """Get whether `Bot` is at location (True) or not (False)."""
         return point_in_or_on_circle(
-            self.position,
-            location,
-            self.POSITION_ARRIVAL_TOLERANCE,
+            point=self.position,
+            circle_centre=location,
+            circle_radius=self.POSITION_ARRIVAL_TOLERANCE,
         )
 
     def rotate(self, rotation_delta: float) -> None:
@@ -239,7 +240,6 @@ class Bot(GenericEntity):
             Empty if no path found.
         """
         if self.world is None:
-            # TypeGuard
-            err_msg = "Bot needs to be added to World first."
-            raise TypeError(err_msg)
+            err_msg = f"Can't route {self.description}. Add to World first."
+            raise ValueError(err_msg)
         return [] if goal is None else self.world.route(self.position, goal)

@@ -26,8 +26,6 @@ class BotRenderer(GenericEntityRenderer):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        log_msg = f"BotRenderer initialised for '{self.entity.name}'."
-        _logger.debug(log_msg)
 
     def render(self, *, debug_render_mode: bool = False) -> None:
         """Draws `Bot` and decorations."""
@@ -58,6 +56,10 @@ class BotRenderer(GenericEntityRenderer):
             return
 
         # Destination marker (X)
+        # TypeGuard
+        if not self.radius:
+            raise TypeError
+
         offset = self.radius / self.parent.scale_factor
         self.parent.draw_line(
             color=colors.BOT_DESTINATION_LINE,
@@ -125,8 +127,9 @@ class BotRenderer(GenericEntityRenderer):
 
     def _draw_icon(self) -> None:
         """Draw unscaled icon to surface."""
-        if not isinstance(self.entity, Bot):
+        if not isinstance(self.entity, Bot) or not self.radius:
             raise TypeError
+
         fill_color = colors.SELECTED_FILL if self.is_selected else colors.BOT_FILL
         self.parent.draw_circle(
             surface=self.parent.surface,
