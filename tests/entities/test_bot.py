@@ -27,21 +27,19 @@ def compass_directions() -> dict[str, Vector2]:
 
 def test_create() -> None:
     """Test Bot initial state."""
-    # arrange
-    w = World(10)
-    # act
+    # arrange / act
     b = Bot(
-        world=w,
         name="b1",
         position_from_sequence=(0.7, 100.35),
     )
+    # assert
     assert b.name == "b1"
     assert b.position == Vector2(0.7, 100.35)
     # Bot is initially stationary:
     assert b.velocity == Vector2(0, 0)
     # Defaults:
     assert b.heading.vector == Vector2(0, 1)
-    assert b.radius == 0
+    assert b.radius == 10
 
 
 def test_can_see_point__in_range(
@@ -52,12 +50,10 @@ def test_can_see_point__in_range(
     With default North heading, can see only points on/within 90 degree cone.
     """
     # arrange
-    w = World(10)
     visible_points = [compass_directions[_] for _ in ["NW", "N", "NE"]]
     not_visible_points = [compass_directions[_] for _ in ["E", "SE", "S", "SW", "W"]]
     # act
     b = Bot(
-        world=w,
         name="b0",
         position_from_sequence=(0, 0),
     )
@@ -69,9 +65,7 @@ def test_can_see_point__in_range(
 def test_move() -> None:
     """Test Bot linear move."""
     # arrange
-    w = World(10)
     b = Bot(
-        world=w,
         name="b0",
         position_from_sequence=(0, 0),
     )
@@ -85,9 +79,7 @@ def test_move() -> None:
 def test_move_negative() -> None:
     """Test that Bot does not change position by default, as velocity is zero."""
     # arrange
-    w = World(10)
     b = Bot(
-        world=w,
         name="b0",
         position_from_sequence=(0, 0),
     )
@@ -102,10 +94,10 @@ def test_destination() -> None:
     # arrange
     w = World(40)
     b = Bot(
-        world=w,
         name="b0",
         position_from_sequence=(0, 0),
     )
+    w.add_entity(b)
     # act
     b.destination = Vector2(-17, -12)
     # assert
@@ -117,10 +109,10 @@ def test_set_destination_tuple() -> None:
     # arrange
     w = World(100)
     b = Bot(
-        world=w,
         name="b0",
         position_from_sequence=(0, 0),
     )
+    w.add_entity(b)
     # act
     b.destination_from_sequence((25, -50))
     # assert

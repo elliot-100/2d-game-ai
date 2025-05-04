@@ -14,11 +14,12 @@ def test_create() -> None:
     w = World(10)
     v = View(world=w)
     b = Bot(
-        world=w,
         name="b1",
         position_from_sequence=(0.7, 100.35),
     )
+    w.add_entity(b)
     # act
     v.render()
+    # assert
     assert len(v.world_renderer.bot_renderers) == 1
     assert v.world_renderer.bot_renderers.pop().entity is b

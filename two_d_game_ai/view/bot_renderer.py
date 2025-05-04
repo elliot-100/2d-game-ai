@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
 
 from pygame import Vector2
 
@@ -23,9 +23,6 @@ _logger = logging.getLogger(__name__)
 @dataclass(kw_only=True, eq=False)
 class BotRenderer(GenericEntityRenderer):
     """Renders a `Bot` to a `WorldRenderer`."""
-
-    ICON_RADIUS: ClassVar[int] = 10
-    """Display units."""
 
     def __post_init__(self) -> None:
         super().__post_init__()
@@ -51,7 +48,6 @@ class BotRenderer(GenericEntityRenderer):
                 self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
             )
         self._draw_icon()
-        self.clickable_radius = self.ICON_RADIUS
 
     def _draw_destination(self) -> None:
         """Draw `Bot` destination icon, and line to it."""
@@ -62,7 +58,7 @@ class BotRenderer(GenericEntityRenderer):
             return
 
         # Destination marker (X)
-        offset = self.ICON_RADIUS / self.parent.scale_factor
+        offset = self.radius / self.parent.scale_factor
         self.parent.draw_line(
             color=colors.BOT_DESTINATION_LINE,
             start_pos=self.entity.destination + Vector2(-offset, -offset),
@@ -136,13 +132,13 @@ class BotRenderer(GenericEntityRenderer):
             surface=self.parent.surface,
             color=fill_color,
             center=self.entity.position,
-            radius=self.ICON_RADIUS,
+            radius=self.radius,
             scale_radius=False,
         )
 
         # Heading indicator (line from centre to 'nose')
         # NB legacy use of Pygame CCW rotation here, thus negative angle:
-        nose_offset = Vector2(0, self.ICON_RADIUS).rotate(-self.entity.heading.degrees)
+        nose_offset = Vector2(0, self.radius).rotate(-self.entity.heading.degrees)
         self.parent.draw_line(
             color=colors.BOT_HEADING_INDICATOR_LINE,
             start_pos=self.entity.position,

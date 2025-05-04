@@ -21,8 +21,10 @@ _logger = logging.getLogger(__name__)
 class GenericEntity(ABC):
     """Generic circular entity."""
 
-    world: World
-    """Reference to `World` object."""
+    id: None | int = field(init=False, default=None)
+    """Unique identifier within World. `None` until added to `World`."""
+    world: None | World = field(init=False, default=None)
+    """Reference to `World` object. `None` until added to `World`."""
     position_from_sequence: InitVar[Sequence[float]]
     """`World` coordinates."""
     position: Vector2 = field(init=False)
@@ -31,14 +33,15 @@ class GenericEntity(ABC):
     """Radius in `World` units. Default is 0."""
     name: str = "GenericEntity"
     """May be shown in UI and logging."""
-    id: int = field(init=False)
 
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
-        self.id = len(self.world.entities)
-        self.world.entities.add(self)
         self.position = Vector2(position_from_sequence)
-        log_msg = f"Entity '{self.name}' initialised."
+        log_msg = f"{type(self).__name__} '{self.name}' initialised."
         _logger.debug(log_msg)
 
     def __hash__(self) -> int:
+        if self.id is None:
+            # TypeGuard
+            err_msg = "Entity has no `id` to hash. Add to World first."
+            raise TypeError(err_msg)
         return self.id

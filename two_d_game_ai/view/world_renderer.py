@@ -130,6 +130,11 @@ class WorldRenderer:
     def ensure_renderers(self) -> None:
         """Update the set of entity renderers."""
         for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
+            if e.id is None:
+                # TypeGuard
+                err_msg = "Entity must have an id to be rendered."
+                raise TypeError(err_msg)
+
             if isinstance(e, MovementBlock):
                 self.entity_renderers[e.id] = MovementBlockRenderer(
                     parent=self, entity=e

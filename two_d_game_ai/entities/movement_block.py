@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -13,8 +12,6 @@ from two_d_game_ai.world.grid import Grid
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-_logger = logging.getLogger(__name__)
-
 
 @dataclass(kw_only=True, eq=False)
 class MovementBlock(GenericEntity):
@@ -22,6 +19,13 @@ class MovementBlock(GenericEntity):
 
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
         super().__post_init__(position_from_sequence)
+
+    def add_to_grid(self) -> None:
+        """Set obscured grid cells to untraversable."""
+        if self.world is None:
+            # TypeGuard
+            err_msg = "MovementBlock needs to be added to World first."
+            raise TypeError(err_msg)
         for cell in self.world.grid.cells:
             cell_centre = Grid.cell_centre_to_world_pos(cell, self.world)
             if point_in_or_on_circle(
@@ -30,6 +34,3 @@ class MovementBlock(GenericEntity):
                 self.radius,
             ):
                 self.world.grid.untraversable_cells.add(cell)
-
-        log_msg = f"MovementBlock '{self.name}' initialised."
-        _logger.info(log_msg)

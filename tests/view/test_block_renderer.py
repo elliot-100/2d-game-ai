@@ -13,13 +13,14 @@ def test_create() -> None:
     # arrange
     w = World(10)
     m = MovementBlock(
-        world=w,
-        name="b1",
+        name="m0",
         position_from_sequence=(0.7, 100.35),
         radius=0.1,
     )
+    w.add_entity(m)
     v = View(world=w)
     # act
     v.render()
+    # assert
     assert len(v.world_renderer.movement_block_renderers) == 1
     assert v.world_renderer.movement_block_renderers.pop().entity is m

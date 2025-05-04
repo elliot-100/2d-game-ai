@@ -50,14 +50,14 @@ arg-type-hints-in-docstring = false
 select = ["ALL"]
 
 ignore = [
-# Rules that conflict with Ruff formatter:
-"COM812",  # Trailing comma missing
-"ISC001",  # Implicitly concatenated string literals on one line
-
-# Other:
-"D105",  # Missing docstring in magic method
-"D205",  # 1 blank line required between summary line and description
-"S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
+    # Rules that conflict with Ruff formatter:
+    "COM812",  # Trailing comma missing
+    "ISC001",  # Implicitly concatenated string literals on one line
+    # Other:
+    "D105",  # Missing docstring in magic method
+    "D205",  # 1 blank line required between summary line and description
+    "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
+    "FIX002", "TD002", "TD003",  # TODO related
 ]
 
 # Allow applying these 'unsafe' fixes without the `--unsafe-fixes` flag:

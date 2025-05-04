@@ -13,8 +13,13 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Added:
 
-- Improved text rendering
+- Bot has radius (not yet used for collision etc)
+- View: improved colours and text rendering
 - Build: PEP621-compatible `pyproject.toml`
+
+### Changed:
+
+- Entities need to be explicitly added to the World
 
 
 ## [0.7.0] - 2025-03-28

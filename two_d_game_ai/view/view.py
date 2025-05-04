@@ -36,7 +36,7 @@ class View:
     """The `World` to be rendered."""
     world_renderer_name: InitVar[str] = "UNNAMED WORLD_RENDERER"
     """Passed to `self.world_renderer`."""
-    scale_factor: float = 1
+    scale_factor: float = 40
     """Scale factor applied to the `World` render."""
     show_debug_while_unpaused: bool = False
 
