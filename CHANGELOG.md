@@ -11,6 +11,10 @@ Historic and pre-release versions aren't necessarily included.
 
 ## [UNRELEASED] - TBC
 
+### Added:
+
+- Bot stops if it collides with another Bot
+
 ### Fixed:
 
 - 'Following' example: Bots immediately forgot their leader

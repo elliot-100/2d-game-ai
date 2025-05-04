@@ -125,7 +125,8 @@ class Bot(GenericEntityCircle):
             err_msg = f"Can't update {self!s}. Add to World first."
             raise ValueError(err_msg)
 
-        self.handle_sensing(b for b in self.world.bots if b is not self)
+        other_bots = self.world.bots - {self}
+        self.handle_sensing(other_bots)
 
         if self.leader and self.destination != self.leader.position:
             self.destination = self.leader.position.copy()
@@ -167,7 +168,12 @@ class Bot(GenericEntityCircle):
                         waypoint_relative_bearing,
                     ),
                 )
-        self._move()
+        next_pos = self.position + self.velocity / SIMULATION_FPS
+
+        if self._is_in_collision(next_pos, other_bots):
+            self.stop()
+        else:
+            self.position = next_pos
 
     def is_at(self, location: Vector2) -> bool:
         """Get whether `Bot` is at location (True) or not (False)."""
@@ -192,10 +198,6 @@ class Bot(GenericEntityCircle):
     def stop(self) -> None:
         """Stop."""
         self.velocity = Vector2(0)
-
-    def _move(self) -> None:
-        """Change `Bot` position over 1 simulation step."""
-        self.position += self.velocity / SIMULATION_FPS
 
     def handle_sensing(self, other_bots: Iterable[Bot]) -> None:
         """Update knowledge of others."""
@@ -229,4 +231,14 @@ class Bot(GenericEntityCircle):
         return (
             relative_bearing_magnitude <= Bot.VISION_CONE_ANGLE / 2
             and relative_vector.magnitude() < self.vision_range
+        )
+
+    def _is_in_collision(self, point: Vector2, bots: Iterable[Bot]) -> bool:
+        return any(
+            point_in_or_on_circle(
+                point=point,
+                circle_centre=b.position,
+                circle_radius=self.radius + b.radius,
+            )
+            for b in bots
         )

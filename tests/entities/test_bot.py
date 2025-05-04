@@ -83,13 +83,15 @@ def test_can_see_point__in_range(
 def test_move() -> None:
     """Test Bot linear move."""
     # arrange
+    w = World(40)
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
+    w.add_entity(b)
     b.velocity = Vector2(1, 0)
     # act
-    b._move()
+    b.update()
     # assert
     assert b.position == Vector2(1 / SIMULATION_FPS, 0)
 
@@ -97,12 +99,14 @@ def test_move() -> None:
 def test_move_negative() -> None:
     """Test that Bot does not change position by default, as velocity is zero."""
     # arrange
+    w = World(40)
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
+    w.add_entity(b)
     # act
-    b._move()
+    b.update()
     # assert
     assert b.position == Vector2(0, 0)
 

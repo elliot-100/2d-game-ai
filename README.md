@@ -63,7 +63,6 @@ while view.running:
 
 ### Bot
 
-- Treated as a point
 - Initially stationary
 - While stationary, can rotate at a constant rate
 - Can move at a constant rate in the direction it is facing
