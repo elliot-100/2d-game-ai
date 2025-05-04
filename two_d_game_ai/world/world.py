@@ -123,7 +123,8 @@ class World:
         -------
         list[Vector2]
             Points on the path, including `to_pos` itself.
-            Empty if no route was found.
+        `None`
+            if no route was found.
         """
         from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
         to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
