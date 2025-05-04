@@ -11,10 +11,10 @@ from typing import TYPE_CHECKING
 from pygame import Color, Font, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacles import is_obstacle
 from two_d_game_ai.view import FONT_DIR_RELATIVE, FONT_FILENAME, FONT_SIZE, colors
 from two_d_game_ai.view.bot_renderer import BotRenderer
-from two_d_game_ai.view.movement_block_renderer import MovementBlockRenderer
+from two_d_game_ai.view.obstacle_renderers import ObstacleRenderer
 from two_d_game_ai.view.primitives import (
     blit,
     draw_circle,
@@ -44,7 +44,7 @@ class WorldRenderer:
     """The `World` to be rendered."""
     scale_factor: float = 1
     """Scale factor applied to the render."""
-    name: str = "UNNAMED WORLD_RENDERER"
+    name: str = ""
     size: float = field(init=False)
     """Display units."""
     surface: Surface = field(init=False)
@@ -62,7 +62,7 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        log_msg = f"WorldRenderer '{self.name}' initiated."
+        log_msg = f"WorldRenderer '{self.name}' initialised."
         _logger.debug(log_msg)
 
     def __hash__(self) -> int:
@@ -75,12 +75,10 @@ class WorldRenderer:
         return {r for r in self.entity_renderers.values() if isinstance(r, BotRenderer)}
 
     @property
-    def movement_block_renderers(self) -> set[MovementBlockRenderer]:
+    def obstacle_renderers(self) -> set[ObstacleRenderer]:
         """TO DO."""
         return {
-            r
-            for r in self.entity_renderers.values()
-            if isinstance(r, MovementBlockRenderer)
+            r for r in self.entity_renderers.values() if isinstance(r, ObstacleRenderer)
         }
 
     @property
@@ -96,7 +94,7 @@ class WorldRenderer:
         self.render_untraversable_cells(self.world.grid)
         for b in self.bot_renderers:
             b.render(debug_render_mode=debug_render_mode)
-        for m in self.movement_block_renderers:
+        for m in self.obstacle_renderers:
             m.render()
         self.render_axes()
 
@@ -131,17 +129,14 @@ class WorldRenderer:
         """Update the set of entity renderers."""
         for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
             if e.id is None:
-                # TypeGuard
-                err_msg = "Entity must have an id to be rendered."
-                raise TypeError(err_msg)
+                err_msg = f"{e.description} must have an `id` to be rendered."
+                raise ValueError(err_msg)
 
-            if isinstance(e, MovementBlock):
-                self.entity_renderers[e.id] = MovementBlockRenderer(
-                    parent=self, entity=e
-                )
+            if is_obstacle(e):
+                self.entity_renderers[e.id] = ObstacleRenderer(parent=self, entity=e)
             elif isinstance(e, Bot):
                 self.entity_renderers[e.id] = BotRenderer(parent=self, entity=e)
-            log_msg = f"{e.name} renderer added."
+            log_msg = f"{e.description} renderer added."
             _logger.debug(log_msg)
 
     def to_local(self, world_pos: Vector2) -> Vector2:
@@ -194,9 +189,7 @@ class WorldRenderer:
             grid_rect = grid_rect.move(-0.5, -0.5)
             grid_rect.width += 1
             grid_rect.height += 1
-            self.draw_rect(
-                color=colors.MOVEMENT_BLOCK_FILL, rect=Rect(grid_rect), width=0
-            )
+            self.draw_rect(color=colors.OBSTACLE_FILL, rect=Rect(grid_rect), width=0)
 
     def render_axes(self) -> None:
         """Draw axes."""
@@ -221,7 +214,7 @@ class WorldRenderer:
         """Return the EntityRenderer at position, or None."""
         for renderer in self.clickables:
             if renderer.is_clicked(pos):
-                log_msg = f"{renderer.entity.name} clicked."
+                log_msg = f"{renderer.description} clicked."
                 _logger.debug(log_msg)
                 return renderer
         return None
@@ -282,6 +275,7 @@ class WorldRenderer:
             surface=self.surface,
             color=color,
             rect=Rect(
+                # TODO: transform rect?
                 scaled_pos.x,
                 scaled_pos.y - scaled_height,
                 scaled_width,
@@ -293,7 +287,7 @@ class WorldRenderer:
     def draw_circle(
         self,
         *,
-        surface: Surface,
+        surface: Surface,  # TODO: why does this draw method have this param?
         color: Color,
         center: Vector2,
         radius: float,

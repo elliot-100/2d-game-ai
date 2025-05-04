@@ -1,4 +1,4 @@
-"""Contains `GenericEntityRenderer` class."""
+"""Contains generic entity renderer classes."""
 
 from __future__ import annotations
 
@@ -9,11 +9,11 @@ from typing import TYPE_CHECKING, ClassVar
 
 from pygame import Vector2
 
-from two_d_game_ai.geometry import point_in_or_on_circle
+from two_d_game_ai.geometry import point_in_or_on_circle, point_in_or_on_rect
 from two_d_game_ai.view import colors
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities.generic_entity import GenericEntity
+    from two_d_game_ai.entities.generic_entities import GenericEntity
     from two_d_game_ai.view.world_renderer import WorldRenderer
 
 
@@ -27,28 +27,30 @@ class GenericEntityRenderer(ABC):
     LABEL_OFFSET: ClassVar = (10, 10)
     """Display units."""
 
+    id: int = field(init=False)
+    """Used as hash value."""
     entity: GenericEntity
     parent: WorldRenderer
     """Parent renderer."""
-    radius: float = field(init=False)
     is_selected: bool = field(init=False)
-    id: int = field(init=False)
-    """Used as hash value."""
+    radius: None | float = field(init=False)
+    size: None | Vector2 = None
 
     def __post_init__(self) -> None:
-        self.radius = self.entity.radius
+        if hasattr(self.entity, "radius"):
+            self.radius = self.entity.radius
         self.id = len(self.parent.entity_renderers)
         self.is_selected = False
-        log_msg = f"GenericEntityRenderer initialised for '{self.entity.name}'."
-        _logger.debug(log_msg)
+        log_msg = f"{self.description} initialised for {self.entity.description}."
+        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return self.id
 
     @property
-    def _pos_v(self) -> Vector2:
-        """Get position in window coordinates."""
-        return self.parent.to_local(self.entity.position)
+    def description(self) -> str:
+        """Description of entity."""
+        return f"{type(self).__name__}"
 
     @abstractmethod
     def render(self) -> None:
@@ -75,6 +77,20 @@ class GenericEntityRenderer(ABC):
         Returns
         -------
         bool
-            True if the click position is within or on the clickable radius.
+            True if the click position is within or on the renderer.
         """
-        return point_in_or_on_circle(click_pos, self._pos_v, self.radius)
+        click_pos_world = self.parent.to_world(click_pos)
+
+        if hasattr(self.entity, "radius"):
+            return point_in_or_on_circle(
+                point=click_pos_world,
+                circle_centre=self.entity.position,
+                circle_radius=self.entity.radius,
+            )
+        if hasattr(self.entity, "size"):
+            return point_in_or_on_rect(
+                point=click_pos_world,
+                rect_min=self.entity.position,
+                rect_size=self.entity.size,
+            )
+        return False

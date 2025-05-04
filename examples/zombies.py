@@ -10,7 +10,7 @@ from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 ZOMBIE_MIN_SPEED = 1
 ZOMBIE_MAX_SPEED = 8
@@ -23,7 +23,7 @@ ZOMBIES_COUNT = 5
 the_world = World(100)
 
 # Add a regular human to the World
-human = Bot(name="h", max_speed=10, position_from_sequence=(0, 0))
+human = Bot(name="human", max_speed=10, position_from_sequence=(0, 0))
 the_world.add_entity(human)
 
 # Add zombies with varying speeds and vision ranges, and set destination for some

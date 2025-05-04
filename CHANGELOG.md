@@ -14,12 +14,13 @@ Historic and pre-release versions aren't necessarily included.
 ### Added:
 
 - Bot has radius (not yet used for collision etc)
+- Obstacles (prevously MovementBlocks) can be rectangles
 - View: improved colours and text rendering
 - Build: PEP621-compatible `pyproject.toml`
 
 ### Changed:
 
-- Entities need to be explicitly added to the World
+- Entities must be added to the World after they are created
 
 
 ## [0.7.0] - 2025-03-28

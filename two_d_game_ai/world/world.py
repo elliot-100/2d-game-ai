@@ -10,11 +10,16 @@ from typing import TYPE_CHECKING
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.movement_block import MovementBlock
+from two_d_game_ai.entities.obstacles import (
+    is_obstacle,
+)
+from two_d_game_ai.geometry import point_in_or_on_rect
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities.generic_entity import GenericEntity
+    from two_d_game_ai.entities.generic_entities import (
+        GenericEntity,
+    )
 
 _logger = logging.getLogger(__name__)
 
@@ -59,9 +64,9 @@ class World:
         return {e for e in self.entities if isinstance(e, Bot)}
 
     @property
-    def movement_blocks(self) -> set[MovementBlock]:
+    def obstacles(self) -> set[GenericEntity]:
         """TO DO."""
-        return {e for e in self.entities if isinstance(e, MovementBlock)}
+        return {e for e in self.entities if is_obstacle(e)}
 
     def update(self) -> None:
         """Only Bots currently need to be updated."""
@@ -71,11 +76,12 @@ class World:
         self.step_counter += 1
 
     def location_is_inside_world_bounds(self, location: Vector2) -> bool:
-        """Return `True` if point is inside the World bounds, else `False`.
-
-        Not currently used.
-        """
-        return abs(location.x) <= self.magnitude and abs(location.y) <= self.magnitude
+        """Return `True` if point is inside the World bounds, else `False`."""
+        return point_in_or_on_rect(
+            point=location,
+            rect_min=Vector2(-self.magnitude, -self.magnitude),
+            rect_size=Vector2(self.size, self.size),
+        )
 
     def location_is_blocked(self, location: Vector2) -> bool:
         """Return `True` if point is inside a blocked grid cell, else `False`."""
@@ -132,11 +138,11 @@ class World:
         entity.id = len(self.entities)
         self.entities.add(entity)
         entity.world = self
-        if isinstance(entity, MovementBlock):
+        if is_obstacle(entity):
             entity.add_to_grid()  # TODO: separation of concerns - pass Grid?
-        log_msg = f"{type(entity).__name__} '{entity.name}' added to World."
+        log_msg = f"{entity.description} added to World."
         _logger.info(log_msg)
 
         if not self.location_is_inside_world_bounds(entity.position):
-            log_msg = f"{type(entity).__name__} '{entity.name}' outside World bounds."
+            log_msg = f"{entity.description}' outside World bounds."
             _logger.warning(log_msg)

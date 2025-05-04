@@ -63,9 +63,9 @@ while view.running:
 - Divided into a square Grid
 
 
-### MovementBlock
+### Obstacles
 
-- Circular entity that blocks Bot movement
+- Circular or rectangular entities that block Bot movement
 
 
 ### Bot
