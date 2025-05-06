@@ -18,6 +18,10 @@ Historic and pre-release versions aren't necessarily included.
 - View: improved colours and text rendering
 - Build: PEP621-compatible `pyproject.toml`
 
+### Fixed:
+
+- Bot routes could pass through obstacles due to faulty path optimisation 
+
 ### Changed:
 
 - Entities must be added to the World after they are created
