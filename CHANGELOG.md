@@ -14,8 +14,9 @@ Historic and pre-release versions aren't necessarily included.
 ### Added:
 
 - Bot has radius (not yet used for collision etc)
-- Obstacles (prevously MovementBlocks) can be rectangles
+- Obstacles (previously MovementBlocks) can be rectangles
 - View: improved colours and text rendering
+- Simplified and improved log messages
 - Build: PEP621-compatible `pyproject.toml`
 
 ### Fixed:

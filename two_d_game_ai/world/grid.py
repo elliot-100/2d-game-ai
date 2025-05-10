@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import logging
 import math
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
+from loguru import logger
 from pygame import Vector2
 from pygame.math import lerp
 
@@ -18,8 +18,6 @@ if TYPE_CHECKING:
 
 
 _MIN_PATH_NODES: int = 3
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -116,8 +114,7 @@ class Grid:
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
-        log_msg = f"Calculated path: {len(path_from_goal)} points."
-        _logger.debug(log_msg)
+        logger.debug(f"Calculated path: {len(path_from_goal)} points.")
         return list(reversed(path_from_goal))
 
     def _uniform_cost_search(

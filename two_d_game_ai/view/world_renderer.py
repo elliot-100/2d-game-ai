@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import itertools
-import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from loguru import logger
 from pygame import Color, Font, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
@@ -29,8 +29,6 @@ if TYPE_CHECKING:
 
     from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
     from two_d_game_ai.world.world import World
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -62,8 +60,7 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        log_msg = f"WorldRenderer '{self.name}' initialised."
-        _logger.debug(log_msg)
+        logger.info(f"WorldRenderer '{self.name}' initialised.")
 
     def __hash__(self) -> int:
         return hash(self.name)
@@ -129,15 +126,14 @@ class WorldRenderer:
         """Update the set of entity renderers."""
         for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
             if e.id is None:
-                err_msg = f"{e.description} must have an `id` to be rendered."
+                err_msg = f"{e!s} must have an `id` to be rendered."
                 raise ValueError(err_msg)
 
             if is_obstacle(e):
                 self.entity_renderers[e.id] = ObstacleRenderer(parent=self, entity=e)
             elif isinstance(e, Bot):
                 self.entity_renderers[e.id] = BotRenderer(parent=self, entity=e)
-            log_msg = f"{e.description} renderer added."
-            _logger.debug(log_msg)
+            logger.debug(f"Added renderer for {e!s}.")
 
     def to_local(self, world_pos: Vector2) -> Vector2:
         """Convert `World` coordinates to local coordinates.
@@ -214,8 +210,7 @@ class WorldRenderer:
         """Return the EntityRenderer at position, or None."""
         for renderer in self.clickables:
             if renderer.is_clicked(pos):
-                log_msg = f"{renderer.description} clicked."
-                _logger.debug(log_msg)
+                logger.debug(f"{renderer!s}: clicked.")
                 return renderer
         return None
 

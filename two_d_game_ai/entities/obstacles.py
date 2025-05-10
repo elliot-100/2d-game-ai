@@ -34,7 +34,7 @@ class ObstacleCircle(GenericEntityCircle):
     def add_to_grid(self) -> None:
         """Set obscured grid cells to untraversable."""
         if not self.world:
-            err_msg = f"Can't add {self.description} to grid. Add to World first."
+            err_msg = f"Can't add {self!s} to grid. Add to World first."
             raise ValueError(err_msg)
 
         for cell in self.world.grid.cells:
@@ -57,7 +57,7 @@ class ObstacleRectangle(GenericEntityRectangle):
     def add_to_grid(self) -> None:
         """Set obscured grid cells to untraversable."""
         if not self.world:
-            err_msg = f"Can't add {self.description} to grid. Add to World first."
+            err_msg = f"Can't add {self!s} to grid. Add to World first."
             raise ValueError(err_msg)
 
         for cell in self.world.grid.cells:
