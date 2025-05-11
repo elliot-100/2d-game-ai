@@ -41,6 +41,25 @@ def test_create() -> None:
     assert b.heading.vector == Vector2(0, 1)
 
 
+def test_out_of_world_bounds() -> None:
+    """TO DO."""
+    # arrange
+    w = World(100)
+    b0 = Bot(
+        name="b0",
+        position_from_sequence=(50, 50),
+    )
+    w.add_entity(b0)
+    b1 = Bot(
+        name="b0",
+        position_from_sequence=(50, 101),
+    )
+    w.add_entity(b1)
+    # act, assert
+    assert b0.is_inside_world_bounds
+    assert not b1.is_inside_world_bounds
+
+
 def test_can_see_point__in_range(
     compass_directions: dict[str, Vector2],
 ) -> None:
