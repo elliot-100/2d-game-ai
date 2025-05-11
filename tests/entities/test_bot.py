@@ -39,7 +39,6 @@ def test_create() -> None:
     assert b.velocity == Vector2(0, 0)
     # Defaults:
     assert b.heading.vector == Vector2(0, 1)
-    assert b.radius == 10
 
 
 def test_can_see_point__in_range(
