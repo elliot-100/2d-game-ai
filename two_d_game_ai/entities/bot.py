@@ -22,9 +22,9 @@ if TYPE_CHECKING:
 class Bot(GenericEntityCircle):
     """Simulated agent/vehicle."""
 
-    DEFAULT_RADIUS: ClassVar[float] = 5
+    DEFAULT_RADIUS: ClassVar[float] = 0.5
     """`World` units."""
-    DEFAULT_MAX_SPEED: ClassVar[float] = 6
+    DEFAULT_MAX_SPEED: ClassVar[float] = 0.6
     """`World` units / second."""
     DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
     """Degrees / second."""
@@ -32,9 +32,9 @@ class Bot(GenericEntityCircle):
     """Degrees."""
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
-    DEFAULT_VISION_RANGE: ClassVar[float] = 100
+    DEFAULT_VISION_RANGE: ClassVar[float] = 10
     """`World` units."""
-    POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 1
+    POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 0.1
     """`World` units."""
 
     radius: float = DEFAULT_RADIUS

@@ -50,7 +50,7 @@ class World:
         self.grid_resolution = self.size / self.grid.size
         self.step_counter = 0
         self.is_paused = True
-        logger.info(f"{self} initialised.")
+        logger.info(f"{self} (size={self.size}) initialized.")
 
     def __str__(self) -> str:
         """Human-readable description."""

@@ -7,7 +7,7 @@ from two_d_game_ai.world.world import World
 def test_create() -> None:
     """Test that `View` can be created and initialized."""
     # arrange
-    w = World(200)
+    w = World(20)
     # act
     v = View(world=w)
     # assert
@@ -18,7 +18,7 @@ def test_create() -> None:
 def test_render() -> None:
     """Test that `View` can be rendered without error."""
     # arrange
-    w = World(200)
+    w = World(20)
     v = View(world=w)
     # act
     v.render()
