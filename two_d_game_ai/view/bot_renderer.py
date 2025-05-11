@@ -136,7 +136,6 @@ class BotRenderer(GenericEntityRenderer):
             color=fill_color,
             center=self.entity.position,
             radius=self.radius,
-            scale_radius=False,
         )
 
         # Heading indicator (line from centre to 'nose')
@@ -145,6 +144,6 @@ class BotRenderer(GenericEntityRenderer):
         self.parent.draw_line(
             color=colors.BOT_HEADING_INDICATOR_LINE,
             start_pos=self.entity.position,
-            end_pos=self.entity.position + nose_offset / self.parent.scale_factor,
+            end_pos=self.entity.position + nose_offset,
             width=3,
         )
