@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-import logging
 from abc import ABC, abstractmethod
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
 
+from loguru import logger
 from pygame import Vector2
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from two_d_game_ai.world.world import World
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True, eq=False)
@@ -34,19 +32,26 @@ class GenericEntity(ABC):
 
     def __post_init__(self, position_from_sequence: Sequence[float]) -> None:
         self.position = Vector2(position_from_sequence)
-        log_msg = f"{self.description} initialised."
-        _logger.debug(log_msg)
+        if self.world and not self.is_inside_world_bounds:
+            logger.warning(f"{self!s}: outside World bounds.")
 
     def __hash__(self) -> int:
         if self.id is None:
-            err_msg = f"Can't hash {self.description}: no `id`. Add to World first."
+            err_msg = f"Can't hash {self!s}: no `id`. Add to World first."
             raise ValueError(err_msg)
         return self.id
 
+    def __str__(self) -> str:
+        """Human-readable description."""
+        return f"{type(self).__name__} '{self.name}', id={self.id}"
+
     @property
-    def description(self) -> str:
-        """Description of entity."""
-        return f"{type(self).__name__} '{self.name}' id={self.id}"
+    def is_inside_world_bounds(self) -> bool:
+        """Return `True` if entity is inside the World bounds, else `False`."""
+        if self.world is None:
+            err_msg = f"Can't check {self!s} inside bounds. Add to World first."
+            raise ValueError(err_msg)
+        return self.world.location_is_inside_world_bounds(self.position)
 
     @abstractmethod
     def add_to_grid(self) -> None:

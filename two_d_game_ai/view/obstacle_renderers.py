@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import ClassVar
 
@@ -11,8 +10,6 @@ from pygame import Rect
 from two_d_game_ai.entities.obstacles import ObstacleCircle, ObstacleRectangle
 from two_d_game_ai.view import colors
 from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True, eq=False)

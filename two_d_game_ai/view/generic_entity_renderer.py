@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
@@ -15,9 +14,6 @@ from two_d_game_ai.view import colors
 if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entities import GenericEntity
     from two_d_game_ai.view.world_renderer import WorldRenderer
-
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -41,15 +37,12 @@ class GenericEntityRenderer(ABC):
             self.radius = self.entity.radius
         self.id = len(self.parent.entity_renderers)
         self.is_selected = False
-        log_msg = f"{self.description} initialised for {self.entity.description}."
-        _logger.info(log_msg)
 
     def __hash__(self) -> int:
         return self.id
 
-    @property
-    def description(self) -> str:
-        """Description of entity."""
+    def __str__(self) -> str:
+        """Human-readable description."""
         return f"{type(self).__name__}"
 
     @abstractmethod

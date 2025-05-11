@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
@@ -20,8 +19,6 @@ if TYPE_CHECKING:
 _PRIMARY_MOUSE_BUTTON = 1
 _SECONDARY_MOUSE_BUTTON = 3
 _PAUSE_KEY = pygame.K_p
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)

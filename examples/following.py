@@ -1,15 +1,15 @@
 """Bots can follow other Bots."""
 
 import itertools
-import logging
+
+from logging_config import configure_logger
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.obstacles import ObstacleCircle
 from two_d_game_ai.view.view import View
 from two_d_game_ai.world.world import World
 
-logging.basicConfig(level=logging.INFO)
-
+configure_logger()
 
 # Create a World
 the_world = World(200, grid_size=32)

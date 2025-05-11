@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import logging
 import random
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
 
+from loguru import logger
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
@@ -20,8 +20,6 @@ if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entities import (
         GenericEntity,
     )
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -52,6 +50,11 @@ class World:
         self.grid_resolution = self.size / self.grid.size
         self.step_counter = 0
         self.is_paused = True
+        logger.info(f"{self} initialised.")
+
+    def __str__(self) -> str:
+        """Human-readable description."""
+        return f"{type(self).__name__}"
 
     @property
     def magnitude(self) -> float:
@@ -140,9 +143,7 @@ class World:
         entity.world = self
         if is_obstacle(entity):
             entity.add_to_grid()  # TODO: separation of concerns - pass Grid?
-        log_msg = f"{entity.description} added to World."
-        _logger.info(log_msg)
+        logger.info(f"{self}: added {entity!s}.")
 
         if not self.location_is_inside_world_bounds(entity.position):
-            log_msg = f"{entity.description}' outside World bounds."
-            _logger.warning(log_msg)
+            logger.warning(f"{entity!s}: outside World bounds.")

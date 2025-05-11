@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import logging
 import math
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
+from loguru import logger
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
@@ -16,8 +16,6 @@ from two_d_game_ai.geometry.bearing import Bearing
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
-
-_logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True, eq=False)
@@ -85,25 +83,22 @@ class Bot(GenericEntityCircle):
     def destination(self, proposed_destination: Vector2 | None) -> None:
         """Set destination point."""
         if not self.world:
-            err_msg = f"Can't set {self.description} destination. Add to World first."
+            err_msg = f"Can't set {self!s} destination. Add to World first."
             raise ValueError(err_msg)
 
         if proposed_destination is None:
-            log_msg = f"{self.description}: destination -> `None`."
-            _logger.debug(log_msg)
+            logger.debug(f"{self!s}: destination -> `None`.")
             self._destination = None
         elif (
             proposed_destination != self.position
             and not self.is_at(proposed_destination)
             and self.world.location_is_inside_world_bounds(proposed_destination)
         ):
-            log_msg = f"{self.description}: destination -> `{proposed_destination}`."
-            _logger.info(log_msg)
+            logger.info(f"{self!s}: destination -> `{proposed_destination}`.")
             self.stop()
             self._destination = proposed_destination
             self.route = self.route_to(self.destination)
-            log_msg = f"{self.description}: routed: {len(self.route)} waypoints."
-            _logger.info(log_msg)
+            logger.info(f"{self!s}: routed: {len(self.route)} waypoints.")
             if self.route and len(self.route) >= 2:  # noqa: PLR2004
                 del self.route[0]
                 # effectively suppress reporting arrival at first waypoint, which is
@@ -119,7 +114,7 @@ class Bot(GenericEntityCircle):
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
         if not self.world:
-            err_msg = f"Can't update {self.description}. Add to World first."
+            err_msg = f"Can't update {self!s}. Add to World first."
             raise ValueError(err_msg)
         self.handle_sensing(b for b in self.world.bots if b is not self)
 
@@ -130,16 +125,14 @@ class Bot(GenericEntityCircle):
             if not self.destination:
                 raise ValueError
             if self.is_at(self.destination):
-                log_msg = f"{self.description}: arrived at destination."
-                _logger.info(log_msg)
+                logger.info(f"{self!s}: arrived at destination.")
                 self.stop()
                 self.route = []
                 self.destination = None
                 return
 
             if self.is_at(self.route[0]):
-                log_msg = f"{self.description}': arrived at waypoint."
-                _logger.info(log_msg)
+                logger.info(f"{self!s}': arrived at waypoint.")
                 self.stop()
                 del self.route[0]
                 return
@@ -240,6 +233,6 @@ class Bot(GenericEntityCircle):
             Empty if no path found.
         """
         if self.world is None:
-            err_msg = f"Can't route {self.description}. Add to World first."
+            err_msg = f"Can't route {self!s}. Add to World first."
             raise ValueError(err_msg)
         return [] if goal is None else self.world.route(self.position, goal)
