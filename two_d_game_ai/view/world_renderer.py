@@ -249,6 +249,27 @@ class WorldRenderer:
             width=width,
         )
 
+    def draw_polyline(
+        self,
+        *,
+        color: Color,
+        points: Sequence[Vector2],
+        width: int = 1,
+    ) -> None:
+        """Draw a polyline in `World` units on `self.surface`.
+
+        `width`: display pixels.
+        """
+        point_pairs = itertools.pairwise(points)
+        for start_pos, end_pos in point_pairs:
+            draw_line(
+                surface=self.surface,
+                color=color,
+                start_pos=self.to_local(start_pos),
+                end_pos=self.to_local(end_pos),
+                width=width,
+            )
+
     def draw_rect(
         self,
         *,
@@ -304,7 +325,7 @@ class WorldRenderer:
             width=width,
         )
 
-    def draw_poly(
+    def draw_polygon(
         self,
         *,
         color: Color,
@@ -340,9 +361,8 @@ class WorldRenderer:
             )
             for angle in draw_angles
         ]
-        self.draw_poly(
-            color=color,
-            points=[center] + [center + offset for offset in offsets],
+        self.draw_polygon(
+            color=color, points=[center] + [center + offset for offset in offsets]
         )
 
     def blit(
