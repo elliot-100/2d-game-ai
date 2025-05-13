@@ -10,7 +10,7 @@ def test_to_local() -> None:
     """Test that coordinates are converted so that origin is at centre."""
     # arrange
     w = World(20)
-    wr = WorldRenderer(world=w)
+    wr = WorldRenderer(world=w, scale_factor=1)
     world_origin = Vector2(0, 0)
     world_max = Vector2(10, 10)
     # act
@@ -40,7 +40,7 @@ def test_to_world() -> None:
     """Test that coordinates are converted so that origin is at top left."""
     # arrange
     w = World(20)
-    wr = WorldRenderer(world=w)
+    wr = WorldRenderer(world=w, scale_factor=1)
     local_origin = Vector2(0, 0)
     local_max = Vector2(20, 20)
     # act

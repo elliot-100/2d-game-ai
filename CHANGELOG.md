@@ -22,7 +22,8 @@ Historic and pre-release versions aren't necessarily included.
 
 ### Fixed:
 
-- Bot routes could pass through obstacles due to faulty path optimisation 
+- Bot routes could pass through obstacles due to faulty path optimisation
+- View: grid nodes weren't always drawn
 
 ### Changed:
 

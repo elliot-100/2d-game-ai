@@ -24,7 +24,7 @@ class Bot(GenericEntityCircle):
 
     DEFAULT_RADIUS: ClassVar[float] = 0.5
     """`World` units."""
-    DEFAULT_MAX_SPEED: ClassVar[float] = 0.6
+    DEFAULT_MAX_SPEED: ClassVar[float] = 2.5
     """`World` units / second."""
     DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
     """Degrees / second."""

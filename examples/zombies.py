@@ -14,17 +14,16 @@ from two_d_game_ai.world.world import World
 configure_logger()
 
 ZOMBIE_MIN_SPEED = 1
-ZOMBIE_MAX_SPEED = 8
+ZOMBIE_MAX_SPEED = 2
 ZOMBIE_MIN_ROTATION_RATE = 5
 ZOMBIE_MAX_ROTATION_RATE = 60
 ZOMBIES_COUNT = 5
-
 
 # Create a World
 the_world = World(20)
 
 # Add a regular human to the World
-human = Bot(name="human", max_speed=1, position_from_sequence=(0, 0))
+human = Bot(name="human", position_from_sequence=(0, 0))
 the_world.add_entity(human)
 
 # Add zombies with varying speeds and vision ranges, and set destination for some
