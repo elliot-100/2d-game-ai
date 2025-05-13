@@ -11,56 +11,55 @@ configure_logger()
 
 # Create a World
 the_world = World(
-    size=300,
+    size=30,
     grid_size=32,
 )
 # Add a Bot to the World...
-bot = Bot(name="bt0", position_from_sequence=(-100, 0))
+bot = Bot(name="bt0", position_from_sequence=(-10, 0))
 the_world.add_entity(bot)
 
 # Add an obstacle between Bot and destination
 the_world.add_entity(
-    ObstacleCircle(name="oc0", position_from_sequence=(0, 0), radius=50)
+    ObstacleCircle(name="oc0", position_from_sequence=(0, 0), radius=5)
 )
 
 # Create a View of the World
 view = View(
     world=the_world,
-    scale_factor=2,
     show_debug_while_unpaused=True,
 )
 the_world.add_entity(
-    ObstacleCircle(name="mb1", position_from_sequence=(100, 0), radius=20)
+    ObstacleCircle(name="mb1", position_from_sequence=(10, 0), radius=2)
 )
 the_world.add_entity(
-    ObstacleCircle(name="oc1", position_from_sequence=(50, 50), radius=40)
+    ObstacleCircle(name="oc1", position_from_sequence=(5, 5), radius=4)
 )
 the_world.add_entity(
-    ObstacleCircle(name="oc2", position_from_sequence=(-60, 70), radius=40)
+    ObstacleCircle(name="oc2", position_from_sequence=(-6, 7), radius=4)
 )
 the_world.add_entity(
-    ObstacleCircle(name="oc3", position_from_sequence=(-30, 50), radius=35)
+    ObstacleCircle(name="oc3", position_from_sequence=(-3, 5), radius=3.5)
 )
 
-SQUARE_BLOCK_SIZE = 30, 30
+SQUARE_BLOCK_SIZE = 3, 3
 the_world.add_entity(
     ObstacleRectangle(
-        name="or0", position_from_sequence=(-70, -100), size=SQUARE_BLOCK_SIZE
+        name="or0", position_from_sequence=(-7, -10), size=SQUARE_BLOCK_SIZE
     )
 )
 the_world.add_entity(
     ObstacleRectangle(
-        name="or0", position_from_sequence=(-30, -100), size=SQUARE_BLOCK_SIZE
+        name="or0", position_from_sequence=(-3, -10), size=SQUARE_BLOCK_SIZE
     )
 )
 the_world.add_entity(
     ObstacleRectangle(
-        name="or0", position_from_sequence=(10, -100), size=SQUARE_BLOCK_SIZE
+        name="or0", position_from_sequence=(1, -10), size=SQUARE_BLOCK_SIZE
     )
 )
 
 
-bot.destination_from_sequence((125, 5))
+bot.destination_from_sequence((12.5, 0.5))
 
 while view.running:
     view.handle_inputs()

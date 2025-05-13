@@ -60,7 +60,7 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        logger.info(f"WorldRenderer '{self.name}' initialised.")
+        logger.info(f"WorldRenderer (name={self.name}, size={self.size}) initialized.")
 
     def __hash__(self) -> int:
         return hash(self.name)

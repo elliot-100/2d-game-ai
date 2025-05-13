@@ -44,15 +44,15 @@ def test_create() -> None:
 def test_out_of_world_bounds() -> None:
     """TO DO."""
     # arrange
-    w = World(100)
+    w = World(10)
     b0 = Bot(
         name="b0",
-        position_from_sequence=(50, 50),
+        position_from_sequence=(5, 5),
     )
     w.add_entity(b0)
     b1 = Bot(
         name="b0",
-        position_from_sequence=(50, 101),
+        position_from_sequence=(5, 10.1),
     )
     w.add_entity(b1)
     # act, assert
@@ -125,13 +125,13 @@ def test_destination() -> None:
 def test_set_destination_tuple() -> None:
     """Test that Bot can be given destination as tuple inside World limits."""
     # arrange
-    w = World(100)
+    w = World(10)
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
     w.add_entity(b)
     # act
-    b.destination_from_sequence((25, -50))
+    b.destination_from_sequence((2.5, -5.0))
     # assert
-    assert b.destination == Vector2(25, -50)
+    assert b.destination == Vector2(2.5, -5.0)

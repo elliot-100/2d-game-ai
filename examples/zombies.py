@@ -21,10 +21,10 @@ ZOMBIES_COUNT = 5
 
 
 # Create a World
-the_world = World(100)
+the_world = World(20)
 
 # Add a regular human to the World
-human = Bot(name="human", max_speed=10, position_from_sequence=(0, 0))
+human = Bot(name="human", max_speed=1, position_from_sequence=(0, 0))
 the_world.add_entity(human)
 
 # Add zombies with varying speeds and vision ranges, and set destination for some
@@ -39,7 +39,7 @@ for i in range(ZOMBIES_COUNT):
         ),
         position_from_sequence=(0, 0),
         initial_heading=random.uniform(0, 360),
-        vision_range=random.uniform(10, 50),
+        vision_range=random.uniform(1, 5),
     )
     the_world.add_entity(z)
     z.position = the_world.random_location()
@@ -48,7 +48,7 @@ for i in range(ZOMBIES_COUNT):
     zombies.add(z)
 
 # Create a View of the World
-view = View(world=the_world, scale_factor=4)
+view = View(world=the_world)
 
 while view.running:
     view.handle_inputs()

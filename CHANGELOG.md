@@ -27,6 +27,7 @@ Historic and pre-release versions aren't necessarily included.
 ### Changed:
 
 - Entities must be added to the World after they are created
+- Bots have default radius of 0.5 world units; examples scaled accordingly
 
 
 ## [0.7.0] - 2025-03-28
