@@ -43,7 +43,7 @@ class GenericEntityRenderer(ABC):
 
     def __str__(self) -> str:
         """Human-readable description."""
-        return f"{type(self).__name__}"
+        return f"{type(self).__name__}(entity={self.entity!s})"
 
     @abstractmethod
     def render(self) -> None:

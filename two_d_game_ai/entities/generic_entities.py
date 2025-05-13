@@ -43,7 +43,7 @@ class GenericEntity(ABC):
 
     def __str__(self) -> str:
         """Human-readable description."""
-        return f"{type(self).__name__} '{self.name}', id={self.id}"
+        return f"{type(self).__name__}('{self.name}')"
 
     @property
     def is_inside_world_bounds(self) -> bool:
