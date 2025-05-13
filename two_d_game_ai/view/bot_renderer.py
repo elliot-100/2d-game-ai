@@ -45,7 +45,7 @@ class BotRenderer(GenericEntityRenderer):
         self._draw_icon()
 
     def _draw_destination(self) -> None:
-        """Draw `Bot` destination icon, and line to it."""
+        """Draw `Bot` destination icon."""
         if not isinstance(self.entity, Bot):
             raise TypeError
 
@@ -69,13 +69,6 @@ class BotRenderer(GenericEntityRenderer):
             end_pos=self.entity.destination + Vector2(-offset, offset),
         )
 
-        # Line from Bot centre to destination
-        self.parent.draw_line(
-            color=colors.BOT_DESTINATION_LINE,
-            start_pos=self.entity.position,
-            end_pos=self.entity.destination,
-        )
-
     def _draw_route(self) -> None:
         if not isinstance(self.entity, Bot):
             raise TypeError
@@ -91,12 +84,9 @@ class BotRenderer(GenericEntityRenderer):
                     scale_radius=False,
                 )
 
-            min_path_nodes: int = 2
-            if len(self.entity.route) >= min_path_nodes:
-                self.parent.draw_poly(
-                    color=colors.BOT_ROUTE_LINE,
-                    points=[self.entity.position, *self.entity.route],
-                )
+            points = [self.entity.position]
+            points.extend(self.entity.route)
+            self.parent.draw_polyline(color=colors.BOT_ROUTE_LINE, points=points)
 
     def _draw_vision_cone(self) -> None:
         """Draw `Bot` vision cone."""
