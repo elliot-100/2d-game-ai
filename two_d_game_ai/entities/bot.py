@@ -68,6 +68,8 @@ class Bot(GenericEntityCircle):
         super().__post_init__(position_from_sequence)
         self.heading: Bearing = Bearing(initial_heading)
         self.velocity: Vector2 = Vector2(0, 0)
+        if self.leader:
+            logger.info(f"{self!s}: leader={self.leader!s}.")
 
     @property
     def max_rotation_step(self) -> float:

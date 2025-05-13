@@ -9,6 +9,13 @@ As an application, does not attempt to adhere to Semantic Versioning.
 Historic and pre-release versions aren't necessarily included.
 
 
+## [UNRELEASED] - TBC
+
+### Fixed:
+
+- 'Following' example: Bots immediately forgot their leader
+
+ 
 ## [0.8.0] - 2025-05-13
 
 ### Added:

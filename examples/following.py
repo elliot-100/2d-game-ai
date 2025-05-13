@@ -27,6 +27,7 @@ for ax, ay in itertools.product(range(2), range(2)):
             name=f"A-{ax}{ay}",
             position_from_sequence=position,
             leader=leader_a,
+            has_memory=True,
         )
     )
 
@@ -39,7 +40,12 @@ for i in range(1, 4):
     bx = origin_b[0] + 0.5 * i
     by = origin_b[1] - 5 * i
     the_world.add_entity(
-        Bot(name=f"B-{i}", position_from_sequence=(bx, by), leader=leader_b)
+        Bot(
+            name=f"B-{i}",
+            position_from_sequence=(bx, by),
+            leader=leader_b,
+            has_memory=True,
+        )
     )
 
 ObstacleCircle(name="mb0", position_from_sequence=(2, -1.5), radius=2)
