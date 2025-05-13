@@ -5,7 +5,7 @@ from __future__ import annotations
 import itertools
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from loguru import logger
 from pygame import Color, Font, Rect, Surface, Vector2
@@ -38,9 +38,12 @@ class WorldRenderer:
     NB: Unlike Pygame default, origin at centre, positive y upwards.
     """
 
+    GRID_NODE_RADIUS: ClassVar[int] = 1
+    """Display units."""
+
     world: World
     """The `World` to be rendered."""
-    scale_factor: float = 1
+    scale_factor: float
     """Scale factor applied to the render."""
     name: str = ""
     size: float = field(init=False)
@@ -96,16 +99,9 @@ class WorldRenderer:
         self.render_axes()
 
     def base_grid(self) -> Surface:
-        """Pre-render grid to a static surface.
-
-        Nodes aren't drawn if grid resolution < 4 display units.
-        """
-        min_resolution = 4
+        """Pre-render grid to a static surface."""
         surface = Surface((self.size, self.size))
         surface.fill(colors.WORLD_FILL)
-
-        if self.world.grid_resolution < min_resolution:
-            return surface
 
         cell_size = self.world.grid_resolution
         cell_offsets = [
@@ -117,7 +113,7 @@ class WorldRenderer:
                 surface=surface,
                 color=colors.WORLD_GRID_LINE,
                 center=Vector2(x, y),
-                radius=1,
+                radius=self.GRID_NODE_RADIUS,
                 scale_radius=False,
             )
         return surface
