@@ -57,10 +57,16 @@ def draw_poly(
     *,
     surface: Surface,
     color: Color,
+    closed: bool,
     points: Sequence[Vector2],
 ) -> None:
-    """Draw a closed anti-aliased polygon."""
-    draw.aalines(surface=surface, color=color, closed=True, points=points)
+    """Draw an unfilled 1 px anti-aliased polygon/polyline."""
+    draw.aalines(
+        surface=surface,
+        color=color,
+        closed=closed,
+        points=points,
+    )
 
 
 def blit(
