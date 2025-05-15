@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import ClassVar
 
-from pygame import Rect
+from pygame import FRect
 
 from two_d_game_ai.entities.obstacles import ObstacleCircle, ObstacleRectangle
 from two_d_game_ai.view import colors
@@ -38,7 +38,7 @@ class ObstacleRenderer(GenericEntityRenderer):
         elif isinstance(self.entity, ObstacleRectangle):
             self.parent.draw_rect(
                 color=color,
-                rect=Rect(
+                rect=FRect(
                     self.entity.position,
                     self.entity.size,
                 ),

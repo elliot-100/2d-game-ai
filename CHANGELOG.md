@@ -18,7 +18,9 @@ Historic and pre-release versions aren't necessarily included.
 ### Fixed:
 
 - 'Following' example: Bots immediately forgot their leader
-- View: routes were drawn as a closed polygon instead of polyline
+- View:
+  - routes were drawn as a closed polygon instead of polyline
+  - blocks were drawn inaccurately
 
 ### Changed:
 
