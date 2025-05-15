@@ -20,6 +20,10 @@ Historic and pre-release versions aren't necessarily included.
 - 'Following' example: Bots immediately forgot their leader
 - View: routes were drawn as a closed polygon instead of polyline
 
+### Changed:
+
+- Dependency: require pygame-ce >=2.5.2
+
  
 ## [0.8.0] - 2025-05-13
 
