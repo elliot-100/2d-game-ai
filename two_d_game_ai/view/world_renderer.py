@@ -8,20 +8,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
 from loguru import logger
-from pygame import Color, Font, Rect, Surface, Vector2
+from pygame import Color, Font, FRect, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.obstacles import is_obstacle
-from two_d_game_ai.view import FONT_DIR_RELATIVE, FONT_FILENAME, FONT_SIZE, colors
+from two_d_game_ai.view import (
+    FONT_DIR_RELATIVE,
+    FONT_FILENAME,
+    FONT_SIZE,
+    colors,
+    primitives,
+)
 from two_d_game_ai.view.bot_renderer import BotRenderer
 from two_d_game_ai.view.obstacle_renderers import ObstacleRenderer
-from two_d_game_ai.view.primitives import (
-    blit,
-    draw_circle,
-    draw_line,
-    draw_poly,
-    draw_rect,
-)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -44,10 +43,10 @@ class WorldRenderer:
     world: World
     """The `World` to be rendered."""
     scale_factor: float
-    """Scale factor applied to the render."""
+    """Scale factor applied to the render. World units / pixel."""
     name: str = ""
     size: float = field(init=False)
-    """Display units."""
+    """Display pixels."""
     surface: Surface = field(init=False)
     """pygame `Surface`."""
     entity_renderers: dict[int, GenericEntityRenderer] = field(default_factory=dict)
@@ -63,7 +62,9 @@ class WorldRenderer:
         self.surface = Surface((self.size, self.size))
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
-        logger.info(f"WorldRenderer(size={self.size}) initialized.")
+        logger.info(
+            f"WorldRenderer(size={self.size}px, scale={self.scale_factor}) initialized."
+        )
 
     def __hash__(self) -> int:
         return hash(self.name)
@@ -98,8 +99,10 @@ class WorldRenderer:
         self.render_movement_blocking_cells(self.world.grid)
         for b in self.bot_renderers:
             b.render(debug_render_mode=debug_render_mode)
+
         for m in self.obstacle_renderers:
             m.render()
+
         self.render_axes()
 
     def base_grid(self) -> Surface:
@@ -131,8 +134,10 @@ class WorldRenderer:
 
             if is_obstacle(e):
                 self.entity_renderers[e.id] = ObstacleRenderer(parent=self, entity=e)
+
             elif isinstance(e, Bot):
                 self.entity_renderers[e.id] = BotRenderer(parent=self, entity=e)
+
             logger.debug(f"Added renderer for {e!s}.")
 
     def to_local(self, world_pos: Vector2) -> Vector2:
@@ -178,14 +183,11 @@ class WorldRenderer:
         """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
         for cell_ref in grid.movement_blocking_cells:
-            grid_rect = Rect(
-                (cell_ref.x * cell_size, cell_ref.y * cell_size), (cell_size, cell_size)
+            grid_rect = FRect(
+                (cell_ref.x * cell_size, cell_ref.y * cell_size),
+                (cell_size, cell_size),
             )
-            # draw slightly oversize to avoid antialiasing issues
-            grid_rect = grid_rect.move(-0.5, -0.5)
-            grid_rect.width += 1
-            grid_rect.height += 1
-            self.draw_rect(color=colors.OBSTACLE_FILL, rect=Rect(grid_rect), width=0)
+            self.draw_rect(color=colors.OBSTACLE_FILL, rect=grid_rect, width=0)
 
     def render_axes(self) -> None:
         """Draw axes."""
@@ -212,6 +214,7 @@ class WorldRenderer:
             if renderer.is_clicked(pos):
                 logger.debug(f"{renderer!s}: clicked.")
                 return renderer
+
         return None
 
     def handle_mouse_set_destination(self, local_pos: Vector2) -> Vector2 | None:
@@ -241,7 +244,7 @@ class WorldRenderer:
 
         `width`: display pixels.
         """
-        draw_line(
+        primitives.draw_line(
             surface=self.surface,
             color=color,
             start_pos=self.to_local(start_pos),
@@ -262,7 +265,7 @@ class WorldRenderer:
         """
         point_pairs = itertools.pairwise(points)
         for start_pos, end_pos in point_pairs:
-            draw_line(
+            primitives.draw_line(
                 surface=self.surface,
                 color=color,
                 start_pos=self.to_local(start_pos),
@@ -274,7 +277,7 @@ class WorldRenderer:
         self,
         *,
         color: Color,
-        rect: Rect,
+        rect: FRect,
         width: int = 0,
     ) -> None:
         """Draw a rectangle in `World` units on `self.surface`.
@@ -285,7 +288,7 @@ class WorldRenderer:
         scaled_pos = self.to_local(Vector2(rect.left, rect.top))
         scaled_width = rect.width * self.scale_factor
         scaled_height = rect.height * self.scale_factor
-        draw_rect(
+        primitives.draw_rect(
             surface=self.surface,
             color=color,
             rect=Rect(
@@ -317,7 +320,8 @@ class WorldRenderer:
         """
         if scale_radius:
             radius *= self.scale_factor
-        draw_circle(
+
+        primitives.draw_circle(
             surface=surface,
             color=color,
             center=self.to_local(center),
@@ -335,7 +339,7 @@ class WorldRenderer:
         """Draw an unfilled 1 px anti-aliased polygon/polyline in `World` units
         on `self.surface`.
         """
-        draw_poly(
+        primitives.draw_poly(
             surface=self.surface,
             color=color,
             closed=closed,
@@ -388,7 +392,8 @@ class WorldRenderer:
             dest = Vector2(0, 0)
         if display_offset is None:
             display_offset = Vector2(0, 0)
-        blit(
+
+        primitives.blit(
             source=source,
             surface=self.surface,
             dest=self.to_local(dest) + display_offset,
