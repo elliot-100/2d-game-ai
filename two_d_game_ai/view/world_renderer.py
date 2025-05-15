@@ -325,16 +325,20 @@ class WorldRenderer:
             width=width,
         )
 
-    def draw_polygon(
+    def draw_poly(
         self,
         *,
         color: Color,
+        closed: bool,
         points: Sequence[Vector2],
     ) -> None:
-        """Draw a closed unfilled polygon in `World` units on `self.surface`."""
+        """Draw an unfilled 1 px anti-aliased polygon/polyline in `World` units
+        on `self.surface`.
+        """
         draw_poly(
             surface=self.surface,
             color=color,
+            closed=closed,
             points=[self.to_local(p) for p in points],
         )
 
@@ -361,8 +365,10 @@ class WorldRenderer:
             )
             for angle in draw_angles
         ]
-        self.draw_polygon(
-            color=color, points=[center] + [center + offset for offset in offsets]
+        self.draw_poly(
+            color=color,
+            closed=True,
+            points=[center] + [center + offset for offset in offsets],
         )
 
     def blit(
