@@ -93,7 +93,8 @@ class Grid:
         Returns
         -------
         `list[GridRef]`
-            Cells on the route to `to_cell`, including `to_cell`.
+            Cells on the route to `to_cell`.
+            Includes `to_cell`; doesn't include 'from_cell'.
         `None`
             if no route was found.
         """
@@ -103,14 +104,12 @@ class Grid:
             or to_cell in self.movement_blocking_cells
         ):
             return None
-        if from_cell == to_cell:
+        if from_cell == to_cell or self._is_line_of_sight(from_cell, to_cell):
             return [to_cell]
-        if self._is_line_of_sight(from_cell, to_cell):
-            return [from_cell, to_cell]
 
         came_from = self._uniform_cost_search(from_cell, to_cell)
 
-        # Construct cell path starting at `to_cell` and retracing to `start_cell`...
+        # Construct cell path starting at `to_cell` and retracing to `from_cell`
         path_from_goal = [to_cell]
         current_cell = to_cell
 
@@ -122,8 +121,9 @@ class Grid:
             current_cell = came_from_location
             path_from_goal.append(current_cell)
 
+        path = path_from_goal[-1::-1]  # reverse
         logger.debug(f"Calculated path: {len(path_from_goal)} points.")
-        return list(reversed(path_from_goal))
+        return path
 
     def _uniform_cost_search(
         self,

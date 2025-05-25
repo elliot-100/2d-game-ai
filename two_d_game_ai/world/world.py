@@ -138,8 +138,11 @@ class World:
 
         pos_route = [Grid.cell_centre_to_world_pos(self, cell) for cell in cell_route]
         # always use actual points (not cell centre) for end waypoints:
-        pos_route[0] = from_pos
-        pos_route[-1] = to_pos
+        if len(pos_route) == 1:  # direct route
+            return [to_pos]
+
+        pos_route.append(to_pos)
+
         return pos_route
 
     def add_entity(self, entity: GenericEntity) -> None:

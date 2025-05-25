@@ -39,6 +39,29 @@ def test_cells_on_line() -> None:
     }
 
 
+def test_route__direct() -> None:
+    """Test that only the goal cell is returned when the route is direct."""
+    # arrange
+    g = Grid(size=2)
+    c0 = GridRef(x=-1, y=0)
+    c1 = GridRef(x=1, y=1)
+    # act
+    cs = g.route(c0, c1)
+    # assert
+    assert cs == [GridRef(x=1, y=1)]
+
+
+def test_cell_from_pos() -> None:
+    """Test that `World` coordinates are converted to a `GridRef`."""
+    # arrange
+    w = World(size=100, grid_size=10)
+    p = Vector2(15, 45)
+    # act
+    gr = Grid.grid_ref_from_world_pos(w, p)
+    # assert
+    assert gr == GridRef(1, 4)
+
+
 def test_cell_centre_to_world_pos() -> None:
     """Test that world pos of the centre of the cell is calculated correctly."""
     # arrange

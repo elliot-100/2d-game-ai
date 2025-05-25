@@ -1,5 +1,7 @@
 """Package containing geometric classes and functions."""
 
+from collections.abc import Iterable
+
 from pygame import Vector2
 
 
@@ -24,3 +26,10 @@ def point_in_or_on_rect(
         rect_min[0] <= point[0] <= (rect_min + rect_size)[0]
         and rect_min[1] <= point[1] <= (rect_min + rect_size)[1]
     )
+
+
+def points_as_str(
+    points: Iterable[Vector2],
+) -> str:
+    """Format points as a string for logging etc."""
+    return ",".join(str(p) for p in points)

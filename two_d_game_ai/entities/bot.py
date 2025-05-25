@@ -96,12 +96,10 @@ class Bot(GenericEntity):
                     from_pos=self.position, to_pos=self.destination
                 )
             if self.route:
-                logger.info(f"{self!s}: routed: {len(self.route)} waypoints.")
-
-                if len(self.route) >= 2:  # noqa: PLR2004
-                    del self.route[0]
-                    # effectively suppress reporting arrival at first waypoint, which is
-                    # always own position
+                logger.info(
+                    f"{self!s} at {self.position} routed: "
+                    f"{len(self.route)} waypoints: {points_as_str(self.route)}"
+                )
 
     def destination_from_sequence(self, position: Sequence[float]) -> None:
         """Set destination point."""
