@@ -14,7 +14,10 @@ from two_d_game_ai.view.generic_entity_renderer import GenericEntityRenderer
 
 @dataclass(kw_only=True, eq=False)
 class ObstacleRenderer(GenericEntityRenderer):
-    """Renders an obstacle to a `WorldRenderer`."""
+    """Renders outline of an obstacle to a `WorldRenderer`.
+
+    NB: Contained Grid cells are rendered by `WorldRenderer`.
+    """
 
     LABEL_OFFSET: ClassVar = (0, 0)
     """Display units."""

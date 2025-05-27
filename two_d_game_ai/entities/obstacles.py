@@ -38,7 +38,7 @@ class ObstacleCircle(GenericEntityCircle):
             raise ValueError(err_msg)
 
         for cell in self.world.grid.cells:
-            cell_centre = Grid.cell_centre_to_world_pos(cell, self.world)
+            cell_centre = Grid.cell_centre_to_world_pos(self.world, cell)
             if point_in_or_on_circle(
                 point=cell_centre,
                 circle_centre=self.position,
@@ -61,7 +61,7 @@ class ObstacleRectangle(GenericEntityRectangle):
             raise ValueError(err_msg)
 
         for cell in self.world.grid.cells:
-            cell_centre = Grid.cell_centre_to_world_pos(cell, self.world)
+            cell_centre = Grid.cell_centre_to_world_pos(self.world, cell)
             if point_in_or_on_rect(
                 point=cell_centre,
                 rect_min=self.position,
