@@ -14,9 +14,11 @@ Historic and pre-release versions aren't necessarily included.
 ### Added:
 
 - Bot stops if it collides with another Bot
+- View: render grid cell boundaries
 
 ### Fixed:
 
+- Bot could clip through corners of movement obstacles
 - 'Following' example: Bots immediately forgot their leader
 - View:
   - routes were drawn as a closed polygon instead of polyline
@@ -26,14 +28,14 @@ Historic and pre-release versions aren't necessarily included.
 
 - Dependency: require pygame-ce >=2.5.2
 
- 
+
 ## [0.8.0] - 2025-05-13
 
 ### Added:
 
 - Bot has radius (not yet used for collision etc)
 - Obstacles (previously MovementBlocks) can be rectangles
-- Warn if entity position initially outside World 
+- Warn if entity position initially outside World
 - View: improved colours and text rendering
 - Simplified and improved log messages
 - Build: PEP621-compatible `pyproject.toml`

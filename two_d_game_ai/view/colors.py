@@ -6,7 +6,8 @@ WINDOW_FILL = Color("grey15")
 WINDOW_TEXT = Color("grey80")
 
 WORLD_FILL = Color("grey25")
-WORLD_AXES_LINE = WORLD_GRID_LINE = Color("grey40")
+WORLD_GRID_LINE = Color("grey30")
+WORLD_AXES_LINE = Color("grey40")
 
 OBSTACLE_FILL = WINDOW_FILL
 OBSTACLE_LINE = Color("black")
