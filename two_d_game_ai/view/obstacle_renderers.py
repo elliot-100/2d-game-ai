@@ -40,6 +40,7 @@ class ObstacleRenderer(GenericEntityRenderer):
             )
         elif isinstance(self.entity, ObstacleRectangle):
             self.parent.draw_rect(
+                surface=self.parent.surface,
                 color=color,
                 rect=FRect(
                     self.entity.position,

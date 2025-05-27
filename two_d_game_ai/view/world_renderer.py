@@ -106,7 +106,11 @@ class WorldRenderer:
         self.render_axes()
 
     def base_grid(self) -> Surface:
-        """Pre-render grid to a static surface."""
+        """Pre-render grid to a static surface.
+
+        # TODO: refactor
+
+        """
         surface = Surface((self.size, self.size))
         surface.fill(colors.WORLD_FILL)
 
@@ -122,6 +126,16 @@ class WorldRenderer:
                 center=Vector2(x, y),
                 radius=self.GRID_NODE_RADIUS,
                 scale_radius=False,
+            )
+            grid_rect = FRect(
+                (x - cell_size / 2, y - cell_size / 2),
+                (cell_size, cell_size),
+            )
+            self.draw_rect(
+                surface=surface,
+                color=colors.WORLD_GRID_LINE,
+                rect=grid_rect,
+                width=1,
             )
         return surface
 
@@ -188,7 +202,12 @@ class WorldRenderer:
                 cell_origin,
                 (cell_size, cell_size),
             )
-            self.draw_rect(color=colors.OBSTACLE_FILL, rect=grid_rect, width=0)
+            self.draw_rect(
+                surface=self.surface,
+                color=colors.OBSTACLE_FILL,
+                rect=grid_rect,
+                width=0,
+            )
 
     def render_axes(self) -> None:
         """Draw axes."""
@@ -196,11 +215,13 @@ class WorldRenderer:
             color=colors.WORLD_AXES_LINE,
             start_pos=Vector2(0, -self.world.magnitude),
             end_pos=Vector2(0, self.world.magnitude),
+            width=2,
         )
         self.draw_line(
             color=colors.WORLD_AXES_LINE,
             start_pos=Vector2(-self.world.magnitude, 0),
             end_pos=Vector2(self.world.magnitude, 0),
+            width=2,
         )
 
     def handle_mouse_select(self, local_pos: Vector2) -> None:
@@ -277,6 +298,7 @@ class WorldRenderer:
     def draw_rect(
         self,
         *,
+        surface: Surface,
         color: Color,
         rect: FRect,
         width: int = 0,
@@ -290,7 +312,7 @@ class WorldRenderer:
         scaled_width = rect.width * self.scale_factor
         scaled_height = rect.height * self.scale_factor
         primitives.draw_rect(
-            surface=self.surface,
+            surface=surface,
             color=color,
             rect=Rect(
                 # TODO: transform rect?
@@ -305,7 +327,7 @@ class WorldRenderer:
     def draw_circle(
         self,
         *,
-        surface: Surface,  # TODO: why does this draw method have this param?
+        surface: Surface,
         color: Color,
         center: Vector2,
         radius: float,
