@@ -183,8 +183,9 @@ class WorldRenderer:
         """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
         for cell_ref in grid.movement_blocking_cells:
+            cell_origin = cell_ref * cell_size + self.world.grid_offset
             grid_rect = FRect(
-                (cell_ref.x * cell_size, cell_ref.y * cell_size),
+                cell_origin,
                 (cell_size, cell_size),
             )
             self.draw_rect(color=colors.OBSTACLE_FILL, rect=grid_rect, width=0)

@@ -24,43 +24,43 @@ _MIN_PATH_NODES: int = 3
 class Grid:
     """Grid class.
 
-    NB: there is no 'Grid cell' class.
+    Zero-based.
 
+    NB: there is no 'Grid cell' class.
     """
 
     DEFAULT_SIZE: ClassVar = 2
 
-    _DIRECTIONS: ClassVar = {
+    _CARDINAL_DIRECTIONS: ClassVar = {
         (1, 0),
         (0, 1),
         (-1, 0),
         (0, -1),
+    }
+    _DIAGONAL_DIRECTIONS: ClassVar = {
         (1, 1),
         (-1, 1),
         (-1, -1),
         (1, -1),
     }
+    _DIRECTIONS: ClassVar = _CARDINAL_DIRECTIONS | _DIAGONAL_DIRECTIONS
+
     size: int = DEFAULT_SIZE
     """`Grid` units per side."""
-    offset: GridRef = field(init=False)
     movement_blocking_cells: set[GridRef] = field(init=False, default_factory=set)
 
-    def __post_init__(self) -> None:
-        _offset = -self.size // 2
-        self.offset = GridRef(_offset, _offset)
+    def __str__(self) -> str:
+        """Human-readable description."""
+        return f"{type(self).__name__}(size={self.size})"
 
     @property
     def cells(self) -> set[GridRef]:
         """Return all cells."""
-        return {
-            GridRef(x, y) + self.offset
-            for x in range(self.size)
-            for y in range(self.size)
-        }
+        return {GridRef(x, y) for x in range(self.size) for y in range(self.size)}
 
     def _cell_is_in_bounds(self, cell: GridRef) -> bool:
         """Determine whether a cell is within the `Grid`."""
-        return abs(cell.x) <= self.size and abs(cell.y) <= self.size
+        return 0 <= cell.x < self.size and 0 <= cell.y < self.size
 
     def reachable_neighbours(self, cell: GridRef) -> set[GridRef]:
         """Return a cell's reachable (by movement) neighbours."""
@@ -176,10 +176,10 @@ class Grid:
     def _cells_on_line(self, cell_0: GridRef, cell_1: GridRef) -> set[GridRef]:
         """Return cells on the line between two cells, including end cells."""
         if not self._cell_is_in_bounds(cell_0):
-            err_msg = f"Cell {cell_0} is out of bounds."
+            err_msg = f"{self!s}: cell {cell_0} is out of bounds."
             raise IndexError(err_msg)
         if not self._cell_is_in_bounds(cell_1):
-            err_msg = f"Cell {cell_1} is out of bounds."
+            err_msg = f"{self!s}: cell {cell_1} is out of bounds."
             raise IndexError(err_msg)
         if cell_0 == cell_1:
             return {cell_0}
@@ -215,14 +215,19 @@ class Grid:
     @staticmethod
     def grid_ref_from_world_pos(world: World, pos: Vector2) -> GridRef:
         """Return the `GridRef` of the cell containing `World` position."""
+        relative_pos = pos - world.grid_offset
         return GridRef(
-            int(pos.x // world.grid_resolution), int(pos.y // world.grid_resolution)
+            int(relative_pos.x // world.grid_resolution),
+            int(relative_pos.y // world.grid_resolution),
         )
 
     @staticmethod
-    def cell_centre_to_world_pos(grid_ref: GridRef, world: World) -> Vector2:
+    def cell_centre_to_world_pos(world: World, grid_ref: GridRef) -> Vector2:
         """Return the `World` position of the centre of the cell."""
-        return Vector2(
-            grid_ref.x * world.grid_resolution,
-            grid_ref.y * world.grid_resolution,
-        ) + Vector2(world.grid_resolution / 2)
+        return (
+            world.grid_offset
+            + Vector2(
+                grid_ref.x * world.grid_resolution, grid_ref.y * world.grid_resolution
+            )
+            + Vector2(world.grid_resolution / 2)
+        )
