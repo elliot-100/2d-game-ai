@@ -129,6 +129,9 @@ class World:
             Points on the path, including `to_pos` itself.
             Empty if no route was found.
         """
+        if not self.grid.movement_blocking_cells:
+            return [to_pos]
+
         from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
         to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
         cell_route = self.grid.route(from_cell, to_cell)
