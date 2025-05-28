@@ -35,6 +35,7 @@ class View:
     """Passed to `self.world_renderer`."""
     scale_factor: float = 16
     """Scale factor applied to the `World` render. Display units per world unit."""
+    show_debug_vision: bool = False
     show_debug_while_unpaused: bool = False
 
     running: bool = field(init=False)
@@ -93,7 +94,9 @@ class View:
         self.clock.tick(self.MAX_RENDER_FPS)
         self.window.fill(colors.WINDOW_FILL)
         if self.world.is_paused or self.show_debug_while_unpaused:
-            self.world_renderer.render(debug_render_mode=True)
+            self.world_renderer.render(
+                debug_render_mode=True, show_debug_vision=self.show_debug_vision
+            )
         else:
             self.world_renderer.render()
         self.window.blit(

@@ -24,7 +24,9 @@ class BotRenderer(GenericEntityRenderer):
     def __post_init__(self) -> None:
         super().__post_init__()
 
-    def render(self, *, debug_render_mode: bool = False) -> None:
+    def render(
+        self, *, debug_render_mode: bool = False, show_debug_vision: bool = False
+    ) -> None:
         """Draws `Bot` and decorations."""
         super().render()
         if not isinstance(self.entity, Bot):
@@ -37,13 +39,14 @@ class BotRenderer(GenericEntityRenderer):
                 self._draw_destination()
             if self.entity.route:
                 self._draw_route()
-            self._draw_vision_cone()
-            self._draw_lines_to_others(
-                self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 3
-            )
-            self._draw_lines_to_others(
-                self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
-            )
+            if show_debug_vision:
+                self._draw_vision_cone()
+                self._draw_lines_to_others(
+                    self.entity.visible_bots, colors.BOT_CAN_SEE_LINE, 3
+                )
+                self._draw_lines_to_others(
+                    self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
+                )
 
     def _draw_destination(self) -> None:
         """Draw `Bot` destination icon."""

@@ -91,14 +91,18 @@ class WorldRenderer:
         """Clickable elements."""
         return set(self.entity_renderers.values())
 
-    def render(self, *, debug_render_mode: bool = False) -> None:
+    def render(
+        self, *, debug_render_mode: bool = False, show_debug_vision: bool = False
+    ) -> None:
         """Render the `World` to `self.surface`."""
         self.ensure_renderers()
         # Drawn in order, bottom layer to top:
         self.surface.blit(self.base_grid_surface)
         self.render_movement_blocking_cells(self.world.grid)
         for b in self.bot_renderers:
-            b.render(debug_render_mode=debug_render_mode)
+            b.render(
+                debug_render_mode=debug_render_mode, show_debug_vision=show_debug_vision
+            )
 
         for m in self.obstacle_renderers:
             m.render()

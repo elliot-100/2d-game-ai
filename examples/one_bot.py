@@ -14,7 +14,7 @@ the_world = World(20)
 the_world.add_entity(Bot(position_from_sequence=(2, 2)))
 
 # Create a View of the World
-view = View(world=the_world)
+view = View(world=the_world, show_debug_vision=True)
 
 while view.running:
     view.handle_inputs()

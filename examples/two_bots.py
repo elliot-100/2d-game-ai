@@ -13,7 +13,7 @@ the_world = World(20)
 # Add a Bot to the World...
 the_world.add_entity(Bot(name="b0", position_from_sequence=(2, 2)))
 # Create a View of the World
-view = View(world=the_world)
+view = View(world=the_world, show_debug_vision=True)
 # Add another Bot to the World...
 b1 = Bot(name="b1", position_from_sequence=(0, 0))
 the_world.add_entity(b1)

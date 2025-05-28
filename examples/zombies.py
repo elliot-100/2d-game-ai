@@ -46,7 +46,7 @@ for i in range(ZOMBIES_COUNT):
     zombies.add(z)
 
 # Create a View of the World
-view = View(world=the_world)
+view = View(world=the_world, show_debug_vision=True)
 
 while view.running:
     view.handle_inputs()
