@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
 
 from loguru import logger
 from pygame import Vector2
 
+from two_d_game_ai.geometry import point_in_or_on_circle, point_in_or_on_rect
+from two_d_game_ai.world.grid import Grid
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from two_d_game_ai.world.grid_ref import GridRef
     from two_d_game_ai.world.world import World
 
 
@@ -53,22 +57,31 @@ class GenericEntity(ABC):
             raise ValueError(err_msg)
         return self.world.location_is_inside_world_bounds(self.position)
 
-    @abstractmethod
-    def add_to_grid(self) -> None:
-        """Not implemented."""
+    def occupied_cells(self) -> set[GridRef]:
+        """TODO."""
+        if not self.world:
+            err_msg = "UNHANDLED. Add to World first."
+            raise ValueError(err_msg)
 
+        occupied_cells = set()
+        if hasattr(self, "radius"):
+            for cell in self.world.grid.cells:
+                cell_centre = Grid.cell_centre_to_world_pos(self.world, cell)
+                if point_in_or_on_circle(
+                    point=cell_centre,
+                    circle_centre=self.position,
+                    circle_radius=self.radius,
+                ):
+                    occupied_cells.add(cell)
 
-@dataclass(kw_only=True, eq=False)
-class GenericEntityCircle(GenericEntity, ABC):
-    """Generic circular entity."""
+        elif hasattr(self, "size"):
+            for cell in self.world.grid.cells:
+                cell_centre = Grid.cell_centre_to_world_pos(self.world, cell)
+                if point_in_or_on_rect(
+                    point=cell_centre,
+                    rect_min=self.position,
+                    rect_size=Vector2(self.size),
+                ):
+                    occupied_cells.add(cell)
 
-    radius: float = 1
-    """Radius in `World` units. Default is 1."""
-
-
-@dataclass(kw_only=True, eq=False)
-class GenericEntityRectangle(GenericEntity, ABC):
-    """Generic rectangular entity."""
-
-    size: tuple[float, float] = 2, 2
-    """Size in `World` units. Default is 2, 2."""
+        return occupied_cells

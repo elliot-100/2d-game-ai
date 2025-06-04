@@ -11,7 +11,7 @@ from loguru import logger
 from pygame import Color, Font, FRect, Rect, Surface, Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.obstacles import is_obstacle
+from two_d_game_ai.entities.obstacles import Obstacle
 from two_d_game_ai.view import (
     FONT_DIR_RELATIVE,
     FONT_FILENAME,
@@ -146,7 +146,7 @@ class WorldRenderer:
                 err_msg = f"{e!s} must have an `id` to be rendered."
                 raise ValueError(err_msg)
 
-            if is_obstacle(e):
+            if isinstance(e, Obstacle):
                 self.entity_renderers[e.id] = ObstacleRenderer(parent=self, entity=e)
 
             elif isinstance(e, Bot):

@@ -10,7 +10,7 @@ from loguru import logger
 from pygame import Vector2
 
 from two_d_game_ai import SIMULATION_FPS
-from two_d_game_ai.entities.generic_entities import GenericEntityCircle
+from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.geometry.bearing import Bearing
 
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(kw_only=True, eq=False)
-class Bot(GenericEntityCircle):
+class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
     DEFAULT_RADIUS: ClassVar[float] = 0.5
@@ -115,9 +115,6 @@ class Bot(GenericEntityCircle):
     def destination_from_sequence(self, position: Sequence[float]) -> None:
         """Set destination point."""
         self.destination = Vector2(position)
-
-    def add_to_grid(self) -> None:
-        """Not implemented for `Bot`."""
 
     def update(self) -> None:
         """Update `Bot`, including move over 1 simulation step."""
