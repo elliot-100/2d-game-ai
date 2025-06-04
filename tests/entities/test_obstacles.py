@@ -16,8 +16,8 @@ def test_create_circle() -> None:
     assert oc0.position == Vector2(5000, -9000)
 
 
-def test_create_rectangule() -> None:
-    """Test ObstacleRectangle is created.."""
+def test_create_rectangle() -> None:
+    """Test ObstacleRectangle is created."""
     # arrange / act
     or0 = ObstacleRectangle(name="m0", position_from_sequence=(5000, -9000))
     # assert

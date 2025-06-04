@@ -10,14 +10,12 @@ from loguru import logger
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
-from two_d_game_ai.entities.obstacles import (
-    is_obstacle,
-)
+from two_d_game_ai.entities.obstacles import Obstacle
 from two_d_game_ai.geometry import point_in_or_on_rect
 from two_d_game_ai.world.grid import Grid
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities.generic_entities import (
+    from two_d_game_ai.entities.generic_entity import (
         GenericEntity,
     )
 
@@ -73,7 +71,7 @@ class World:
     @property
     def obstacles(self) -> set[GenericEntity]:
         """TO DO."""
-        return {e for e in self.entities if is_obstacle(e)}
+        return {e for e in self.entities if isinstance(e, Obstacle)}
 
     def update(self) -> None:
         """Only Bots currently need to be updated."""
@@ -150,9 +148,9 @@ class World:
         entity.id = len(self.entities)
         self.entities.add(entity)
         entity.world = self
-        if is_obstacle(entity):
-            entity.add_to_grid()  # TODO: separation of concerns - pass Grid?
-        logger.info(f"{self}: added {entity!s}.")
+        if isinstance(entity, Obstacle):
+            entity.add_to_grid(self.grid)
 
+        logger.info(f"{self}: added {entity!s}.")
         if not self.location_is_inside_world_bounds(entity.position):
             logger.warning(f"{entity!s}: outside World bounds.")

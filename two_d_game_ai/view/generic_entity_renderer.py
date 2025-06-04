@@ -12,7 +12,7 @@ from two_d_game_ai.geometry import point_in_or_on_circle, point_in_or_on_rect
 from two_d_game_ai.view import colors
 
 if TYPE_CHECKING:
-    from two_d_game_ai.entities.generic_entities import GenericEntity
+    from two_d_game_ai.entities.generic_entity import GenericEntity
     from two_d_game_ai.view.world_renderer import WorldRenderer
 
 
