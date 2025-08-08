@@ -13,6 +13,7 @@ from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.obstacles import Obstacle
 from two_d_game_ai.geometry import point_in_or_on_rect
 from two_d_game_ai.world.grid import Grid
+from two_d_game_ai.world.grid_ref import GridRef
 
 if TYPE_CHECKING:
     from two_d_game_ai.entities.generic_entity import (
@@ -41,8 +42,6 @@ class World:
     """Size of a `Grid` cell in `World` units."""
     grid_offset: Vector2 = field(init=False)
     """Origin of `Grid` in `World` coordinates."""
-    cell_size: float = field(init=False)
-    """Size of a `Grid` cell in `World` units."""
     entities: set[GenericEntity] = field(init=False, default_factory=set)
     """All entities."""
     step_counter: int = field(init=False)
@@ -57,11 +56,11 @@ class World:
         self.grid_offset = -Vector2(self.magnitude, self.magnitude)
         self.step_counter = 0
         self.is_paused = True
-        logger.info(f"{self!s}(size={self.size}) initialized.")
+        logger.info(f"{self} initialized.")
 
     def __str__(self) -> str:
         """Human-readable description."""
-        return f"{type(self).__name__}"
+        return f"{type(self).__name__}(size={self.size})"
 
     @property
     def bots(self) -> set[Bot]:
@@ -92,7 +91,7 @@ class World:
         """Return `True` if `location` is inside a movement-blocked grid cell,
         else `False`.
         """
-        grid_ref = self.grid.grid_ref_from_world_pos(self, location)
+        grid_ref = self.grid_ref_from_pos(location)
         return grid_ref in self.grid.movement_blocking_cells
 
     def random_location(self) -> Vector2:
@@ -130,8 +129,8 @@ class World:
         if not self.grid.movement_blocking_cells:
             return [to_pos]
 
-        from_cell = Grid.grid_ref_from_world_pos(self, from_pos)
-        to_cell = Grid.grid_ref_from_world_pos(self, to_pos)
+        from_cell = self.grid_ref_from_pos(from_pos)
+        to_cell = self.grid_ref_from_pos(to_pos)
         cell_route = self.grid.route(from_cell, to_cell)
 
         if not isinstance(cell_route, list):
@@ -154,3 +153,23 @@ class World:
         logger.info(f"{self}: added {entity!s}.")
         if not self.location_is_inside_world_bounds(entity.position):
             logger.warning(f"{entity!s}: outside World bounds.")
+
+    def grid_ref_from_pos(self, pos: Vector2) -> GridRef:
+        """Return the `GridRef` of the cell containing `World` position."""
+        relative_pos = pos - self.grid_offset
+        grid_ref = GridRef(
+            int(relative_pos.x // self.grid_resolution),
+            int(relative_pos.y // self.grid_resolution),
+        )
+        if any(
+            (
+                grid_ref.x < 0,
+                grid_ref.y < 0,
+                grid_ref.x > self.grid.size,
+                grid_ref.y > self.grid.size,
+            )
+        ):
+            err_msg = f"Can't get a `GridRef` for pos {pos} outside {self}."
+            raise ValueError(err_msg)
+
+        return grid_ref
