@@ -19,10 +19,12 @@ Historic and pre-release versions aren't necessarily included.
 ### Fixed:
 
 - Bot could clip through corners of movement obstacles
+- Positions outside the World bounds had spurious grid refs 
 - 'Following' example: Bots immediately forgot their leader
 - View:
   - routes were drawn as a closed polygon instead of polyline
   - blocks were drawn inaccurately
+
 
 ### Changed:
 

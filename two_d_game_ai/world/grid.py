@@ -213,15 +213,6 @@ class Grid:
         return dx1 * dy2 == dy1 * dx2
 
     @staticmethod
-    def grid_ref_from_world_pos(world: World, pos: Vector2) -> GridRef:
-        """Return the `GridRef` of the cell containing `World` position."""
-        relative_pos = pos - world.grid_offset
-        return GridRef(
-            int(relative_pos.x // world.grid_resolution),
-            int(relative_pos.y // world.grid_resolution),
-        )
-
-    @staticmethod
     def cell_centre_to_world_pos(world: World, grid_ref: GridRef) -> Vector2:
         """Return the `World` position of the centre of the cell."""
         return (
