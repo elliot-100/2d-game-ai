@@ -39,17 +39,6 @@ def test_cells_on_line() -> None:
     }
 
 
-def test_cell_from_pos() -> None:
-    """Test that `World` coordinates are converted to a `GridRef`."""
-    # arrange
-    w = World(size=100, grid_size=10)
-    world_origin = Vector2(0, 0)
-    # act
-    origin_grid_ref = Grid.grid_ref_from_world_pos(world=w, pos=world_origin)
-    # assert
-    assert origin_grid_ref == GridRef(5, 5)
-
-
 def test_cell_centre_to_world_pos() -> None:
     """Test that world pos of the centre of the cell is calculated correctly."""
     # arrange

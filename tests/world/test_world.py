@@ -1,9 +1,11 @@
 """Tests for `World` class."""
 
+import pytest
 from pygame import Vector2
 
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.obstacles import ObstacleCircle, ObstacleRectangle
+from two_d_game_ai.world.grid_ref import GridRef
 from two_d_game_ai.world.world import World
 
 
@@ -69,3 +71,24 @@ def test_point_is_inside_world_bounds() -> None:
     # act/assert
     assert w.location_is_inside_world_bounds(p0)
     assert not w.location_is_inside_world_bounds(p1)
+
+
+def test_grid_ref_from_pos() -> None:
+    """Test that World coordinates are converted to a `GridRef`."""
+    # arrange
+    w = World(size=100, grid_size=10)
+    world_origin = Vector2(0, 0)
+    # act
+    origin_grid_ref = w.grid_ref_from_pos(world_origin)
+    # assert
+    assert origin_grid_ref == GridRef(5, 5)
+
+
+def test_cell_from_pos__out_of_bounds() -> None:
+    """Test that out-of-bounds coordinates...."""
+    # arrange
+    w = World(size=100, grid_size=10)
+    pos = Vector2(0, -101)
+    # act, assert
+    with pytest.raises(ValueError, match="Can't get a `GridRef` for pos"):
+        w.grid_ref_from_pos(pos)
