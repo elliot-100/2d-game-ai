@@ -11,9 +11,8 @@ dependencies = [
     "loguru >=0.7.3",
     "pygame-ce>=2.5.3",
 ]
-
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "invoke >=2.2.0",
     "mypy >= 1.17.1",
     "pdoc >= 15.0.4",
