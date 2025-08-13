@@ -30,6 +30,8 @@ class BotRenderer(GenericEntityRenderer):
         if not isinstance(self.entity, Bot):
             raise TypeError
 
+        self._draw_icon()
+
         if debug_render_mode:
             if self.entity.destination:
                 self._draw_destination()
@@ -42,7 +44,6 @@ class BotRenderer(GenericEntityRenderer):
             self._draw_lines_to_others(
                 self.entity.remembered_bots, colors.BOT_KNOWS_LINE, 1
             )
-        self._draw_icon()
 
     def _draw_destination(self) -> None:
         """Draw `Bot` destination icon."""

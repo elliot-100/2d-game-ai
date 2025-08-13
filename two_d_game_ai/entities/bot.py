@@ -22,32 +22,23 @@ if TYPE_CHECKING:
 class Bot(GenericEntity):
     """Simulated agent/vehicle."""
 
-    DEFAULT_RADIUS: ClassVar[float] = 0.5
-    """`World` units."""
-    DEFAULT_MAX_SPEED: ClassVar[float] = 2.5
-    """`World` units / second."""
-    DEFAULT_MAX_ROTATION_RATE: ClassVar[float] = 90
-    """Degrees / second."""
-    DEFAULT_INITIAL_HEADING: ClassVar[float] = 0
-    """Degrees."""
     VISION_CONE_ANGLE: ClassVar[float] = 90
     """Degrees."""
-    DEFAULT_VISION_RANGE: ClassVar[float] = 10
-    """`World` units."""
     POSITION_ARRIVAL_TOLERANCE: ClassVar[float] = 0.1
     """`World` units."""
 
-    radius: float = DEFAULT_RADIUS
+    radius: float = 0.5
+    """`World` units."""
     leader: Bot | None = None
-    max_speed: float = DEFAULT_MAX_SPEED
+    max_speed: float = 2.5
     """`World` units / second."""
-    max_rotation_rate: float = DEFAULT_MAX_ROTATION_RATE
+    max_rotation_rate: float = 90
     """Degrees / second."""
-    initial_heading: InitVar[float] = DEFAULT_INITIAL_HEADING
+    initial_heading: InitVar[float] = 0
     """Initial direction the `Bot` is facing. Degrees."""
     has_memory: bool = False
     """Can remember peers."""
-    vision_range: float = DEFAULT_VISION_RANGE
+    vision_range: float = 10
     """`World` units."""
 
     heading: Bearing = field(init=False)
@@ -209,16 +200,17 @@ class Bot(GenericEntity):
         self.visible_bots = currently_visible_bots
 
     def can_see(self, other_bot: Bot) -> bool:
-        """Determine whether `Bot` can see another `Bot`.
+        """Determine whether the `Bot` can see `other_bot`.
 
-        Considers only vision cone angle.
+        Specifically, whether the `other_bot` position (i.e. centre) is within the
+        vision cone.
         """
         return self.can_see_location(other_bot.position)
 
     def can_see_location(self, location: Vector2) -> bool:
-        """Determine whether `Bot` can see `location`.
+        """Determine whether the `Bot` can see `location`.
 
-        Considers only vision cone angle and vision range.
+        Specifically, whether the `location` is within the vision cone.
         """
         relative_vector = location - self.position
         relative_bearing_magnitude = abs(
