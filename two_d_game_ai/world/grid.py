@@ -216,9 +216,9 @@ class Grid:
     def cell_centre_to_world_pos(world: World, grid_ref: GridRef) -> Vector2:
         """Return the `World` position of the centre of the cell."""
         return (
-            world.grid_offset
-            + Vector2(
+            Vector2(
                 grid_ref.x * world.grid_resolution, grid_ref.y * world.grid_resolution
             )
             + Vector2(world.grid_resolution / 2)
+            - world.origin_offset
         )

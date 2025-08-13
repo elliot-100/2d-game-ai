@@ -8,10 +8,10 @@ from two_d_game_ai.world.world import World
 configure_logger()
 
 # Create a World
-the_world = World(20)
+the_world = World(size_from_sequence=(20, 20))
 
 # Add a Bot to the World...
-the_world.add_entity(Bot(position_from_sequence=(2, 2)))
+the_world.add_generic_entity(Bot(position_from_sequence=(2, 2)))
 
 # Create a View of the World
 view = View(world=the_world)

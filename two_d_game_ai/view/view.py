@@ -48,11 +48,14 @@ class View:
 
     def __post_init__(self, world_renderer_name: str) -> None:
         pygame.init()
-        font_filepath = Path(__file__).resolve().parent / FONT_DIR_RELATIVE
-        self.font = Font(font_filepath / FONT_FILENAME, FONT_SIZE)
-        world_render_size = self.world.size * self.scale_factor
-        window_size = world_render_size + 2 * self.MARGIN
-        self.window = pygame.display.set_mode((window_size, window_size))
+        self.font = Font(
+            Path(__file__).resolve().parent / FONT_DIR_RELATIVE / FONT_FILENAME,
+            FONT_SIZE,
+        )
+        _window_size = self.world.size * self.scale_factor + 2 * Vector2(
+            self.MARGIN, self.MARGIN
+        )
+        self.window = pygame.display.set_mode(_window_size)
         pygame.display.set_caption(self.CAPTION)
         self.world_renderer = WorldRenderer(
             world=self.world,

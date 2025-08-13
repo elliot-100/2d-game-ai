@@ -21,16 +21,13 @@ from two_d_game_ai.world.world import World
 # WORLD
 
 # Create a World
-the_world = World(
-  size=300,
-  grid_size=16,
-)
+the_world = World(size_from_sequence=(300, 300), grid_size=16)
 
 # ENTITIES
 
 # Add a Bot to the World...
 b0 = Bot(position_from_sequence=(20, 20))
-the_world.add_entity(b0)
+the_world.add_generic_entity(b0)
 
 # ... with a destination
 b0.destination = (25, -50)
@@ -43,10 +40,10 @@ view = View(world=the_world)
 # MAIN LOOP
 
 while view.running:
-  view.handle_inputs()
-  if not the_world.is_paused:
-    the_world.update()
-  view.render()
+    view.handle_inputs()
+    if not the_world.is_paused:
+        the_world.update()
+    view.render()
 ```
 
 

@@ -10,12 +10,12 @@ from two_d_game_ai.world.world import World
 def test_bot_move_in_world_context() -> None:
     """Test that Bot's position is correct after 1 World update."""
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(10, 10))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     b.velocity = Vector2(1, 0)
     # act
     w.update()

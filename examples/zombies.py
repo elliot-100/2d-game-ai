@@ -19,11 +19,11 @@ ZOMBIE_MAX_ROTATION_RATE = 60
 ZOMBIES_COUNT = 5
 
 # Create a World
-the_world = World(20)
+the_world = World(size_from_sequence=(20, 20))
 
 # Add a regular human to the World
 human = Bot(name="human", position_from_sequence=(0, 0))
-the_world.add_entity(human)
+the_world.add_generic_entity(human)
 
 # Add zombies with varying speeds and vision ranges, and set destination for some
 zombies = set()
@@ -39,10 +39,10 @@ for i in range(ZOMBIES_COUNT):
         initial_heading=random.uniform(0, 360),
         vision_range=random.uniform(1, 5),
     )
-    the_world.add_entity(z)
-    z.position = the_world.random_location()
+    the_world.add_generic_entity(z)
+    z.position = the_world.random_position()
     if set_destination:
-        z.destination = the_world.random_location()
+        z.destination = the_world.random_position()
     zombies.add(z)
 
 # Create a View of the World

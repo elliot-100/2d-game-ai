@@ -11,13 +11,13 @@ def test_create() -> None:
     Can't be tested on `WorldRenderer.render(), as it does not create a Pygame window.
     """
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(10, 10))
     v = View(world=w)
     b = Bot(
         name="b1",
         position_from_sequence=(0.7, 100.35),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     # act
     v.render()
     # assert

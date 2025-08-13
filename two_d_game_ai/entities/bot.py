@@ -85,7 +85,7 @@ class Bot(GenericEntity):
         elif (
             proposed_destination != self.position
             and not self.is_at(proposed_destination)
-            and self.world.location_is_inside_world_bounds(proposed_destination)
+            and self.world.position_is_in_bounds(proposed_destination)
         ):
             logger.info(f"{self!s}: destination -> {proposed_destination}.")
             self.stop()

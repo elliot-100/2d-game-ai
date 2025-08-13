@@ -11,17 +11,17 @@ from two_d_game_ai.world.world import World
 configure_logger()
 
 # Create a World
-the_world = World(20, grid_size=32)
+the_world = World(size_from_sequence=(20, 20), grid_size=32)
 
 # Add a Bot to the World...
 leader_a = Bot(name="A", position_from_sequence=(-5, -5))
-the_world.add_entity(leader_a)
+the_world.add_generic_entity(leader_a)
 
 # Group of followers:
 origin_a = -5, 5
 for ax, ay in itertools.product(range(2), range(2)):
     position = origin_a[0] + 2 * ax, origin_a[1] + 2 * ay
-    the_world.add_entity(
+    the_world.add_generic_entity(
         Bot(
             name=f"A-{ax}{ay}",
             position_from_sequence=position,
@@ -33,12 +33,12 @@ for ax, ay in itertools.product(range(2), range(2)):
 # Follower chain:
 origin_b = 4, 7
 leader_b = Bot(name="B", position_from_sequence=origin_b)
-the_world.add_entity(leader_b)
+the_world.add_generic_entity(leader_b)
 
 for i in range(1, 4):
     bx = origin_b[0] + 0.5 * i
     by = origin_b[1] - 5 * i
-    the_world.add_entity(
+    the_world.add_generic_entity(
         Bot(
             name=f"B-{i}",
             position_from_sequence=(bx, by),

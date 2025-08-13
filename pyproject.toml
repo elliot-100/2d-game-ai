@@ -10,7 +10,9 @@ requires-python = ">=3.11"
 dependencies = [
     "loguru >=0.7.3",
     "pygame-ce>=2.5.3",
+    "two-d-library",
 ]
+
 [dependency-groups]
 dev = [
     "invoke >=2.2.0",
@@ -20,7 +22,7 @@ dev = [
     "pydoclint >= 0.6.6",
     "pydoctest >= 0.2.1",
     "pytest >=8.4.1",
-    "ruff >= 0.12.8",
+    "ruff >= 0.12.9",
 ]
 
 [tool.mypy]
@@ -91,3 +93,6 @@ max-args = 7
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.uv.sources]
+two-d-library = { git = "https://github.com/elliot-100/two-d-library", tag = "v0.3.2" }

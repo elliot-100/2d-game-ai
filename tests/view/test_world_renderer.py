@@ -9,7 +9,7 @@ from two_d_game_ai.world.world import World
 def test_to_local() -> None:
     """Test that coordinates are converted so that origin is at centre."""
     # arrange
-    w = World(20)
+    w = World(size_from_sequence=(20, 20))
     wr = WorldRenderer(world=w, scale_factor=1)
     world_origin = Vector2(0, 0)
     world_max = Vector2(10, 10)
@@ -24,7 +24,7 @@ def test_to_local() -> None:
 def test_to_local_with_scale_factor() -> None:
     """Test that coordinates are converted so that origin is at centre."""
     # arrange
-    w = World(20)
+    w = World(size_from_sequence=(20, 20))
     wr = WorldRenderer(world=w, scale_factor=2)
     world_origin = Vector2(0, 0)
     world_max = Vector2(10, 10)
@@ -39,7 +39,7 @@ def test_to_local_with_scale_factor() -> None:
 def test_to_world() -> None:
     """Test that coordinates are converted so that origin is at top left."""
     # arrange
-    w = World(20)
+    w = World(size_from_sequence=(20, 20))
     wr = WorldRenderer(world=w, scale_factor=1)
     local_origin = Vector2(0, 0)
     local_max = Vector2(20, 20)
@@ -54,7 +54,7 @@ def test_to_world() -> None:
 def test_from_display_with_scale_factor() -> None:
     """Test that coordinates are converted so that origin is at top left."""
     # arrange
-    w = World(20)
+    w = World(size_from_sequence=(20, 20))
     wr = WorldRenderer(world=w, scale_factor=2)
     window_origin = Vector2(0, 0)
     window_point = Vector2(40, 40)

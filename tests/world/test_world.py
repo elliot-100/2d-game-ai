@@ -12,71 +12,61 @@ from two_d_game_ai.world.world import World
 def test_create() -> None:
     """Test World initial state."""
     # arrange / act
-    w = World(5)
+    w = World(size_from_sequence=(5, 5))
     # assert
-    assert w.size == 5
+    assert w.size == Vector2(5, 5)
 
 
 def test_add_bot() -> None:
     """Test adding a Bot to the World."""
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(10, 10))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
     # act
-    w.add_entity(b)
+    w.add_generic_entity(b)
     # assert
-    assert w.entities == {b}
+    assert w.generic_entities == {b}
     assert w.bots == {b}
+    assert w.grid
 
 
 def test_add_obstacle_circle() -> None:
     """Test adding an ObstacleCircle to the World."""
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(10, 10))
     # act
     oc0 = ObstacleCircle(
         name="m0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(oc0)
+    w.add_generic_entity(oc0)
     # assert
-    assert w.entities == {oc0}
+    assert w.generic_entities == {oc0}
     assert w.obstacles == {oc0}
 
 
 def test_add_obstacle_rectangle() -> None:
     """Test adding an ObstacleRectangle to the World."""
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(10, 10))
     # act
     or0 = ObstacleRectangle(
         name="m0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(or0)
+    w.add_generic_entity(or0)
     # assert
-    assert w.entities == {or0}
+    assert w.generic_entities == {or0}
     assert w.obstacles == {or0}
-
-
-def test_point_is_inside_world_bounds() -> None:
-    """Test that points are inside/outside World."""
-    # arrange
-    w = World(10)
-    p0 = Vector2(0, 0)
-    p1 = Vector2(-8, 8)
-    # act/assert
-    assert w.location_is_inside_world_bounds(p0)
-    assert not w.location_is_inside_world_bounds(p1)
 
 
 def test_grid_ref_from_pos() -> None:
     """Test that World coordinates are converted to a `GridRef`."""
     # arrange
-    w = World(size=100, grid_size=10)
+    w = World(size_from_sequence=(100, 100), grid_size=10)
     world_origin = Vector2(0, 0)
     # act
     origin_grid_ref = w.grid_ref_from_pos(world_origin)
@@ -87,7 +77,7 @@ def test_grid_ref_from_pos() -> None:
 def test_cell_from_pos__out_of_bounds() -> None:
     """Test that out-of-bounds coordinates...."""
     # arrange
-    w = World(size=100, grid_size=10)
+    w = World(size_from_sequence=(100, 100), grid_size=10)
     pos = Vector2(0, -101)
     # act, assert
     with pytest.raises(ValueError, match="Can't get a `GridRef` for pos"):

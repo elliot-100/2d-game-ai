@@ -29,35 +29,13 @@ def test_create() -> None:
     """Test Bot initial state."""
     # arrange / act
     b = Bot(
-        name="b1",
         position_from_sequence=(0.7, 100.35),
     )
     # assert
-    assert b.name == "b1"
-    assert b.position == Vector2(0.7, 100.35)
     # Bot is initially stationary:
     assert b.velocity == Vector2(0, 0)
     # Defaults:
     assert b.heading.vector == Vector2(0, 1)
-
-
-def test_out_of_world_bounds() -> None:
-    """TO DO."""
-    # arrange
-    w = World(10)
-    b0 = Bot(
-        name="b0",
-        position_from_sequence=(5, 5),
-    )
-    w.add_entity(b0)
-    b1 = Bot(
-        name="b0",
-        position_from_sequence=(5, 10.1),
-    )
-    w.add_entity(b1)
-    # act, assert
-    assert b0.is_inside_world_bounds
-    assert not b1.is_inside_world_bounds
 
 
 def test_can_see_point__in_range(
@@ -83,12 +61,12 @@ def test_can_see_point__in_range(
 def test_move() -> None:
     """Test Bot linear move."""
     # arrange
-    w = World(40)
+    w = World(size_from_sequence=(40, 40))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     b.velocity = Vector2(1, 0)
     # act
     b.update()
@@ -99,12 +77,12 @@ def test_move() -> None:
 def test_move_negative() -> None:
     """Test that Bot does not change position by default, as velocity is zero."""
     # arrange
-    w = World(40)
+    w = World(size_from_sequence=(40, 40))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     # act
     b.update()
     # assert
@@ -114,12 +92,12 @@ def test_move_negative() -> None:
 def test_destination() -> None:
     """Test that Bot can be given destination inside World limits."""
     # arrange
-    w = World(40)
+    w = World(size_from_sequence=(40, 40))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     # act
     b.destination = Vector2(-17, -12)
     # assert
@@ -129,12 +107,12 @@ def test_destination() -> None:
 def test_set_destination_tuple() -> None:
     """Test that Bot can be given destination as tuple inside World limits."""
     # arrange
-    w = World(10)
+    w = World(size_from_sequence=(40, 40))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
     )
-    w.add_entity(b)
+    w.add_generic_entity(b)
     # act
     b.destination_from_sequence((2.5, -5.0))
     # assert

@@ -11,8 +11,10 @@ def test_create_circle() -> None:
     Can't be tested on `WorldRenderer.render(), as it does not create a Pygame window.
     """
     # arrange
-    w = World(10)
-    w.add_entity(ObstacleCircle(name="oc0", position_from_sequence=(0.7, 100.35)))
+    w = World(size_from_sequence=(10, 10))
+    w.add_generic_entity(
+        ObstacleCircle(name="oc0", position_from_sequence=(0.7, 100.35))
+    )
     v = View(world=w)
     # act
     v.render()
@@ -26,8 +28,10 @@ def test_create_rectangle() -> None:
     Can't be tested on `WorldRenderer.render(), as it does not create a Pygame window.
     """
     # arrange
-    w = World(10)
-    w.add_entity(ObstacleRectangle(name="or0", position_from_sequence=(0.7, 100.35)))
+    w = World(size_from_sequence=(10, 10))
+    w.add_generic_entity(
+        ObstacleRectangle(name="or0", position_from_sequence=(0.7, 100.35))
+    )
     v = View(world=w)
     # act
     v.render()

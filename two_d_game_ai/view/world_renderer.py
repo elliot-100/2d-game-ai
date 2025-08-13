@@ -45,8 +45,6 @@ class WorldRenderer:
     scale_factor: float
     """Scale factor applied to the render. World units / pixel."""
     name: str = ""
-    size: float = field(init=False)
-    """Display pixels."""
     surface: Surface = field(init=False)
     """pygame `Surface`."""
     entity_renderers: dict[int, GenericEntityRenderer] = field(default_factory=dict)
@@ -58,8 +56,7 @@ class WorldRenderer:
     def __post_init__(self) -> None:
         font_filepath = Path(__file__).resolve().parent / FONT_DIR_RELATIVE
         self.font = Font(font_filepath / FONT_FILENAME, FONT_SIZE)
-        self.size = self.world.size * self.scale_factor
-        self.surface = Surface((self.size, self.size))
+        self.surface = Surface(self.size)
         self.base_grid_surface = self.base_grid()
         self.selected_renderer = None
         logger.info(
@@ -73,6 +70,11 @@ class WorldRenderer:
     def __str__(self) -> str:
         """Human-readable description."""
         return f"{type(self).__name__}"
+
+    @property
+    def size(self) -> Vector2:
+        """Return size of the renderer."""
+        return self.world.size * self.scale_factor
 
     @property
     def bot_renderers(self) -> set[BotRenderer]:
@@ -111,12 +113,12 @@ class WorldRenderer:
         # TODO: refactor
 
         """
-        surface = Surface((self.size, self.size))
+        surface = Surface(self.size)
         surface.fill(colors.WORLD_FILL)
 
         cell_size = self.world.grid_resolution
         cell_offsets = [
-            cell_size * i - self.world.magnitude + cell_size / 2
+            cell_size * i - self.world.origin_offset.x + cell_size / 2
             for i in range(self.world.grid.size)
         ]
         for x, y in itertools.product(cell_offsets, cell_offsets):
@@ -141,7 +143,9 @@ class WorldRenderer:
 
     def ensure_renderers(self) -> None:
         """Update the set of entity renderers."""
-        for e in {e for e in self.world.entities if e.id not in self.entity_renderers}:
+        for e in {
+            e for e in self.world.generic_entities if e.id not in self.entity_renderers
+        }:
             if e.id is None:
                 err_msg = f"{e!s} must have an `id` to be rendered."
                 raise ValueError(err_msg)
@@ -168,11 +172,8 @@ class WorldRenderer:
             Local coordinates.
             Origin is at centre, positive y upwards.
         """
-        pos = world_pos
-        pos = pos.elementwise() * Vector2(1, -1)
-        offset = self.world.magnitude
-        pos += Vector2(offset, offset)
-        return pos * self.scale_factor
+        pos = world_pos.elementwise() * Vector2(1, -1)
+        return (pos + self.world.origin_offset) * self.scale_factor
 
     def to_world(self, local_pos: Vector2) -> Vector2:
         """Convert local coordinates to `World` coordinates.
@@ -188,16 +189,14 @@ class WorldRenderer:
         Vector2
             `World` coordinates.
         """
-        pos = local_pos / self.scale_factor
-        offset = self.world.magnitude
-        pos -= Vector2(offset, offset)
+        pos = local_pos / self.scale_factor - self.world.origin_offset
         return pos.elementwise() * Vector2(1, -1)
 
     def render_movement_blocking_cells(self, grid: Grid) -> None:
         """Fill the cells within obstacles."""
         cell_size = self.world.grid_resolution
         for cell_ref in grid.movement_blocking_cells:
-            cell_origin = cell_ref * cell_size + self.world.grid_offset
+            cell_origin = cell_ref * cell_size - self.world.origin_offset
             grid_rect = FRect(
                 cell_origin,
                 (cell_size, cell_size),
@@ -213,14 +212,14 @@ class WorldRenderer:
         """Draw axes."""
         self.draw_line(
             color=colors.WORLD_AXES_LINE,
-            start_pos=Vector2(0, -self.world.magnitude),
-            end_pos=Vector2(0, self.world.magnitude),
+            start_pos=Vector2(-self.world.origin_offset.x, 0),
+            end_pos=Vector2(self.world.origin_offset.x, 0),
             width=2,
         )
         self.draw_line(
             color=colors.WORLD_AXES_LINE,
-            start_pos=Vector2(-self.world.magnitude, 0),
-            end_pos=Vector2(self.world.magnitude, 0),
+            start_pos=Vector2(0, -self.world.origin_offset.y),
+            end_pos=Vector2(0, self.world.origin_offset.y),
             width=2,
         )
 
@@ -248,7 +247,7 @@ class WorldRenderer:
             raise TypeError
 
         world_pos = self.to_world(local_pos)
-        if self.world.location_is_movement_blocked(world_pos):
+        if self.world.position_is_movement_blocked(world_pos):
             return None
 
         self.selected_renderer.entity.destination = world_pos

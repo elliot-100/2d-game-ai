@@ -42,7 +42,7 @@ def test_cells_on_line() -> None:
 def test_cell_centre_to_world_pos() -> None:
     """Test that world pos of the centre of the cell is calculated correctly."""
     # arrange
-    w = World(size=100, grid_size=10)
+    w = World(size_from_sequence=(100, 100), grid_size=10)
     min_cell = GridRef(0, 0)
     # act
     world_pos = Grid.cell_centre_to_world_pos(world=w, grid_ref=min_cell)
