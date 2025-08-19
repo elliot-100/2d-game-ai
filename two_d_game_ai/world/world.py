@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING
 
 from loguru import logger
 from two_d_library.world import World as BaseWorld
 
+from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.bot import Bot
 from two_d_game_ai.entities.obstacles import Obstacle
 from two_d_game_ai.world.grid import Grid
@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     )
 
 
-@dataclass(kw_only=True)
 class World(BaseWorld):
     """Simulated domain.
 
@@ -30,33 +29,21 @@ class World(BaseWorld):
     Has a `two_d_game_ai.world.grid.Grid`.
     """
 
-    grid_size: InitVar[int] = 2
-    centered_origin: bool = True
-
-    grid: Grid = field(init=False)
-    """`Grid` instance."""
-    grid_resolution: float = field(init=False)
-    """Size of a `Grid` cell in `World` units."""
-    generic_entities: set[GenericEntity] = field(init=False, default_factory=set)
-    """All entities."""  # Base class `entities` is incompatible
-    step_counter: int = field(init=False)
-    """Number of update steps taken."""
-    is_paused: bool = field(init=False)
-    """Whether the `World` is paused."""
-
-    def __post_init__(
-        self, size_from_sequence: tuple[int, int], grid_size: int
-    ) -> None:
-        super().__post_init__(size_from_sequence)
+    def __init__(self, grid_size: int = 2, **kwargs: tuple[int, int]) -> None:
+        super().__init__(centered_origin=True, **kwargs)
         if self.size.x != self.size.y:
             err_msg = "Size of world must be square."
             raise ValueError(err_msg)
 
         self.grid = Grid(size=grid_size)
+        self.generic_entities: set[GenericEntity] = set()
         self.grid_resolution = self.size.x / self.grid.size
-        self.step_counter = 0
         self.is_paused = True
         logger.info(f"{self} initialized.")
+
+    @property
+    def time_step(self) -> float:
+        return 1 / SIMULATION_FPS
 
     @property
     def bots(self) -> set[Bot]:
@@ -68,12 +55,11 @@ class World(BaseWorld):
         """TO DO."""
         return {e for e in self.generic_entities if isinstance(e, Obstacle)}
 
-    def update(self) -> None:
+    def update_(self) -> None:
         """Only Bots currently need to be updated."""
         for e in self.generic_entities:
             if isinstance(e, Bot):
-                e.update()
-        self.step_counter += 1
+                e.update(self.time_step)
 
     def position_is_movement_blocked(self, position: Vector2) -> bool:
         """Return `True` if `position` is inside a movement-blocked grid cell,

@@ -23,5 +23,5 @@ b1.destination_from_sequence((2.5, -5.0))
 while view.running:
     view.handle_inputs()
     if not the_world.is_paused:
-        the_world.update()
+        the_world.update_()
     view.render()

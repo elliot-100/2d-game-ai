@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, ClassVar
 from loguru import logger
 from pygame import Vector2
 
-from two_d_game_ai import SIMULATION_FPS
 from two_d_game_ai.entities.generic_entity import GenericEntity
 from two_d_game_ai.geometry import point_in_or_on_circle
 from two_d_game_ai.geometry.bearing import Bearing
@@ -63,11 +62,6 @@ class Bot(GenericEntity):
             logger.info(f"{self!s}: leader={self.leader!s}.")
 
     @property
-    def max_rotation_step(self) -> float:
-        """Get maximum rotation, in degrees per simulation step."""
-        return self.max_rotation_rate / SIMULATION_FPS
-
-    @property
     def destination(self) -> Vector2 | None:
         """Destination point in `World` coordinates."""
         return self._destination
@@ -107,7 +101,7 @@ class Bot(GenericEntity):
         """Set destination point."""
         self.destination = Vector2(position)
 
-    def update(self) -> None:
+    def update(self, time_delta: float) -> None:
         """Update `Bot`, including move over 1 simulation step."""
         if not self.world:
             err_msg = f"Can't update {self!s}. Add to World first."
@@ -141,8 +135,9 @@ class Bot(GenericEntity):
                 self.route[0] - self.position
             ).degrees_normalised
 
+            max_rotation_step = self.max_rotation_rate * time_delta
             #  if Bot can complete rotation to face wp this step...
-            if abs(waypoint_relative_bearing) <= self.max_rotation_step:
+            if abs(waypoint_relative_bearing) <= max_rotation_step:
                 # face wp precisely
                 self.rotate(waypoint_relative_bearing)
                 # initiate move towards wp
@@ -152,11 +147,11 @@ class Bot(GenericEntity):
                 # turn towards wp
                 self.rotate(
                     math.copysign(
-                        self.max_rotation_step,
+                        max_rotation_step,
                         waypoint_relative_bearing,
                     ),
                 )
-        next_pos = self.position + self.velocity / SIMULATION_FPS
+        next_pos = self.position + self.velocity * time_delta
 
         if self._is_in_collision(next_pos, other_bots):
             self.stop()

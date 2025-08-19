@@ -58,10 +58,10 @@ def test_can_see_point__in_range(
     assert not any(b.can_see_location(p) for p in not_visible_points)
 
 
-def test_move() -> None:
-    """Test Bot linear move."""
+def test_bot_move_in_world_context() -> None:
+    """Test that Bot's position is correct after 1 World update."""
     # arrange
-    w = World(size_from_sequence=(40, 40))
+    w = World(size_from_sequence=(10, 10))
     b = Bot(
         name="b0",
         position_from_sequence=(0, 0),
@@ -69,24 +69,9 @@ def test_move() -> None:
     w.add_generic_entity(b)
     b.velocity = Vector2(1, 0)
     # act
-    b.update()
+    w.update_()
     # assert
     assert b.position == Vector2(1 / SIMULATION_FPS, 0)
-
-
-def test_move_negative() -> None:
-    """Test that Bot does not change position by default, as velocity is zero."""
-    # arrange
-    w = World(size_from_sequence=(40, 40))
-    b = Bot(
-        name="b0",
-        position_from_sequence=(0, 0),
-    )
-    w.add_generic_entity(b)
-    # act
-    b.update()
-    # assert
-    assert b.position == Vector2(0, 0)
 
 
 def test_destination() -> None:

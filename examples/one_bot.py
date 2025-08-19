@@ -19,5 +19,5 @@ view = View(world=the_world)
 while view.running:
     view.handle_inputs()
     if not the_world.is_paused:
-        the_world.update()
+        the_world.update_()
     view.render()

@@ -61,5 +61,5 @@ bot.destination_from_sequence((12.5, 0.5))
 while view.running:
     view.handle_inputs()
     if not the_world.is_paused:
-        the_world.update()
+        the_world.update_()
     view.render()
