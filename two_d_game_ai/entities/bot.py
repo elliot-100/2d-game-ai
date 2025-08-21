@@ -82,10 +82,14 @@ class Bot(GenericEntity):
         if proposed_destination is None:
             logger.debug(f"{self!s}: destination -> `None`.")
             self._destination = None
-        elif (
-            proposed_destination != self.position
-            and not self.is_at(proposed_destination)
-            and self.world.position_is_in_bounds(proposed_destination)
+            return
+
+        if not self.world.is_in_bounds(proposed_destination):
+            err_msg = f"Can't set {self} destination out of bounds."
+            raise ValueError(err_msg)
+
+        if proposed_destination != self.position and not self.is_at(
+            proposed_destination
         ):
             logger.info(f"{self!s}: destination -> {proposed_destination}.")
             self.stop()
