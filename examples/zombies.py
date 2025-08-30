@@ -56,5 +56,5 @@ while view.running:
             z.leader = human
 
     if not the_world.is_paused:
-        the_world.update_()
+        the_world.update()
     view.render()

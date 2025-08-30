@@ -69,7 +69,7 @@ def test_bot_move_in_world_context() -> None:
     w.add_generic_entity(b)
     b.velocity = Vector2(1, 0)
     # act
-    w.update_()
+    w.update()
     # assert
     assert b.position == Vector2(1 / SIMULATION_FPS, 0)
 
